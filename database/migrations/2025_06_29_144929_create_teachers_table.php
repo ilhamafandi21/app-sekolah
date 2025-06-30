@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('teachers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->date('tgl_lahir');
-            $table->string('kota_lahir');
-            $table->string('alamat');
-            $table->string('pendidikan');
-            $table->string('foto');
-            $table->string('password');
+            $table->date('tgl_lahir')->nullable();
+            $table->string('kota_lahir')->nullable();
+            $table->string('alamat')->nullable();
+            $table->string('pendidikan')->nullable();
+            $table->string('foto')->nullable();
+            $table->string('email')->nullable();
+            $table->string('password')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

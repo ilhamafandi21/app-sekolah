@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Siswa;
+use App\Models\Subject;
 use App\Observers\SiswaObserver;
+use App\Observers\SubjectObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 

@@ -18,6 +18,7 @@ class Teacher extends Model
         'alamat',
         'pendidikan',
         'foto',
+        'email',
         'password',
     ];
 

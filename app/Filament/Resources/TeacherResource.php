@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\TeacherResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TeacherResource\RelationManagers;
+use Filament\Facades\Filament;
 
 class TeacherResource extends Resource
 {
@@ -47,13 +48,14 @@ class TeacherResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('pendidikan')
                     ->required(),
+                Forms\Components\TextInput::make('email')
+                    ->email()
+                    ->required(),
                 Forms\Components\FileUpload::make('foto')
                     ->image()
-                    ->directory('img_teacher')
-                    ->required(),
+                    ->directory('img_teacher'),
                 Forms\Components\TextInput::make('password')
                     ->required()
-                    ->readOnly()
                     ->dehydrated()
                     ->dehydrateStateUsing(fn ($state) => Hash::make($state)),
             ]);
@@ -64,6 +66,8 @@ class TeacherResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('email')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tgl_lahir')
                     ->date()

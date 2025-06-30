@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\GeneratesKodeFromName;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Subject extends Model
 {
-     use HasFactory, SoftDeletes;
+     use HasFactory, SoftDeletes, GeneratesKodeFromName;
 
     protected $fillable = [
         'kode',
@@ -19,6 +20,14 @@ class Subject extends Model
         'semester',
     ];
 
+    protected static function booted(): void
+    {
+        static::creating(function ($subject) {
+            if (blank($subject->kode) && filled($subject->name)) {
+                $subject->kode = $subject->generateKodeFromName($subject->name);
+            }
+        });
+    }
     // Relasi opsional jika ada tabel jurusans
     public function teachers(): HasMany
     {

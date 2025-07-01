@@ -16,8 +16,6 @@ return new class extends Migration
             $table->string('kode')->unique(); // Kode mata pelajaran, misalnya ING101
             $table->string('name');           // Nama mata pelajaran, misalnya Bahasa Inggris
             $table->text('deskripsi')->nullable(); // Deskripsi opsional
-            $table->unsignedTinyInteger('tingkat_kelas')->nullable(); // Misal: 7, 8, 9
-            $table->unsignedTinyInteger('semester')->nullable(); // 1 atau 2
             $table->timestamps();
             $table->softDeletes();
         });

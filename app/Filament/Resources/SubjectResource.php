@@ -19,6 +19,10 @@ class SubjectResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationLabel = 'Mata Pelajaran';
+    
+    protected static ?string $navigationGroup = 'Jurusan/Kelas/Mapel';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -30,19 +34,6 @@ class SubjectResource extends Resource
                     ->dehydrated(false),
                 Forms\Components\Textarea::make('deskripsi')
                     ->columnSpanFull(),
-                Forms\Components\Select::make('tingkat_kelas')
-                    ->options([
-                        10 => 'SEPULUH',
-                        11 => 'SEBELAS',
-                        12 => 'DUABELAS'
-                    ])
-                    ->default(10),
-                Forms\Components\Select::make('semester')
-                    ->options([
-                        1 => 'SEMESTER I',
-                        2 => 'SEMESTER 2'
-                    ])
-                    ->default(1)
             ]);
     }
 
@@ -54,12 +45,6 @@ class SubjectResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('tingkat_kelas')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('semester')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

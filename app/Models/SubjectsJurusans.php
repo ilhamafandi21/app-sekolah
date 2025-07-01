@@ -15,8 +15,17 @@ class SubjectsJurusans extends Model
         'jurusan_id',
     ];
 
-     public function subject(): BelongsTo
+    protected $casts = [
+        'subject_id' => 'array',
+    ];
+
+    public function subject(): BelongsTo
     {
-        return $this->belongsTo(SubjectsJurusans::class);
+        return $this->belongsTo(Subject::class);
+    }
+
+    public function jurusan(): BelongsTo
+    {
+        return $this->belongsTo(Jurusan::class);
     }
 }

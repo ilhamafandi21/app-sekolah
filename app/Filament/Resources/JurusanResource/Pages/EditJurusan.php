@@ -9,6 +9,8 @@ use Filament\Resources\Pages\EditRecord;
 class EditJurusan extends EditRecord
 {
     protected static string $resource = JurusanResource::class;
+    protected static ?string $title = 'Jurusan';
+
 
     protected function getHeaderActions(): array
     {

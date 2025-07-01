@@ -19,6 +19,10 @@ class JurusanResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationLabel = 'Jurusan';
+    
+    protected static ?string $navigationGroup = 'Jurusan/Kelas/Mapel';
+
     public static function form(Form $form): Form
     {
         return $form

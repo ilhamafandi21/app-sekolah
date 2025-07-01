@@ -9,6 +9,8 @@ use Filament\Resources\Pages\EditRecord;
 class EditSubject extends EditRecord
 {
     protected static string $resource = SubjectResource::class;
+    protected static ?string $title = 'Mata Pelajaran';
+
 
     protected function getHeaderActions(): array
     {

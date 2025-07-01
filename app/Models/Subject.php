@@ -16,8 +16,6 @@ class Subject extends Model
         'kode',
         'name',
         'deskripsi',
-        'tingkat_kelas',
-        'semester',
     ];
 
     protected static function booted(): void

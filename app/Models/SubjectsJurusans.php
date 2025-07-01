@@ -15,9 +15,6 @@ class SubjectsJurusans extends Model
         'jurusan_id',
     ];
 
-    protected $casts = [
-        'subject_id' => 'array',
-    ];
 
     public function subject(): BelongsTo
     {

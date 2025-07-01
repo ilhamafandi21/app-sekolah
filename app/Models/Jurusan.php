@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Jurusan extends Model
 {
@@ -19,8 +20,8 @@ class Jurusan extends Model
         'deskripsi',
     ];
 
-    public function subjects(): HasMany
+    public function subjects(): BelongsToMany
     {
-        return $this->hasMany(SubjectsJurusans::class);
+        return $this->belongsToMany(Subject::class, 'subjects_jurusans');
     }
 }

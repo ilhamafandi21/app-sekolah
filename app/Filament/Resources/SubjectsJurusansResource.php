@@ -15,6 +15,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+use function PHPUnit\Framework\isArray;
+
 class SubjectsJurusansResource extends Resource
 {
     protected static ?string $model = SubjectsJurusans::class;
@@ -25,6 +27,11 @@ class SubjectsJurusansResource extends Resource
     
     protected static ?string $navigationGroup = 'Jurusan/Kelas/Mapel';
 
+     public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with('subject:id,name');
+
+    }
     public static function form(Form $form): Form
     {
         return $form
@@ -40,7 +47,6 @@ class SubjectsJurusansResource extends Resource
                     })
                     ->required(),
                 Forms\Components\Select::make('subject_id')
-                    ->multiple()
                     ->options(function () {
                         return Subject::all()->mapWithKeys(function ($subject) {
                             // dd() di sini akan mencetak satu-per-satu
@@ -50,23 +56,22 @@ class SubjectsJurusansResource extends Resource
                         });
                     })
                     ->required(),
-                
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+        ->query(Jurusan::with('subjects'))
             ->columns([
-                Tables\Columns\TextColumn::make('subject')
-                    ->label('Nama Mapel')
-                    ->formatStateUsing(function ($record) {
-                        return $record->subject['name'] ?? '-';
-                         })
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('jurusan.nama')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('nama')
+                ->label('Jurusan'),
+
+                Tables\Columns\TextColumn::make('subjects')
+                        ->label('Mata Pelajaran')
+                        ->formatStateUsing(function ($state, $record) {
+                            return $record->subjects->pluck('name')->join(', ');
+                        }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

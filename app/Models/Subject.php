@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\GeneratesKodeFromName;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -32,8 +33,8 @@ class Subject extends Model
         return $this->hasMany(TeachersSubjects::class);
     }
 
-    public function jurusans(): HasMany
+    public function jurusans(): BelongsToMany
     {
-        return $this->hasMany(SubjectsJurusans::class);
+        return $this->belongsToMany(Jurusan::class, 'subjects_jurusans');
     }
 }

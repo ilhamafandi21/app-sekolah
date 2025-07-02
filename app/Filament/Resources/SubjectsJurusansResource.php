@@ -7,7 +7,9 @@ use App\Filament\Resources\SubjectsJurusansResource\RelationManagers;
 use App\Models\Jurusan;
 use App\Models\Subject;
 use App\Models\SubjectsJurusans;
+use Doctrine\DBAL\Schema\Schema;
 use Filament\Forms;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -46,7 +48,9 @@ class SubjectsJurusansResource extends Resource
                         });
                     })
                     ->required(),
-                Forms\Components\Select::make('subject_id')
+               Repeater::make('members')
+                ->schema([
+                        Forms\Components\Select::make('subject_id')
                     ->options(function () {
                         return Subject::all()->mapWithKeys(function ($subject) {
                             // dd() di sini akan mencetak satu-per-satu
@@ -56,22 +60,19 @@ class SubjectsJurusansResource extends Resource
                         });
                     })
                     ->required(),
+                    ])
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-        ->query(Jurusan::with('subjects'))
             ->columns([
-                Tables\Columns\TextColumn::make('nama')
-                ->label('Jurusan'),
+                Tables\Columns\TextColumn::make('jurusan.nama')
+                    ->label('Jurusan'),
 
-                Tables\Columns\TextColumn::make('subjects')
-                        ->label('Mata Pelajaran')
-                        ->formatStateUsing(function ($state, $record) {
-                            return $record->subjects->pluck('name')->join(', ');
-                        }),
+                Tables\Columns\TextColumn::make('subject.name')
+                        ->label('Mata Pelajaran'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

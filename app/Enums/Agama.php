@@ -4,11 +4,11 @@ namespace App\Enums;
 
 enum Agama: string
 {
-    case ISLAM = 'islam';
-    case KRISTEN = 'kristen';
-    case KATOLIK = 'katolik';
-    case HINDU = 'hindu';
-    case BUDDHA = 'buddha';
+    case ISLAM = 'Islam';
+    case KRISTEN = 'Kristen';
+    case KATOLIK = 'Katolik';
+    case HINDU = 'Hindu';
+    case BUDDHA = 'Buddha';
 
     public function label(): string
     {

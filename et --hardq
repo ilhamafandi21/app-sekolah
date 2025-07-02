@@ -1,0 +1,17 @@
+[33m1c8c587[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: reset: moving to HEAD
+[33m1c8c587[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{1}: reset: moving to 1c8c587
+[33m1c8c587[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{2}: commit: paham pivot table dan realsi nya
+[33m08d2f71[m HEAD@{3}: commit: jurusan, tambah kelas, realasi baru
+[33m50e0fb5[m HEAD@{4}: reset: moving to 50e0fb5
+[33m50e0fb5[m HEAD@{5}: reset: moving to HEAD
+[33m50e0fb5[m HEAD@{6}: reset: moving to HEAD
+[33m50e0fb5[m HEAD@{7}: commit: tambah traits generate kodefromname, tamnah email di teacher resource, dll
+[33mb97fb7b[m HEAD@{8}: commit: penambahan teachers, subjects, jurusans
+[33m6cd6f7e[m HEAD@{9}: pull --rebase origin main (finish): returning to refs/heads/main
+[33m6cd6f7e[m HEAD@{10}: pull --rebase origin main (pick): ini yg original nya
+[33m9857f3b[m HEAD@{11}: pull --rebase origin main (start): checkout 9857f3b8bb0b6fc6cbf361d30071d44e719d9989
+[33mc31ed96[m HEAD@{12}: commit: ini yg original nya
+[33mcc1af0c[m HEAD@{13}: commit: Inisialisasi Git untuk proyek Laravel
+[33m2d87e06[m HEAD@{14}: commit: Install Pest
+[33m6c4965f[m HEAD@{15}: Branch: renamed refs/heads/master to refs/heads/main
+[33m6c4965f[m HEAD@{17}: commit (initial): Set up a fresh Laravel app

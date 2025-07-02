@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\JurusanResource\Pages;
 use App\Filament\Resources\JurusanResource\RelationManagers;
 use App\Models\Jurusan;
+use App\Models\Subject;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -31,9 +32,16 @@ class JurusanResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('nama')
                     ->required(),
+
+                Forms\Components\Select::make('subjects')
+                // Forms\Components\CheckboxList::make('subjects')-> hapus multiple dan preload gunakan CheckboxList 
+                    ->multiple()
+                    ->relationship('subjects', 'name')
+                    ->preload(),
+                    
                 Forms\Components\Textarea::make('deskripsi')
                     ->columnSpanFull(),
-            ]);
+            ]);         
     }
 
     public static function table(Table $table): Table
@@ -43,6 +51,9 @@ class JurusanResource extends Resource
                 Tables\Columns\TextColumn::make('kode')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nama')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('subjects.name')
+                    ->limit(10)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

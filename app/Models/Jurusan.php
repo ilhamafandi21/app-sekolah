@@ -24,4 +24,8 @@ class Jurusan extends Model
     {
         return $this->belongsToMany(Subject::class, 'subjects_jurusans');
     }
+    public function rombels(): HasMany
+    {
+        return $this->hasMany(Rombel::class, 'subjects_jurusans');
+    }
 }

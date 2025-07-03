@@ -44,6 +44,10 @@ class SubjectResource extends Resource
                 Tables\Columns\TextColumn::make('kode')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
+                    ->limit(15)
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('jurusans.nama')
+                    ->limit(15)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

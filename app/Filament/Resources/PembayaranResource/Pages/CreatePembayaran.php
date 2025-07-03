@@ -9,4 +9,5 @@ use Filament\Resources\Pages\CreateRecord;
 class CreatePembayaran extends CreateRecord
 {
     protected static string $resource = PembayaranResource::class;
+    protected static ?string $title = 'Pembayaran';
 }

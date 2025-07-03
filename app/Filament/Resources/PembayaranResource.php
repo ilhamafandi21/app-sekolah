@@ -25,6 +25,8 @@ class PembayaranResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
     
     protected static ?string $navigationLabel = 'Pembayaran';
+    
+    protected static ?string $navigationGroup = 'Tata Usaha';
 
     // public static function getEloquentQuery(): Builder
     // {
@@ -43,7 +45,7 @@ class PembayaranResource extends Resource
                 Forms\Components\Select::make('siswa_id') // ✅ Nama kolom di database
                     ->label('Nama Siswa')
                     ->options(function () {
-                        return Siswa::all()->mapWithKeys(function ($siswa) {
+                        return Siswa::orderBy('nama')->get()->mapWithKeys(function ($siswa) {
                             // dd() di sini akan mencetak satu-per-satu
                             return [
                                 $siswa->id => "{$siswa->nama} ({$siswa->nis})",
@@ -51,7 +53,6 @@ class PembayaranResource extends Resource
                         });
                     })
                     ->searchable()
-                    ->native(true)
                     ->preload()
                     ->required(),
                 Forms\Components\TextInput::make('user_id')
@@ -66,7 +67,8 @@ class PembayaranResource extends Resource
                     ->options(StatusPembayaran::options())
                     ->default(StatusPembayaran::PENDING)
                     ->preload(),
-                Forms\Components\TextInput::make('keterangan'),
+                Forms\Components\TextInput::make('keterangan')
+                    ->default('-'),
             ]);
     }
 

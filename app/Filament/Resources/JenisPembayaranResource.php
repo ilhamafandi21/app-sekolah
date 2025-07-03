@@ -20,6 +20,10 @@ class JenisPembayaranResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-bars-2';
 
+    protected static ?string $navigationLabel = 'Jenis Pembayaran';
+    
+    protected static ?string $navigationGroup = 'Tata Usaha';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -27,6 +31,7 @@ class JenisPembayaranResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required(),
                 Forms\Components\TextInput::make('keterangan')
+                    ->default('-')
                     ->required(),
                 Forms\Components\Hidden::make('user_id')
                     ->default(Filament::auth()->user()->id)

@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\JurusanResource\Pages;
 use App\Filament\Resources\JurusanResource\RelationManagers;
+use App\Filament\Resources\JurusanResource\RelationManagers\SubjectsRelationManager;
 use App\Models\Jurusan;
 use App\Models\Subject;
 use Filament\Forms;
@@ -84,7 +85,7 @@ class JurusanResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            SubjectsRelationManager::class,
         ];
     }
 

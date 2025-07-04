@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\SubjectResource\Pages;
-use App\Filament\Resources\SubjectResource\RelationManagers;
-use App\Models\Subject;
+use App\Filament\Resources\BiayaResource\Pages;
+use App\Filament\Resources\BiayaResource\RelationManagers;
+use App\Models\Biaya;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,53 +13,50 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class SubjectResource extends Resource
+class BiayaResource extends Resource
 {
-    protected static ?string $model = Subject::class;
+    protected static ?string $model = Biaya::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    protected static ?string $navigationLabel = 'Mata Pelajaran';
-    
-    protected static ?string $navigationGroup = 'Jurusan/Kelas/Mapel';
 
     public static function form(Form $form): Form
     {
         return $form
-       
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label('Jenis Biaya')
                     ->required(),
-                Forms\Components\TextInput::make('kode')
-                    ->hidden()
-                    ->dehydrated(false),
-                Forms\Components\Textarea::make('deskripsi')
-                    ->columnSpanFull(),
+                Forms\Components\TextInput::make('nominal')
+                    ->label('Nominal')
+                    ->numeric(),
+                Forms\Components\Toggle::make('status')
+                    ->label('Status')
+                    ->required(),
+                Forms\Components\Textarea::make('keterangan')
+                    ->label('Keterangan')
+                    ->default('-'),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-         ->defaultSort('created_at', 'desc')
             ->columns([
-                Tables\Columns\TextColumn::make('kode')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->limit(15)
                     ->searchable(),
-                Tables\Columns\TextColumn::make('jurusans.nama')
-                    ->limit(15)
+                Tables\Columns\TextColumn::make('nominal')
+                    ->prefix('Rp.')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\IconColumn::make('status')
+                    ->boolean(),
+                Tables\Columns\TextColumn::make('keterangan')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -87,9 +84,9 @@ class SubjectResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSubjects::route('/'),
-            'create' => Pages\CreateSubject::route('/create'),
-            'edit' => Pages\EditSubject::route('/{record}/edit'),
+            'index' => Pages\ListBiayas::route('/'),
+            'create' => Pages\CreateBiaya::route('/create'),
+            'edit' => Pages\EditBiaya::route('/{record}/edit'),
         ];
     }
 }

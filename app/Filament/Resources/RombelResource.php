@@ -23,9 +23,13 @@ class RombelResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationLabel = 'Rombel';
+    
+    protected static ?string $navigationGroup = 'Jurusan/Kelas/Mapel';
+
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with('jurusan:id,nama');
+        return parent::getEloquentQuery()->with('jurusan:id,nama,kode');
     }
 
     public static function form(Form $form): Form
@@ -52,6 +56,11 @@ class RombelResource extends Resource
                     ->label('Active')
                     ->options(StatusRombel::options())
                     ->default(StatusRombel::NONAKTIF),
+                 Forms\Components\Select::make('rombel_biayas')
+                    ->label('Biaya')
+                    ->multiple()
+                    ->relationship('biayas', 'name')
+                    ->preload(),
                 Forms\Components\TextInput::make('keterangan')
                     ->default('-'),
             ]);
@@ -60,7 +69,10 @@ class RombelResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('tahun_ajaran')
                     ->searchable(),
                 Tables\Columns\ToggleColumn::make('status'),
@@ -68,7 +80,7 @@ class RombelResource extends Resource
                     ->label('Tingkat')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('jurusan.nama')
-                    ->description(fn(Rombel $record)=>"Kode jurusan:".' ' .$record->jurusan->id)
+                    ->description(fn(Rombel $record)=>"Kode jurusan:".' ' .$record->jurusan->kode)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('keterangan')
                     ->searchable(),

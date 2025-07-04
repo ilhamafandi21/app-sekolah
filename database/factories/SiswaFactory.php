@@ -35,7 +35,6 @@ class SiswaFactory extends Factory
             'asal_sekolah' => $this->faker->company(),
             'status_pendaftaran' => $this->faker->randomElement(['pending', 'approved', 'rejected']),
             'status_siswa' => $this->faker->randomElement(['aktif', 'nonaktif', 'alumni']),
-            'waktu_pendaftaran' => now()->subDays(rand(10, 60))->toDateTimeString(),
             'waktu_siswa_aktif' => now()->toDateTimeString(),
             // 'password' => Hash::make('password'), // bisa disamakan dengan user kalau mau
             'password' => Hash::make($reverseTtl),

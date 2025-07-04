@@ -2,22 +2,20 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
-use App\Models\Siswa;
-use App\Models\Rombel;
-use App\Models\Jurusan;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
+use App\Enums\StatusRombel;
 use App\Enums\TingkatKelas;
-use Filament\Resources\Resource;
-use function Pest\Laravel\options;
-use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\RombelResource\Pages;
-
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\RombelResource\RelationManagers;
-use App\Filament\Resources\RombelResource\RelationManagers\SiswasRelationManager;
+use App\Models\Jurusan;
+use App\Models\Rombel;
+use App\Traits\TahunAjaran;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class RombelResource extends Resource
 {
@@ -25,40 +23,35 @@ class RombelResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationLabel = 'Rombel';
-    
-    protected static ?string $navigationGroup = 'Jurusan/Kelas/Mapel';
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with('jurusan:id,nama');
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('tingkat')
+                Forms\Components\Select::make('tahun_ajaran')
+                    ->label('Tahun Ajaran')
+                    ->options(TahunAjaran::tahun_ajaran())
+                    ->required(),
+                Forms\Components\TextInput::make('name')
+                    ->label('Nama Rombel')
+                    ->helperText('Harus unik dan sesuai jurusan "contoh: IPA-1, IPS-2"')
+                    ->required(),
+                Forms\Components\Select::make('tingkat_id')
+                    ->label('Tingkat Kelas')
                     ->options(TingkatKelas::options())
                     ->required(),
                 Forms\Components\Select::make('jurusan_id')
-                    ->options(Jurusan::all()->pluck('nama', 'id'))
+                    ->label('Jurusan')
+                    ->relationship('jurusan', 'nama')
                     ->required(),
-                Forms\Components\TextInput::make('divisi')
-                    ->required(),
-                Forms\Components\Select::make('siswas')
-                // Forms\Components\CheckboxList::make('subjects')-> hapus multiple dan preload gunakan CheckboxList 
-                    ->label('Siswa')
-                    ->multiple()
-                    ->relationship('siswas', 'nama') // Tetap gunakan ini agar pivot auto disimpan
-                    ->options(function () {
-                        return Siswa::whereDoesntHave('rombels') // Pastikan relasi `rombels()` ada di model Siswa
-                            ->orderBy('nama')
-                            ->pluck('nama', 'id');
-                    })
-                    ->searchable()
-                    ->preload()
-                    ->getSearchResultsUsing(function () {
-                        return Siswa::whereDoesntHave('rombels') // Pastikan relasi `rombels()` ada di model Siswa
-                            ->orderBy('nama')
-                            ->pluck('nama', 'id');
-                    })
-                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->nama} ({$record->nis})"), // agar tetap tampil readable
+                Forms\Components\Select::make('status')
+                    ->label('Active')
+                    ->options(StatusRombel::options())
+                    ->default(StatusRombel::NONAKTIF),
                 Forms\Components\TextInput::make('keterangan')
                     ->default('-'),
             ]);
@@ -68,12 +61,15 @@ class RombelResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('tingkat')
+                Tables\Columns\TextColumn::make('tahun_ajaran')
+                    ->searchable(),
+                Tables\Columns\ToggleColumn::make('status'),
+                Tables\Columns\TextColumn::make('tingkat_id')
+                    ->label('Tingkat')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('jurusan.nama')
+                    ->description(fn(Rombel $record)=>"Kode jurusan:".' ' .$record->jurusan->id)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('divisi')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('keterangan')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -101,7 +97,7 @@ class RombelResource extends Resource
     public static function getRelations(): array
     {
         return [
-            SiswasRelationManager::class,
+            //
         ];
     }
 

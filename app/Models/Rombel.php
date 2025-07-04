@@ -15,19 +15,16 @@ class Rombel extends Model
      use HasFactory;
 
     protected $fillable = [
-        'tingkat',
+        'name',
+        'tahun_ajaran',
+        'tingkat_id',
         'jurusan_id',
-        'divisi',
+        'status',
         'keterangan',
     ];
 
     public function jurusan(): BelongsTo
     {
         return $this->belongsTo(Jurusan::class);
-    }
-
-    public function siswas(): BelongsToMany
-    {
-        return $this->belongsToMany(Siswa::class, 'rombel_siswas');
     }
 }

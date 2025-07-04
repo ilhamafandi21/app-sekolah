@@ -18,12 +18,12 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(2)->create();
         // Siswa::factory(25)->create();
-        // Jurusan::factory(3)->create();
+        Jurusan::factory(3)->create();
         Subject::factory(15)->create();
 
-        // User::factory()->create([
-        //     'name' => 'Admin',
-        //     'email' => 'admin@admin.com',
-        // ]);
+        User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@admin.com',
+        ]);
     }
 }

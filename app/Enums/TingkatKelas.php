@@ -4,9 +4,9 @@ namespace App\Enums;
 
 enum TingkatKelas: string
 {
-    case X = 'sepuluh';
-    case XI = 'sebelas';
-    case XII = 'duabelas';
+    case X = '10';
+    case XI = '11';
+    case XII = '12';
 
     public function label(): string
     {

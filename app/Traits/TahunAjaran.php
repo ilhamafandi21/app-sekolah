@@ -2,11 +2,11 @@
 
 namespace App\Traits;
 
-class Tahun
+class TahunAjaran
 {
     public static function tahun_ajaran(): array
     {
-        $tahunMulai = 2020;
+        $tahunMulai = 2023;
         $tahunSekarang = now()->year;
         $tahunMax = $tahunSekarang + 1; // Bisa disesuaikan jika perlu proyeksi ke depan
 

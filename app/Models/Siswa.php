@@ -43,7 +43,6 @@ class Siswa extends Model implements HasMedia
         'asal_sekolah',
         'status_pendaftaran',
         'status_siswa',
-        'waktu_pendaftaran',
         'waktu_siswa_aktif',
         'password',
         'role',
@@ -80,5 +79,10 @@ class Siswa extends Model implements HasMedia
     public function rombels(): BelongsToMany
     {
         return $this->belongsToMany(Rombel::class, 'rombel_siswas');
+    }
+
+    public function tahuns(): BelongsToMany
+    {
+        return $this->belongsToMany(TahunAjaran::class, 'siswa_tahuns');
     }
 }

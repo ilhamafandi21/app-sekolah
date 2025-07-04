@@ -25,7 +25,6 @@ return new class extends Migration
             $table->string('asal_sekolah')->nullable();
             $table->string('status_pendaftaran')->nullable();
             $table->string('status_siswa')->nullable();
-            $table->string('waktu_pendaftaran')->nullable();
             $table->string('waktu_siswa_aktif')->nullable();
             $table->string('password');
             $table->string('role')->nullable();

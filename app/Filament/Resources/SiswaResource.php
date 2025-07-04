@@ -32,6 +32,9 @@ use App\Filament\Resources\SiswaResource\Pages;
 use Filament\Infolists\Components\RepeatableEntry;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\SiswaResource\RelationManagers;
+use App\Models\TahunAjaran as ModelsTahunAjaran;
+use App\Traits\Tahun;
+use App\Models\TahunAjaran;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
@@ -45,167 +48,165 @@ class SiswaResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
+       return $form
+    ->schema([
+        Forms\Components\Fieldset::make('Data Diri')
             ->schema([
-                Forms\Components\Wizard::make([
-                    Forms\Components\Wizard\Step::make('Data Diri')
-                        ->schema([
-                            Forms\Components\TextInput::make('nama')
-                                ->label('Nama Lengkap')
-                                ->required(),
-                            Forms\Components\TextInput::make('tempat_lahir')
-                                ->label('Kota Lahir')
-                                ->required(),
-                            Forms\Components\DatePicker::make('ttl')
-                                ->label('Tanggal Lahir')
-                                ->reactive()
-                                ->afterStateUpdated(function ($state, callable $set) {
-                                    if ($state) {
-                                        try {
-                                            $set('password', Carbon::parse($state)->format('Ymd'));
-                                        } catch (\Exception $e) {
-                                            $set('password', null);
-                                        }
-                                    }
-                                })
-                                ->required(),
-                            Forms\Components\Select::make('jenis_kelamin')
-                                ->options(JenisKelamin::options())
-                                ->required(),
-                            Forms\Components\Textarea::make('alamat')
-                                ->required(),
-                            Forms\Components\TextInput::make('email')
-                                ->email()
-                                ->required(),
-                            Forms\Components\Select::make('agama')
-                                ->options(Agama::options()),
+                Forms\Components\TextInput::make('nama')
+                    ->label('Nama Lengkap')
+                    ->required(),
+                Forms\Components\TextInput::make('tempat_lahir')
+                    ->label('Kota Lahir')
+                    ->required(),
+                Forms\Components\DatePicker::make('ttl')
+                    ->label('Tanggal Lahir')
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        if ($state) {
+                            try {
+                                $set('password', Carbon::parse($state)->format('Ymd'));
+                            } catch (\Exception $e) {
+                                $set('password', null);
+                            }
+                        }
+                    })
+                    ->required(),
+                Forms\Components\Select::make('jenis_kelamin')
+                    ->options(JenisKelamin::options())
+                    ->required(),
+                Forms\Components\Textarea::make('alamat')
+                    ->required(),
+                Forms\Components\TextInput::make('email')
+                    ->email()
+                    ->required(),
+                Forms\Components\Select::make('agama')
+                    ->options(Agama::options()),
 
-                            Forms\Components\TextInput::make('nis')
-                                ->default(function () {
-                                    return (new class {
-                                        use GeneratesNis;
-                                    })->generateNis();
-                                })
-                                ->readOnly()
-                                ->reactive()
-                                ->required(),
-                
-                            Forms\Components\TextInput::make('nisn')->required(),
-                            Forms\Components\TextInput::make('asal_sekolah')->required(),
-                        ])
-                        ->columns(2),
-                
-                    Forms\Components\Wizard\Step::make('Orang Tua & Pendaftaran')
-                        ->schema([
-                            Fieldset::make('Orang Tua')
-                                ->relationship('ortus')
-                                ->schema([
-                                    Forms\Components\TextInput::make('nama_ibu')->required(),
-                                    Forms\Components\TextInput::make('nama_ayah')
-                                        ->label('Nama Ayah')
-                                        ->required(),
-                                    Forms\Components\TextInput::make('pekerjaan_ibu')
-                                        ->label('Pekerjaan Ibu')
-                                        ->required(),
-                                    Forms\Components\TextInput::make('pekerjaan_ayah')
-                                        ->label('Pekerjaan Ayah')
-                                        ->required(),
-                                    Forms\Components\Select::make('pend_terakhir_ibu')
-                                        ->label('Pendidikan Terakhir Ibu')
-                                        ->options(PendTerakhir::options())
-                                        ->default(PendTerakhir::SD)
-                                        ->required(),
-                                    Forms\Components\Select::make('pend_terakhir_ayah')
-                                        ->label('Pendidikan Terakhir Ayah')
-                                        ->options(PendTerakhir::options())
-                                        ->default(PendTerakhir::SD)
-                                        ->required(),
-                                    Forms\Components\TextInput::make('phone')
-                                        ->label('No Telepon Ayah/Ibu')
-                                        ->required(),
-                                    Forms\Components\Textarea::make('alamat')
-                                        ->label('Alamat')
-                                         ->default(fn(Get $get)=>$get('nis'))
-                                        ->required(),
-                            ])
-                        ->columns(2),
-                        ]),
-                           
-                
-                    Forms\Components\Wizard\Step::make('Dokumen & Akun')
-                        ->schema([
-                            Forms\Components\Repeater::make('documents')
-                                ->label('Dokumen Tambahan')
-                                ->relationship('documents')
-                                ->schema([
-                                    Forms\Components\TextInput::make('name')
-                                        ->label('Nama Dokumen')
-                                        ->required(),
-                                    Forms\Components\FileUpload::make('image')
-                                        ->label('File')
-                                        ->directory('dokumen-siswa')
-                                        ->maxSize(10240),
-                                ])
-                                ->nullable()
-                                ->addActionLabel('Tambah Dokumen')
-                                ->collapsible()
-                                ->grid(1)
-                                ->columnSpan('full')
-                                ->default([]),
+                Forms\Components\TextInput::make('nis')
+                    ->default(function () {
+                        return (new class {
+                            use GeneratesNis;
+                        })->generateNis();
+                    })
+                    ->readOnly()
+                    ->reactive()
+                    ->required(),
 
-                             Forms\Components\Select::make('status_pendaftaran')
-                                ->options(StatusPendaftaran::options())
-                                ->default(StatusPendaftaran::PENDING)
-                                ->reactive()
-                                ->required(),
-                
-                            Forms\Components\Select::make('status_siswa')
-                                ->options(function (callable $get, callable $set) {
-                                    $statusPendaftaran = $get('status_pendaftaran');
-                
-                                    if ($statusPendaftaran === StatusPendaftaran::PENDING) {
-                                        $set('status_siswa', StatusSiswa::NONAKTIF);
-                                    } elseif ($statusPendaftaran === StatusPendaftaran::APPROVED) {
-                                        $set('status_siswa', StatusSiswa::AKTIF);
-                                    } elseif ($statusPendaftaran === StatusPendaftaran::REJECTED) {
-                                        $set('status_siswa', StatusSiswa::NONAKTIF);
-                                    }
-                
-                                    return StatusSiswa::options();
-                                })
-                                ->default(StatusSiswa::NONAKTIF)
-                                ->required(),
-                
-                            Forms\Components\DatePicker::make('waktu_pendaftaran')
-                                ->label('Tanggal Pendaftaran')
-                                ->default(now())
-                                ->required(),
-                
-                            Forms\Components\DatePicker::make('waktu_siswa_aktif')
-                                ->default(null),
+                Forms\Components\TextInput::make('nisn')->required(),
+                Forms\Components\TextInput::make('asal_sekolah')->required(),
+            ])
+            ->columns(2),
 
-                            Forms\Components\TextInput::make('password')
-                                ->required()
-                                ->readOnly()
-                                ->dehydrated()
-                                ->dehydrateStateUsing(fn ($state) => Hash::make($state)),
-                
-                            Forms\Components\TextInput::make('role')
-                                ->default('siswa')
-                                ->readOnly()
-                                ->required()
-                                ->dehydrated(),
-                
-                            Forms\Components\TextInput::make('user_id')
-                                ->default(Filament::auth()->user()->id)
-                                ->readOnly()
-                                ->required()
-                                ->dehydrated(),
-                        ])
-                        ->columns(2),
-                ])
+        Forms\Components\Fieldset::make('Orang Tua')
+            ->relationship('ortus')
+            ->schema([
+                Forms\Components\TextInput::make('nama_ibu')->required(),
+                Forms\Components\TextInput::make('nama_ayah')
+                    ->label('Nama Ayah')
+                    ->required(),
+                Forms\Components\TextInput::make('pekerjaan_ibu')
+                    ->label('Pekerjaan Ibu')
+                    ->required(),
+                Forms\Components\TextInput::make('pekerjaan_ayah')
+                    ->label('Pekerjaan Ayah')
+                    ->required(),
+                Forms\Components\Select::make('pend_terakhir_ibu')
+                    ->label('Pendidikan Terakhir Ibu')
+                    ->options(PendTerakhir::options())
+                    ->default(PendTerakhir::SD)
+                    ->required(),
+                Forms\Components\Select::make('pend_terakhir_ayah')
+                    ->label('Pendidikan Terakhir Ayah')
+                    ->options(PendTerakhir::options())
+                    ->default(PendTerakhir::SD)
+                    ->required(),
+                Forms\Components\TextInput::make('phone')
+                    ->label('No Telepon Ayah/Ibu')
+                    ->required(),
+                Forms\Components\Textarea::make('alamat')
+                    ->label('Alamat')
+                    ->default(fn (Get $get) => $get('nis'))
+                    ->required(),
+            ])
+            ->columns(2),
+
+        Forms\Components\Fieldset::make('Dokumen Tambahan')
+            ->schema([
+                Forms\Components\Repeater::make('documents')
+                    ->label('Dokumen Tambahan')
+                    ->relationship('documents')
+                    ->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->label('Nama Dokumen')
+                            ->required(),
+                        Forms\Components\FileUpload::make('image')
+                            ->label('File')
+                            ->directory('dokumen-siswa')
+                            ->maxSize(10240),
+                    ])
+                    ->nullable()
+                    ->addActionLabel('Tambah Dokumen')
+                    ->collapsible()
+                    ->grid(1)
                     ->columnSpan('full')
-            ]);
+                    ->default([]),
+            ]),
+
+        Forms\Components\Fieldset::make('Status & Akun')
+            ->schema([
+                Forms\Components\Select::make('status_pendaftaran')
+                    ->options(StatusPendaftaran::options())
+                    ->default(StatusPendaftaran::PENDING)
+                    ->reactive()
+                    ->required(),
+
+                Forms\Components\Select::make('status_siswa')
+                    ->options(function (callable $get, callable $set) {
+                        $statusPendaftaran = $get('status_pendaftaran');
+
+                        if ($statusPendaftaran === StatusPendaftaran::PENDING) {
+                            $set('status_siswa', StatusSiswa::NONAKTIF);
+                        } elseif ($statusPendaftaran === StatusPendaftaran::APPROVED) {
+                            $set('status_siswa', StatusSiswa::AKTIF);
+                        } elseif ($statusPendaftaran === StatusPendaftaran::REJECTED) {
+                            $set('status_siswa', StatusSiswa::NONAKTIF);
+                        }
+
+                        return StatusSiswa::options();
+                    })
+                    ->default(StatusSiswa::NONAKTIF)
+                    ->required(),
+
+                Forms\Components\Select::make('tahun_ajaran')
+                // Forms\Components\CheckboxList::make('subjects')-> hapus multiple dan preload gunakan CheckboxList 
+                    ->label('Siswa')
+                    ->multiple()
+                    ->relationship('tahuns', 'tahun') // Tetap gunakan ini agar pivot auto disimpan
+                    ->options(TahunAjaran::all()->pluck('tahun', 'id')),
+                Forms\Components\DatePicker::make('waktu_siswa_aktif')
+                    ->default(null),
+
+                Forms\Components\TextInput::make('password')
+                    ->required()
+                    ->readOnly()
+                    ->dehydrated()
+                    ->dehydrateStateUsing(fn ($state) => Hash::make($state)),
+
+                Forms\Components\TextInput::make('role')
+                    ->default('siswa')
+                    ->readOnly()
+                    ->required()
+                    ->dehydrated(),
+
+                Forms\Components\TextInput::make('user_id')
+                    ->default(Filament::auth()->user()->id)
+                    ->readOnly()
+                    ->required()
+                    ->dehydrated(),
+            ])
+            ->columns(2),
+    ]);
+
     }
 
     public static function table(Table $table): Table
@@ -226,7 +227,8 @@ class SiswaResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status_siswa')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('waktu_pendaftaran')
+                Tables\Columns\TextColumn::make('tahuns.tahun')
+                    ->label('Tahun Ajaran')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('waktu_siswa_aktif')
                     ->searchable(),
@@ -306,7 +308,12 @@ class SiswaResource extends Resource
                         TextEntry::make('jenis_kelamin'),
                         TextEntry::make('alamat'),
                         TextEntry::make('email'),
-                        TextEntry::make('agama'),
+                        TextEntry::make('rombels.tingkat')
+                            ->label('Tingkat Kelas'),
+                        TextEntry::make('rombels.jurusan.nama')
+                            ->label('Jurusan'),
+                        TextEntry::make('rombels.divisi')
+                            ->label('Divisi'),
                     ]),
 
                 Section::make('Data Orang Tua')
@@ -332,7 +339,8 @@ class SiswaResource extends Resource
                     ->icon('heroicon-o-calendar-days') // tanggal
                     ->columns(2)
                     ->schema([
-                        TextEntry::make('waktu_pendaftaran')->dateTime('d M Y H:i'),
+                        TextEntry::make('tahuns.tahun')
+                            ->label('Tahun Ajaran'),
                         TextEntry::make('waktu_siswa_aktif')->dateTime('d M Y H:i'),
                     ]),
      

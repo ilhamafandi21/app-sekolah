@@ -66,7 +66,8 @@ class TeacherResource extends Resource
                 Forms\Components\TextInput::make('password')
                     ->required()
                     ->dehydrated()
-                    ->dehydrateStateUsing(fn ($state) => Hash::make($state)),
+                    ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                    ->visible(fn ($livewire) => $livewire instanceof \Filament\Resources\Pages\CreateRecord),
             ]);
     }
 
@@ -126,6 +127,11 @@ class TeacherResource extends Resource
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() < 10 ? 'success' : 'primary';
     }
 
     public static function getPages(): array

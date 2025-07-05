@@ -106,6 +106,16 @@ class RombelResource extends Resource
             ]);
     }
 
+     public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() < 10 ? 'success' : 'primary';
+    }
+
     public static function getRelations(): array
     {
         return [

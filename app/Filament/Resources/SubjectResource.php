@@ -2,16 +2,17 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\SubjectResource\Pages;
-use App\Filament\Resources\SubjectResource\RelationManagers;
-use App\Models\Subject;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Subject;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\SubjectResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\SubjectResource\RelationManagers;
+use App\Traits\GenerateSubjectsKode;
 
 class SubjectResource extends Resource
 {
@@ -23,6 +24,8 @@ class SubjectResource extends Resource
     
     protected static ?string $navigationGroup = 'Jurusan/Kelas/Mapel';
 
+    use GenerateSubjectsKode;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -31,9 +34,15 @@ class SubjectResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required(),
                 Forms\Components\TextInput::make('kode')
-                    ->hidden()
-                    ->dehydrated(false),
+                    ->unique(table: Subject::class, column: 'kode', ignoreRecord: true)
+                    ->readOnly()
+                    ->default(GenerateSubjectsKode::kode_subject())
+                    ->validationMessages([
+                        'unique' => 'Kode sudah maksimal, tidak bisa tambah baru lagi.',
+                        'required' => 'Kode wajib diisi.',
+                    ]),
                 Forms\Components\Textarea::make('deskripsi')
+                    ->default('-')
                     ->columnSpanFull(),
             ]);
     }
@@ -41,7 +50,7 @@ class SubjectResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-         ->defaultSort('created_at', 'desc')
+         ->defaultSort('kode', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('kode')
                     ->searchable(),
@@ -65,14 +74,19 @@ class SubjectResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+               //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ForceDeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
                 ]),
             ]);
     }

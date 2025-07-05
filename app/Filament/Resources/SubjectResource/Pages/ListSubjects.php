@@ -2,9 +2,12 @@
 
 namespace App\Filament\Resources\SubjectResource\Pages;
 
-use App\Filament\Resources\SubjectResource;
 use Filament\Actions;
+use App\Models\Subject;
+use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\SubjectResource;
+use Illuminate\Contracts\Database\Query\Builder;
 
 class ListSubjects extends ListRecords
 {
@@ -17,5 +20,19 @@ class ListSubjects extends ListRecords
         return [
             Actions\CreateAction::make(),
         ];
+    }
+
+    public function getTabs(): array
+    {
+        return [
+        'semua' => Tab::make('Semua')
+            ->badge(Subject::count())
+            ->badgeColor('success'),
+
+        'sampah' => Tab::make('Sampah')
+            ->badge(Subject::onlyTrashed()->count()) // perbaikan
+            ->badgeColor('secondary') // perbaikan typo
+            ->modifyQueryUsing(fn (Builder $query) => $query->onlyTrashed()),
+            ];
     }
 }

@@ -28,9 +28,9 @@ class Subject extends Model
         });
     }
     // Relasi opsional jika ada tabel jurusans
-    public function teachers(): HasMany
+    public function teachers(): BelongsToMany
     {
-        return $this->hasMany(TeachersSubjects::class);
+        return $this->belongsToMany(Teacher::class, 'teachers_subjects');
     }
 
     public function jurusans(): BelongsToMany

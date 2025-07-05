@@ -54,6 +54,8 @@ class AppsekolahPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->collapsibleNavigationGroups(true)
+            ->sidebarCollapsibleOnDesktop(false);
     }
 }

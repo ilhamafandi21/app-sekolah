@@ -23,6 +23,8 @@ class TeacherResource extends Resource
     protected static ?string $model = Teacher::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Guru';
+    protected static ?string $navigationLabel = 'Guru';
 
     public static function form(Form $form): Form
     {
@@ -31,6 +33,7 @@ class TeacherResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required(),
                 Forms\Components\DatePicker::make('tgl_lahir')
+                ->native(false)
                 ->reactive()
                 ->afterStateUpdated(function ($state, callable $set) {
                     if ($state) {
@@ -50,6 +53,12 @@ class TeacherResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('email')
                     ->email()
+                    ->required(),
+                Forms\Components\Select::make('subject')
+                    ->label('Mata Pelajaran')
+                    ->relationship('subjects','name')
+                    ->multiple()
+                    ->preload()
                     ->required(),
                 Forms\Components\FileUpload::make('foto')
                     ->image()
@@ -75,6 +84,7 @@ class TeacherResource extends Resource
                 Tables\Columns\TextColumn::make('kota_lahir')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('alamat')
+                    ->limit(10)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('pendidikan')
                     ->searchable(),
@@ -111,6 +121,11 @@ class TeacherResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
     }
 
     public static function getPages(): array

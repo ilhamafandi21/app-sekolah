@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Teacher extends Model
 {
@@ -22,8 +23,8 @@ class Teacher extends Model
         'password',
     ];
 
-    public function subjects(): HasMany
+    public function subjects(): BelongsToMany
     {
-        return $this->hasMany(TeachersSubjects::class);
+        return $this->belongsToMany(Subject::class, 'teachers_subjects');
     }
 }

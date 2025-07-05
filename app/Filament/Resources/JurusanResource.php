@@ -67,8 +67,11 @@ class JurusanResource extends Resource
             ->defaultSort("created_at", "desc")
             ->columns([
                 Tables\Columns\TextColumn::make("kode")->searchable(),
-                Tables\Columns\TextColumn::make("nama")->searchable(),
+                Tables\Columns\TextColumn::make("nama")
+                    ->label('Jurusan')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make("subjects.name")
+                    ->label('Mapel')
                     ->limit(10)
                     ->searchable(),
                 Tables\Columns\TextColumn::make("created_at")

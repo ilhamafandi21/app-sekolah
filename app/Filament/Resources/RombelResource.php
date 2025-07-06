@@ -26,6 +26,7 @@ class RombelResource extends Resource
     protected static ?string $navigationLabel = 'Rombel';
     
     protected static ?string $navigationGroup = 'Jurusan/Kelas/Mapel';
+    protected static ?int $navigationSort = 0;
 
     public static function getEloquentQuery(): Builder
     {

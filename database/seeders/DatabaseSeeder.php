@@ -21,16 +21,16 @@ class DatabaseSeeder extends Seeder
         // Jurusan::factory(3)->create();
         // Subject::factory(15)->create();
 
-        // User::factory()->create([
-        //     'name' => 'Admin',
-        //     'email' => 'admin@admin.com',
-        // ]);
-        for ($i = 101; $i <= 998; $i++) {
-        Subject::create([
-            'kode' => 'MP' . $i,
-            'name' => 'Subject ' . $i,
-            'deskripsi' => 'Deskripsi untuk subject ' . $i,
+        User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@admin.com',
         ]);
-    }
+        // for ($i = 101; $i <= 998; $i++) {
+        // Subject::create([
+        //     'kode' => 'MP' . $i,
+        //     'name' => 'Subject ' . $i,
+        //     'deskripsi' => 'Deskripsi untuk subject ' . $i,
+        // ]);
+        // }
     }
 }

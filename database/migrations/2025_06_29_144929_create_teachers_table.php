@@ -19,8 +19,7 @@ return new class extends Migration
             $table->string('alamat')->nullable();
             $table->string('pendidikan')->nullable();
             $table->string('foto')->nullable();
-            $table->string('email')->nullable();
-            $table->string('password')->nullable();
+            $table->foreignId('user_id')->constrained('users', 'id')->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

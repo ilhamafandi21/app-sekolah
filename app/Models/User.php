@@ -8,6 +8,7 @@ use App\Models\Pembayaran;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -49,20 +50,9 @@ class User extends Authenticatable
         ];
     }
 
-    public function siswa(): HasMany
+    public function teacher(): HasOne
     {
-        return $this->hasMany(Siswa::class);
+        return $this->hasOne(Teacher::class);
     }
-
-    public function pembayarans(): HasMany
-    {
-        return $this->hasMany(Pembayaran::class);
-    }
-
-    public function jenis_pembayaran(): HasMany
-    {
-        return $this->hasMany(JenisPembayaran::class);
-    }
-
 
 }

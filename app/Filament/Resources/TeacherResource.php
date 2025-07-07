@@ -31,20 +31,13 @@ class TeacherResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\TextInput::make('user_id')
+                    ->required()
+                    ->dehydrated(false),
                 Forms\Components\TextInput::make('name')
                     ->required(),
                 Forms\Components\DatePicker::make('tgl_lahir')
                 ->native(false)
-                ->reactive()
-                ->afterStateUpdated(function ($state, callable $set) {
-                    if ($state) {
-                        try {
-                            $set('password', Carbon::parse($state)->format('Ymd'));
-                        } catch (\Exception $e) {
-                            $set('password', null);
-                        }
-                    }
-                })
                 ->required(),
                 Forms\Components\TextInput::make('kota_lahir')
                     ->required(),
@@ -52,23 +45,19 @@ class TeacherResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('pendidikan')
                     ->required(),
-                Forms\Components\TextInput::make('email')
+                Forms\Components\TextInput::make('user.email')
                     ->email()
                     ->required(),
                 Forms\Components\Select::make('subject')
                     ->label('Mata Pelajaran')
                     ->relationship('subjects','name')
                     ->multiple()
-                    ->preload()
-                    ->required(),
+                    ->preload(),
                 Forms\Components\FileUpload::make('foto')
                     ->image()
                     ->directory('img_teacher'),
-                Forms\Components\TextInput::make('password')
+                Forms\Components\TextInput::make('user.password')
                     ->required()
-                    ->dehydrated()
-                    ->dehydrateStateUsing(fn ($state) => Hash::make($state))
-                    ->visible(fn ($livewire) => $livewire instanceof \Filament\Resources\Pages\CreateRecord),
             ]);
     }
 

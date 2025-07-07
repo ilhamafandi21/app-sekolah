@@ -57,7 +57,8 @@ class TeacherResource extends Resource
                     ->image()
                     ->directory('img_teacher'),
                 Forms\Components\TextInput::make('user.password')
-                    ->required()
+                    ->dehydrated(false)
+                    ->nullable()
             ]);
     }
 

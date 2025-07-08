@@ -29,40 +29,70 @@ class TeacherResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('user_id')
-                    ->required()
-                    ->dehydrated(false),
-                Forms\Components\TextInput::make('name')
-                    ->required(),
-                Forms\Components\DatePicker::make('tgl_lahir')
-                ->native(false)
-                ->required(),
-                Forms\Components\TextInput::make('kota_lahir')
-                    ->required(),
+        return $form->schema([
+            // Sembunyikan user_id dari pengguna
+            Forms\Components\TextInput::make('user_id')
+                ->required()
+                ->dehydrated(false)
+                ->hidden(),
+
+            Forms\Components\Fieldset::make('Data Pribadi')->schema([
+                Forms\Components\Grid::make(2)->schema([
+                    Forms\Components\TextInput::make('name')
+                        ->label('Nama Lengkap')
+                        ->required(),
+
+                    Forms\Components\DatePicker::make('tgl_lahir')
+                        ->label('Tanggal Lahir')
+                        ->native(false)
+                        ->required(),
+
+                    Forms\Components\TextInput::make('kota_lahir')
+                        ->label('Tempat Lahir')
+                        ->required(),
+
+                    Forms\Components\TextInput::make('pendidikan')
+                        ->label('Pendidikan Terakhir')
+                        ->required(),
+                ]),
+
                 Forms\Components\Textarea::make('alamat')
+                    ->label('Alamat')
                     ->required(),
-                Forms\Components\TextInput::make('pendidikan')
-                    ->required(),
-                Forms\Components\TextInput::make('user.email')
-                    ->email()
-                    ->visible(fn (string $operation) => $operation !== 'edit')
-                    ->required(),
-                Forms\Components\Select::make('subject')
-                    ->label('Mata Pelajaran')
-                    ->relationship('subjects','name')
-                    ->multiple()
-                    ->preload(),
+
                 Forms\Components\FileUpload::make('foto')
+                    ->label('Foto Profil')
                     ->image()
                     ->directory('img_teacher'),
-                Forms\Components\TextInput::make('user.password')
-                    ->visible(fn (string $operation) => $operation !== 'edit')
-                    ->dehydrated(false)
-                    ->nullable()
-            ]);
+            ]),
+
+            Forms\Components\Fieldset::make('Akun Pengguna')->schema([
+                Forms\Components\Grid::make(2)->schema([
+                    Forms\Components\TextInput::make('user.email')
+                        ->label('Email')
+                        ->email()
+                        ->required()
+                        ->visible(fn (string $operation) => $operation !== 'edit'),
+
+                    Forms\Components\TextInput::make('user.password')
+                        ->label('Password')
+                        ->password()
+                        ->dehydrated(false)
+                        ->nullable()
+                        ->visible(fn (string $operation) => $operation !== 'edit'),
+                ]),
+            ]),
+
+            Forms\Components\Fieldset::make('Pengajaran')->schema([
+                Forms\Components\Select::make('subject')
+                    ->label('Mata Pelajaran')
+                    ->relationship('subjects', 'name')
+                    ->multiple()
+                    ->preload(),
+            ]),
+        ]);
     }
+
 
     public static function table(Table $table): Table
     {

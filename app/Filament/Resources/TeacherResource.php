@@ -47,6 +47,7 @@ class TeacherResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('user.email')
                     ->email()
+                    ->visible(fn (string $operation) => $operation !== 'edit')
                     ->required(),
                 Forms\Components\Select::make('subject')
                     ->label('Mata Pelajaran')
@@ -57,6 +58,7 @@ class TeacherResource extends Resource
                     ->image()
                     ->directory('img_teacher'),
                 Forms\Components\TextInput::make('user.password')
+                    ->visible(fn (string $operation) => $operation !== 'edit')
                     ->dehydrated(false)
                     ->nullable()
             ]);

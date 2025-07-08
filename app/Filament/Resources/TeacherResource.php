@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\TeacherResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TeacherResource\RelationManagers;
+use App\Filament\Resources\TeacherResource\RelationManagers\UserRelationManager;
 use Filament\Facades\Filament;
 
 class TeacherResource extends Resource
@@ -71,17 +72,14 @@ class TeacherResource extends Resource
                     Forms\Components\TextInput::make('user.email')
                         ->label('Email')
                         ->email()
-                        ->required()
-                        ->visible(fn (string $operation) => $operation !== 'edit'),
-
+                        ->required(),
                     Forms\Components\TextInput::make('user.password')
                         ->label('Password')
                         ->password()
-                        ->dehydrated(false)
                         ->nullable()
-                        ->visible(fn (string $operation) => $operation !== 'edit'),
                 ]),
-            ]),
+            ])
+            ->visible(fn (string $operation) => $operation !== 'edit'),
 
             Forms\Components\Fieldset::make('Pengajaran')->schema([
                 Forms\Components\Select::make('subject')
@@ -100,7 +98,7 @@ class TeacherResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email')
+                Tables\Columns\TextColumn::make('user.email')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tgl_lahir')
                     ->date()
@@ -143,7 +141,7 @@ class TeacherResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            UserRelationManager::class,
         ];
     }
 

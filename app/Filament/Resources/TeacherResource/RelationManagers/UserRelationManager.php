@@ -15,6 +15,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 class UserRelationManager extends RelationManager
 {
     protected static string $relationship = 'User';
+    protected static ?string $title = 'Akun Pengguna';
 
     public function form(Form $form): Form
     {
@@ -32,6 +33,7 @@ class UserRelationManager extends RelationManager
             ->recordTitleAttribute('email')
             ->columns([
                 Tables\Columns\TextColumn::make('email'),
+                Tables\Columns\TextColumn::make('password'),
             ])
             ->filters([
                 //
@@ -40,31 +42,35 @@ class UserRelationManager extends RelationManager
                 // Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('resetPassword')
-                ->label('Reset Password')
-                ->icon('heroicon-o-key')
-                ->color('danger')
-                ->form([
-                    Forms\Components\TextInput::make('new_password')
-                        ->label('Password Baru')
-                        ->password()
-                        ->required()
-                        ->minLength(6),
-                ])
-                ->action(function (array $data, $record) {
-                    $record->update([
-                        'password' => Hash::make($data['new_password']),
-                    ]);
+                    ->label('Reset Password')
+                    ->icon('heroicon-o-key')
+                    ->color('danger')
+                    ->form([
+                        Forms\Components\TextInput::make('new_password')
+                            ->label('Password Baru')
+                            ->password()
+                            ->required()
+                            ->minLength(6),
+                    ])
+                    ->action(function (array $data, $record) {
+                        $record->update([
+                            'password' => Hash::make($data['new_password']),
+                        ]);
 
                     Notification::make()
                         ->title('Berhasil')
                         ->body('Password berhasil direset.')
                         ->success()
                         ->send();
-                })
-                ->requiresConfirmation(false),
+                    })
+                    ->requiresConfirmation(false),
+                ])
+                
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

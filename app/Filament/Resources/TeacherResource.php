@@ -74,8 +74,11 @@ class TeacherResource extends Resource
                         ->email()
                         ->required(),
                     Forms\Components\TextInput::make('user.password')
-                        ->label('Password')
                         ->password()
+                        ->label('Password')
+                        ->default('password')
+                        ->revealable()
+                        ->helperText('ini secara default "password" silahkan ganti jika butuh penyesuaian!')
                         ->nullable()
                 ]),
             ])

@@ -20,7 +20,7 @@ class CreateTeacher extends CreateRecord
             'name' => $data['name'],
             'email' => $data['user']['email'],
             'password' => Hash::make($data['user']['password']),
-        ]);
+        ])->assignRole('teacher'); // assogneRole ke Spatie
 
         // 2. Tambahkan user_id ke data guru
         $data['user_id'] = $user->id;

@@ -13,7 +13,7 @@ class TeacherPolicy
      */
     public function viewAny(User $user): bool
     {
-         return $user->hasRole('admin');
+          return $user->hasAnyRole(['admin', 'teacher']);
     }
 
     /**
@@ -21,7 +21,7 @@ class TeacherPolicy
      */
     public function view(User $user, Teacher $teacher): bool
     {
-         return $user->hasRole('admin');
+         return $user->hasRole('admin') || ($user->hasRole('teacher') && $user->id === $teacher->user_id);
     }
 
     /**

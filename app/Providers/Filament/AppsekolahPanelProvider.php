@@ -31,6 +31,7 @@ class AppsekolahPanelProvider extends PanelProvider
             ->path('appsekolah')
             ->login()
             ->registration()
+            ->profile(isSimple:false)
             ->colors([
                 'primary' => Color::Amber,
             ])

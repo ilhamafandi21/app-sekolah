@@ -8,6 +8,7 @@ use Filament\Tables;
 use App\Models\Teacher;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Facades\Filament;
 use Filament\Resources\Resource;
 use Illuminate\Support\Facades\Hash;
 use Filament\Forms\Components\TextInput;
@@ -16,8 +17,8 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\TeacherResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TeacherResource\RelationManagers;
+use App\Filament\Resources\TeacherResource\RelationManagers\RoleRelationManager;
 use App\Filament\Resources\TeacherResource\RelationManagers\UserRelationManager;
-use Filament\Facades\Filament;
 
 class TeacherResource extends Resource
 {

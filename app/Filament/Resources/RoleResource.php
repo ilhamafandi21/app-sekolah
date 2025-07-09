@@ -33,14 +33,6 @@ class RoleResource extends Resource
                     ->relationship('permissions', 'name')
                     ->preload()
                     ->label('Permissions'),
-                // Forms\Components\Select::make('guard_name')
-                //     ->label('Guard')
-                //     ->required()
-                //     ->options([
-                //         'web' => 'Web',
-                //         'api' => 'API',
-                //     ])
-                //     ->default('web'),
             ]);
     }
 

@@ -37,6 +37,15 @@ class RombelResource extends Resource
     {
         return $form
             ->schema([
+
+                 Forms\Components\Select::make('tahun_ajaran')
+                    ->label('Tahun Ajaran')
+                    ->options(TahunAjaran::tahun_ajaran())
+                    ->required(),
+                 Forms\Components\TextInput::make('name')
+                    ->label('Nama Rombel')
+                    ->helperText('Pastikan unik, Contoh: 2025/X/1 atau 2025/XI/IPA/1 ')
+                    ->required(),
                 Forms\Components\Select::make('tingkat_id')
                     ->label('Tingkat Kelas')
                     ->options(TingkatKelas::options())
@@ -54,7 +63,7 @@ class RombelResource extends Resource
                     ->multiple()
                     ->relationship('biayas', 'name')
                     ->preload(),
-                Forms\Components\TextInput::make('keterangan')
+                Forms\Components\Textarea::make('keterangan')
                     ->default('-'),
             ]);
     }

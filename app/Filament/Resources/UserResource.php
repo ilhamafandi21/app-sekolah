@@ -2,18 +2,19 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Forms;
+use App\Models\User;
+use Filament\Tables;
+use Filament\Forms\Form;
+use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Filters\TrashedFilter;
 use App\Filament\Resources\UserResource\Pages;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Filament\Resources\UserResource\RelationManagers\RoleRelationManager;
-use App\Models\User;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Filters\TrashedFilter;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\UserResource\RelationManagers\SiswaRelationManager;
 
 class UserResource extends Resource
 {
@@ -31,9 +32,11 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required(),
-                Forms\Components\TextInput::make('role'),
+                Forms\Components\TextInput::make('role')
+                    ->visible(fn (string $context) => $context === 'create'),
                 Forms\Components\DateTimePicker::make('email_verified_at'),
                 Forms\Components\TextInput::make('password')
+                    ->visible(fn (string $context) => $context === 'create')
                     ->password()
                     ->required(),
             ]);
@@ -83,6 +86,7 @@ class UserResource extends Resource
     {
         return [
             RoleRelationManager::class,
+            SiswaRelationManager::class,
         ];
     }
 

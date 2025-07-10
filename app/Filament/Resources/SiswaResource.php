@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Enums\Agama;
 use App\Enums\JenisKelamin;
+use App\Enums\StatusSiswa;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Siswa;
@@ -69,16 +70,20 @@ class SiswaResource extends Resource
                             ->nullable(),
                     ]),
 
-                Forms\Components\TextInput::make('status'),
+                Forms\Components\Select::make('status')
+                    ->options(StatusSiswa::options())
+                    ->default(StatusSiswa::AKTIF),
                 Forms\Components\TextInput::make('user_id')
                     ->dehydrated(false)
                     ->hidden()
                     ->numeric(),
 
                 Forms\Components\TextInput::make('user.email')
+                    ->visible(fn (string $context) => $context === 'create')
                     ->email()
                     ->required(),
                 Forms\Components\TextInput::make('user.password')
+                    ->visible(fn (string $context) => $context === 'create')
                     ->default('password')
                     ->revealable()
                     ->password(),
@@ -104,7 +109,7 @@ class SiswaResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tahun_lulus')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('documents')
+                Tables\Columns\ImageColumn::make('documents.files')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->searchable(),

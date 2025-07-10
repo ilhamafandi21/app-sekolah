@@ -21,7 +21,8 @@ class TeacherPolicy
      */
     public function view(User $user, Teacher $teacher): bool
     {
-         return $user->hasRole('admin') || ($user->hasRole('teacher') && $user->id === $teacher->user_id);
+         return $user->hasRole('admin') || 
+         ($user->hasRole('teacher') && $user->id === $teacher->user_id);
     }
 
     /**

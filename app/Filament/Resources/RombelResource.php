@@ -25,8 +25,8 @@ class RombelResource extends Resource
 
     protected static ?string $navigationLabel = 'Rombel';
     
-    protected static ?string $navigationGroup = 'Jurusan/Kelas/Mapel';
-    protected static ?int $navigationSort = 0;
+    protected static ?string $navigationGroup = 'Akademik';
+    protected static ?int $navigationSort = -6;
 
     public static function getEloquentQuery(): Builder
     {
@@ -37,14 +37,6 @@ class RombelResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('tahun_ajaran')
-                    ->label('Tahun Ajaran')
-                    ->options(TahunAjaran::tahun_ajaran())
-                    ->required(),
-                Forms\Components\TextInput::make('name')
-                    ->label('Nama Rombel')
-                    ->helperText('Harus unik dan sesuai jurusan "contoh: IPA-1, IPS-2"')
-                    ->required(),
                 Forms\Components\Select::make('tingkat_id')
                     ->label('Tingkat Kelas')
                     ->options(TingkatKelas::options())

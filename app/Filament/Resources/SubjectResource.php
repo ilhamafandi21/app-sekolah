@@ -22,8 +22,8 @@ class SubjectResource extends Resource
 
     protected static ?string $navigationLabel = 'Mata Pelajaran';
     
-    protected static ?string $navigationGroup = 'Jurusan/Kelas/Mapel';
-    protected static ?int $navigationSort = 2;
+    protected static ?string $navigationGroup = 'Akademik';
+    protected static ?int $navigationSort = -8;
 
     use GenerateSubjectsKode;
 

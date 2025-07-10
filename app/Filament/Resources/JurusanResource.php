@@ -25,8 +25,8 @@ class JurusanResource extends Resource
 
     protected static ?string $navigationLabel = "Jurusan";
 
-    protected static ?string $navigationGroup = "Jurusan/Kelas/Mapel";
-    protected static ?int $navigationSort = 1;
+    protected static ?string $navigationGroup = "Akademik";
+    protected static ?int $navigationSort = -7;
 
     use GenerateJurusanKode;
 

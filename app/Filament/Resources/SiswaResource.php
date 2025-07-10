@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\Agama;
+use App\Enums\JenisKelamin;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Siswa;
@@ -15,13 +17,16 @@ use Filament\Tables\Filters\TrashedFilter;
 use App\Filament\Resources\SiswaResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\SiswaResource\RelationManagers;
+use App\Traits\TahunLulus;
 
 class SiswaResource extends Resource
 {
     protected static ?string $model = Siswa::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'Jurusan/Kelas/Mapel';
+    protected static ?string $navigationGroup = 'Akademik';
+    protected static ?string $navigationLabel = 'Murid';
+    protected static ?int $navigationSort = -9;
 
     public static function form(Form $form): Form
     {
@@ -33,12 +38,22 @@ class SiswaResource extends Resource
                 Forms\Components\DatePicker::make('tanggal_lahir'),
                 Forms\Components\Textarea::make('alamat')
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('agama'),
-                Forms\Components\TextInput::make('jenis_kelamin'),
+                Forms\Components\Select::make('agama')
+                    ->options(Agama::options())
+                    ->default(Agama::ISLAM),
+                Forms\Components\Select::make('jenis_kelamin')
+                    ->options(JenisKelamin::options())
+                    ->default(JenisKelamin::LAKI_LAKI),
                 Forms\Components\TextInput::make('asal_sekolah'),
-                Forms\Components\TextInput::make('tahun_lulus'),
-                
-                
+                Forms\Components\Select::make('tahun_lulus')
+                    ->label('Tahun Lulus')
+                    ->options(
+                        TahunLulus::tahun_lulus()
+                    )
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+
                 Forms\Components\Repeater::make('documents')
                     ->addActionLabel('Tambah Dokumen')
                     ->relationship('documents')

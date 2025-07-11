@@ -2,22 +2,13 @@
 
 namespace App\Filament\Resources;
 
-use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Teacher;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Filament\Facades\Filament;
 use Filament\Resources\Resource;
-use Illuminate\Support\Facades\Hash;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DatePicker;
-use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\TeacherResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\TeacherResource\RelationManagers;
-use App\Filament\Resources\TeacherResource\RelationManagers\RoleRelationManager;
 use App\Filament\Resources\TeacherResource\RelationManagers\UserRelationManager;
 
 class TeacherResource extends Resource
@@ -29,6 +20,7 @@ class TeacherResource extends Resource
     protected static ?string $navigationLabel = 'Guru';
     protected static ?int $navigationSort = -10;
 
+  
     public static function form(Form $form): Form
     {
         return $form->schema([

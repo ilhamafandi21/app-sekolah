@@ -18,16 +18,7 @@ class Subject extends Model
         'name',
         'deskripsi',
     ];
-
-    protected static function booted(): void
-    {
-        static::creating(function ($subject) {
-            if (blank($subject->kode) && filled($subject->name)) {
-                $subject->kode = $subject->generateKodeFromName($subject->name);
-            }
-        });
-    }
-    // Relasi opsional jika ada tabel jurusans
+    
     public function teachers(): BelongsToMany
     {
         return $this->belongsToMany(Teacher::class, 'teachers_subjects');

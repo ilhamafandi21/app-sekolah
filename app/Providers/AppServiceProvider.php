@@ -13,5 +13,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Model::preventLazyLoading(! app()->isProduction());
+
+        if (!app()->isProduction()) {
+            Model::handleLazyLoadingViolationUsing(function ($model, $relation) {
+                logger()->warning("Lazy loading detected: {$relation} on " . get_class($model));
+            });
+        }
     }
 }

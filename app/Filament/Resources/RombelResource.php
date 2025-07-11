@@ -38,22 +38,31 @@ class RombelResource extends Resource
         return $form
             ->schema([
 
-                 Forms\Components\Select::make('tahun_ajaran')
+                Forms\Components\Select::make('tahun_ajaran_id')
+                    ->relationship('tahun_ajaran', 'thn_ajaran')
                     ->label('Tahun Ajaran')
-                    ->options(TahunAjaran::tahun_ajaran())
+                    ->reactive()
                     ->required(),
-                 Forms\Components\TextInput::make('name')
+                Forms\Components\TextInput::make('name')
                     ->label('Nama Rombel')
-                    ->helperText('Pastikan unik, Contoh: 2025/X/1 atau 2025/XI/IPA/1 ')
+                    ->unique('rombels', 'name')
+                    ->helperText('Pastikan unik, Contoh: 2025/X/1 atau 2025/XI/IPA/1')
+                    ->validationMessages([
+                        'unique' => ':Attribute Sudah Digunakan.',
+                    ])
                     ->required(),
                 Forms\Components\Select::make('tingkat_id')
                     ->label('Tingkat Kelas')
                     ->options(TingkatKelas::options())
+                    ->reactive()
                     ->required(),
                 Forms\Components\Select::make('jurusan_id')
                     ->label('Jurusan')
                     ->relationship('jurusan', 'nama')
+                    ->reactive()
                     ->required(),
+
+                    
                 Forms\Components\Select::make('status')
                     ->label('Active')
                     ->options(StatusRombel::options())
@@ -75,7 +84,7 @@ class RombelResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('tahun_ajaran')
+                Tables\Columns\TextColumn::make('tahun_ajaran.thn_ajaran')
                     ->searchable(),
                 Tables\Columns\ToggleColumn::make('status'),
                 Tables\Columns\TextColumn::make('tingkat_id')

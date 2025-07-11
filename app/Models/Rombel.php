@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Biaya;
+use App\Models\TahunAjaran;
 use App\Traits\GeneratesKodeFromName;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,7 +18,7 @@ class Rombel extends Model
 
     protected $fillable = [
         'name',
-        'tahun_ajaran',
+        'tahun_ajaran_id',
         'tingkat_id',
         'jurusan_id',
         'status',
@@ -32,5 +33,10 @@ class Rombel extends Model
     public function biayas(): BelongsToMany
     {
         return $this->belongsToMany(Biaya::class, 'rombel_biayas');
+    }
+
+    public function tahun_ajaran(): BelongsTo
+    {
+        return $this->belongsTo(TahunAjaran::class);
     }
 }

@@ -89,8 +89,12 @@ class RombelResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->badge()
+                    ->color(fn ($record) => $record->status ? 'success' : 'danger')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tahun_ajaran.thn_ajaran')
+                ->badge()
+                    ->color(fn ($record) => $record->status ? 'success' : 'danger')
                     ->searchable(),
                 Tables\Columns\ToggleColumn::make('status'),
                 Tables\Columns\TextColumn::make('tingkat_id')

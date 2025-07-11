@@ -45,7 +45,8 @@ class RombelResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('name')
                     ->label('Nama Rombel')
-                    ->unique('rombels', 'name')
+                    ->hidden(fn (string $context) => $context === 'create')
+                    ->unique('rombels', 'name', ignoreRecord: true,)
                     ->helperText('Pastikan unik, Contoh: 2025/X/1 atau 2025/XI/IPA/1')
                     ->validationMessages([
                         'unique' => ':Attribute Sudah Digunakan.',
@@ -62,7 +63,12 @@ class RombelResource extends Resource
                     ->reactive()
                     ->required(),
 
-                    
+                Forms\Components\TextInput::make('divisi')
+                    ->numeric()
+                    ->label('Divisi')
+                    ->reactive()
+                    ->required(),
+
                 Forms\Components\Select::make('status')
                     ->label('Active')
                     ->options(StatusRombel::options())
@@ -93,7 +99,10 @@ class RombelResource extends Resource
                 Tables\Columns\TextColumn::make('jurusan.nama')
                     ->description(fn(Rombel $record)=>"Kode jurusan:".' ' .$record->jurusan->kode)
                     ->sortable(),
+                Tables\Columns\TextColumn::make('divisi')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('keterangan')
+                    ->label('Ket')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

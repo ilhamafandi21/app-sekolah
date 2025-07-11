@@ -21,6 +21,7 @@ class Rombel extends Model
         'tahun_ajaran_id',
         'tingkat_id',
         'jurusan_id',
+        'divisi',
         'status',
         'keterangan',
     ];

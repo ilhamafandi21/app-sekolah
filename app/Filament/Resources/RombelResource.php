@@ -38,9 +38,9 @@ class RombelResource extends Resource
         return $form
             ->schema([
 
-                Forms\Components\Select::make('tahun_ajaran_id')
-                    ->relationship('tahun_ajaran', 'thn_ajaran')
-                    ->label('Tahun Ajaran')
+                Forms\Components\Select::make('semester_id')
+                    ->relationship('semester', 'name')
+                    ->label('Semester')
                     ->reactive()
                     ->required(),
                 Forms\Components\TextInput::make('name')

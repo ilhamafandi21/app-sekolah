@@ -18,7 +18,7 @@ class Rombel extends Model
 
     protected $fillable = [
         'name',
-        'tahun_ajaran_id',
+        'semester_id',
         'tingkat_id',
         'jurusan_id',
         'divisi',
@@ -36,8 +36,8 @@ class Rombel extends Model
         return $this->belongsToMany(Biaya::class, 'rombel_biayas');
     }
 
-    public function tahun_ajaran(): BelongsTo
+    public function semester(): BelongsTo
     {
-        return $this->belongsTo(TahunAjaran::class);
+        return $this->belongsTo(Semester::class);
     }
 }

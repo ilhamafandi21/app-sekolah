@@ -40,7 +40,7 @@ class UserFactory extends Factory
      * Indicate that the model's email address should be unverified.
      */
 
-     public function configure()
+    public function configure()
     {
         return $this->afterCreating(function (User $user) {
             $role = Role::firstOrCreate(['name' => 'admin']);

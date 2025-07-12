@@ -7,6 +7,7 @@ use App\Models\Siswa;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Jurusan;
 use App\Models\Subject;
+use App\Models\Teacher;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,11 +21,13 @@ class DatabaseSeeder extends Seeder
         // Siswa::factory(25)->create();
         Jurusan::factory(3)->create();
         // Subject::factory(15)->create();
+        Teacher::factory()->count(10)->create();
 
-        // User::factory()->create([
-        //     'name' => 'Admin',
-        //     'email' => 'admin@admin.com',
-        // ])->assignRole('admin');
+
+        User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@admin.com',
+        ])->assignRole('admin');
 
         
         for ($i = 1; $i <= 40; $i++) {

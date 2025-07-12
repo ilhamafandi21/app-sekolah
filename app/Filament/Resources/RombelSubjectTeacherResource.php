@@ -23,34 +23,16 @@ class RombelSubjectTeacherResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('rombel_id')
-                    ->label('Rombel')
-                    ->options(
-                        \App\Models\Rombel::get()
-                            ->pluck('name', 'id')
-                    )
-                    ->searchable()
-                    ->preload()
-                    ->required(),
-
-                Forms\Components\Select::make('rombels_subjects_id')
-                    ->label('Mata Pelajaran')
-                    ->relationship('rombels_subjects', 'id')
-                    
-                    ->searchable()
-                    ->preload()
-                    ->required(),
-
-                Forms\Components\Select::make('teacher_id')
-                    ->label('Guru Pengampu')
-                    ->options(
-                        \App\Models\Teacher::get()
-                            ->pluck('name', 'id')
-                    )
-                    ->searchable()
-                    ->required(),
+                Forms\Components\TextInput::make('rombel_id')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('rombels_subjects_id')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('teacher_id')
+                    ->required()
+                    ->numeric(),
                 Forms\Components\TextInput::make('keterangan')
-                    ->default('-')
                     ->required(),
             ]);
     }

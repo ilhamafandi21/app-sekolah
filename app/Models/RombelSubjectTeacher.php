@@ -20,16 +20,16 @@ class RombelSubjectTeacher extends Model
         'keterangan',
     ];
 
-    public function rombel(): BelongsTo
-    {
-        return $this->belongsTo(Rombel::class);
-    }
-    public function teacher(): BelongsTo
-    {
-        return $this->belongsTo(Teacher::class);
-    }
-    public function rombels_subjects(): BelongsTo
-    {
-        return $this->belongsTo(RombelsSubjects::class);
-    }
+    // public function rombel(): BelongsTo
+    // {
+    //     return $this->belongsTo(Rombel::class);
+    // }
+    // public function teacher(): BelongsTo
+    // {
+    //     return $this->belongsTo(Teacher::class);
+    // }
+    // public function rombels_subjects(): BelongsTo
+    // {
+    //     return $this->belongsTo(RombelsSubjects::class);
+    // }
 }

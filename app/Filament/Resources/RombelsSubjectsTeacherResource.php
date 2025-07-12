@@ -24,7 +24,10 @@ class RombelsSubjectsTeacherResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('rombels_subjects_id')
-                    ->relationship('rombels_subjects', 'id')
+                    ->options(
+                            \App\Models\RombelsSubjects::with('subject')->get()->pluck('subject.name', 'id')
+                        )
+                    ->preload()
                     ->required(),
                 Forms\Components\Select::make('teacher_id')
                     ->relationship('teacher', 'name')

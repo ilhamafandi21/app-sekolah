@@ -73,10 +73,15 @@ class RombelResource extends Resource
                     ->label('Active')
                     ->options(StatusRombel::options())
                     ->default(StatusRombel::NONAKTIF),
-                 Forms\Components\Select::make('rombel_biayas')
+                Forms\Components\Select::make('rombel_biayas')
                     ->label('Biaya')
                     ->multiple()
                     ->relationship('biayas', 'name')
+                    ->preload(),
+                Forms\Components\Select::make('rombels_subjects')
+                    ->label('Mata pelajaran')
+                    ->multiple()
+                    ->relationship('subjects', 'name')
                     ->preload(),
                 Forms\Components\Textarea::make('keterangan')
                     ->default('-'),

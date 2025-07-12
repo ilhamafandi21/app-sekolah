@@ -40,4 +40,9 @@ class Rombel extends Model
     {
         return $this->belongsTo(Semester::class);
     }
+
+    public function subjects(): BelongsToMany
+    {
+        return $this->belongsToMany(Subject::class, 'rombels_subjects');
+    }
 }

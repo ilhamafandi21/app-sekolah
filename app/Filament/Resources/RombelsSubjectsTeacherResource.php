@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\RombelSubjectTeacherResource\Pages;
-use App\Filament\Resources\RombelSubjectTeacherResource\RelationManagers;
-use App\Models\RombelSubjectTeacher;
+use App\Filament\Resources\RombelsSubjectsTeacherResource\Pages;
+use App\Filament\Resources\RombelsSubjectsTeacherResource\RelationManagers;
+use App\Models\RombelsSubjectsTeacher;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class RombelSubjectTeacherResource extends Resource
+class RombelsSubjectsTeacherResource extends Resource
 {
-    protected static ?string $model = RombelSubjectTeacher::class;
+    protected static ?string $model = RombelsSubjectsTeacher::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -23,17 +23,13 @@ class RombelSubjectTeacherResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('rombel_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('rombels_subjects_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('teacher_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('keterangan')
+                Forms\Components\Select::make('rombels_subjects_id')
+                    ->relationship('rombels_subjects', 'id')
                     ->required(),
+                Forms\Components\Select::make('teacher_id')
+                    ->relationship('teacher', 'name')
+                    ->required(),
+                Forms\Components\TextInput::make('keterangan'),
             ]);
     }
 
@@ -41,13 +37,10 @@ class RombelSubjectTeacherResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('rombel_id')
+                Tables\Columns\TextColumn::make('rombels_subjects.id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('rombels_subjects_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('teacher_id')
+                Tables\Columns\TextColumn::make('teacher.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('keterangan')
@@ -84,9 +77,9 @@ class RombelSubjectTeacherResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRombelSubjectTeachers::route('/'),
-            'create' => Pages\CreateRombelSubjectTeacher::route('/create'),
-            'edit' => Pages\EditRombelSubjectTeacher::route('/{record}/edit'),
+            'index' => Pages\ListRombelsSubjectsTeachers::route('/'),
+            'create' => Pages\CreateRombelsSubjectsTeacher::route('/create'),
+            'edit' => Pages\EditRombelsSubjectsTeacher::route('/{record}/edit'),
         ];
     }
 }

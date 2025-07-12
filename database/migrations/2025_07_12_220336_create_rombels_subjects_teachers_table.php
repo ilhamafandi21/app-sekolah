@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rombel_subject_teachers', function (Blueprint $table) {
+        Schema::create('rombels_subjects_teachers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('rombel_id')->constrained('rombels', 'id');
-            $table->foreignId('rombels_subjects_id')->constrained('RombelsSubjects', 'id');
-            $table->foreignId('teacher_id')->constrained('Teachers', 'id');
-            $table->string('keterangan');
+            $table->foreignId('rombels_subjects_id')->constrained('rombels_subjects', 'id');
+            $table->foreignId('teacher_id')->constrained('teachers', 'id');
+            $table->string('keterangan')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rombel_subject_teachers');
+        Schema::dropIfExists('rombels_subjects_teachers');
     }
 };

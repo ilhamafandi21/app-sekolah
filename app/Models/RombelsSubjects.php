@@ -7,12 +7,11 @@ use App\Models\RombelSubjectTeacher;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class RombelsSubjects extends Model
 {
     use HasFactory;
-
-    protected $table = 'rombels_subjects';
 
     protected $fillable = [
         'rombel_id',
@@ -35,9 +34,9 @@ class RombelsSubjects extends Model
     //     return $this->hasMany(Teacher::class);
     // }
 
-    public function rombelsSubjectTeachers(): HasMany
+    public function teachers(): BelongsToMany
     {
-        return $this->hasMany(RombelSubjectTeacher::class);
+        return $this->belongsToMany(Teacher::class, 'rombels_subjects_teachers');
     }
 
 }

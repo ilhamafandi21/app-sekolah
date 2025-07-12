@@ -28,8 +28,8 @@ class RombelSubjectTeacher extends Model
     // {
     //     return $this->belongsTo(Teacher::class);
     // }
-    // public function rombels_subjects(): BelongsTo
-    // {
-    //     return $this->belongsTo(RombelsSubjects::class);
-    // }
+    public function rombels_subjects(): BelongsTo
+    {
+        return $this->belongsTo(RombelsSubjects::class);
+    }
 }

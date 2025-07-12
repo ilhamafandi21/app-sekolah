@@ -92,11 +92,23 @@ class RombelResource extends Resource
                     ->badge()
                     ->color(fn ($record) => $record->status ? 'success' : 'danger')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('tahun_ajaran.thn_ajaran')
-                ->badge()
+                Tables\Columns\TextColumn::make('semester.name')
+                    ->description(fn ($record) => $record->semester?->tahun_ajaran?->thn_ajaran)
+                    ->badge()
                     ->color(fn ($record) => $record->status ? 'success' : 'danger')
                     ->searchable(),
                 Tables\Columns\ToggleColumn::make('status'),
+
+                Tables\Columns\TextColumn::make('info_rinci')
+                    ->label('Info Rombel')
+                    ->getStateUsing(fn(Rombel $record) => 
+                        $record->tingkat_id . ' ' . 
+                        $record->jurusan?->nama . ' ' .
+                        $record->divisi
+                    )
+                    ->searchable()
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('tingkat_id')
                     ->label('Tingkat')
                     ->searchable(),
@@ -105,6 +117,7 @@ class RombelResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('divisi')
                     ->searchable(),
+                
                 Tables\Columns\TextColumn::make('keterangan')
                     ->label('Ket')
                     ->searchable(),

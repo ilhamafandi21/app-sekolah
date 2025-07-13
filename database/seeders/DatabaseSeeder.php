@@ -8,6 +8,7 @@ use App\Models\Siswa;
 use App\Models\Jurusan;
 use App\Models\Subject;
 use App\Models\Teacher;
+use App\Models\Semester;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,6 +23,7 @@ class DatabaseSeeder extends Seeder
         Jurusan::factory(3)->create();
         // Subject::factory(15)->create();
         Teacher::factory()->count(10)->create();
+        Semester::factory()->count(4)->create();
 
 
         User::factory()->create([

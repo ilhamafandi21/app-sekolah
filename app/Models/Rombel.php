@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Biaya;
 use App\Models\TahunAjaran;
 use App\Traits\GeneratesKodeFromName;
+use App\Models\RombelsSubjectsTeacher;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -45,4 +46,5 @@ class Rombel extends Model
     {
         return $this->belongsToMany(Subject::class, 'rombels_subjects');
     }
+
 }

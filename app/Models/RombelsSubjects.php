@@ -29,10 +29,6 @@ class RombelsSubjects extends Model
         return $this->belongsTo(Subject::class);
     }
 
-    // public function teachers()
-    // {
-    //     return $this->hasMany(Teacher::class);
-    // }
 
     public function teachers(): BelongsToMany
     {

@@ -6,6 +6,7 @@ use App\Enums\StatusRombel;
 use App\Enums\TingkatKelas;
 use App\Filament\Resources\RombelResource\Pages;
 use App\Filament\Resources\RombelResource\RelationManagers;
+use App\Filament\Resources\RombelResource\RelationManagers\RombelsSubjectsRelationManager;
 use App\Models\Jurusan;
 use App\Models\Rombel;
 use App\Traits\TahunAjaran;
@@ -161,7 +162,7 @@ class RombelResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RombelsSubjectsRelationManager::class,
         ];
     }
 

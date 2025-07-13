@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->boolean('status');
             $table->string('keterangan')->nullable();
-            $table->foreignId('tahun_ajaran_id')->constrained('tahun_ajarans', 'id');
+            $table->foreignId('tahun_ajaran_id')->constrained('tahun_ajarans', 'id')->cascadeOnDelete();
             $table->timestamps();
         });
     }

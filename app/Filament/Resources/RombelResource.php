@@ -42,8 +42,13 @@ class RombelResource extends Resource
                 Forms\Components\Select::make('semester_id')
                     ->relationship('semester', 'name')
                     ->label('Semester')
+                    ->getOptionLabelFromRecordUsing(function ($record) {
+                        // Anggap record adalah model Semester
+                        return $record->name . ' - ' . optional($record->tahun_ajaran)->thn_ajaran;
+                    })
                     ->reactive()
                     ->required(),
+
                 Forms\Components\TextInput::make('name')
                     ->label('Nama Rombel')
                     ->hidden(fn (string $context) => $context === 'create')

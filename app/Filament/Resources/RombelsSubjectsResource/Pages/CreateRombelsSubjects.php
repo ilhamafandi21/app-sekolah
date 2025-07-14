@@ -32,8 +32,6 @@ class CreateRombelsSubjects extends CreateRecord
 
         $this->record = $this->handleRecordCreation($data);
 
-        $this->afterCreate();
-
         Notification::make()
             ->title('Berhasil')
             ->body('Data berhasil ditambahkan.')

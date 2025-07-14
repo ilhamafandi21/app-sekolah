@@ -29,6 +29,9 @@ class RombelsSubjectsResource extends Resource
                 Forms\Components\Select::make('subject_id')
                     ->relationship('subject', 'name')
                     ->required(),
+                Forms\Components\Select::make('teacher_id')
+                    ->relationship('teachers', 'name')
+                    ->required(),
                 Forms\Components\TextInput::make('keterangan')
                     ->default('-')
                     ->required(),
@@ -43,6 +46,9 @@ class RombelsSubjectsResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('subject.name')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('teachers.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('keterangan')

@@ -16,6 +16,12 @@ class RombelsSubjectsTeacherRelationManager extends RelationManager
 {
     protected static string $relationship = 'RombelsSubjectsTeachers';
 
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Pengampu Mapel'; // 🔁 Label untuk banyak record
+    }
+
     public function form(Form $form): Form
     {
         return $form

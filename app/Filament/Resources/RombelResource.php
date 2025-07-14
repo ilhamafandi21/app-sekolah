@@ -92,7 +92,7 @@ class RombelResource extends Resource
                     ])
                     ->columns(3),
 
-                Forms\Components\Section::make('Biaya & Pengampu')
+                Forms\Components\Section::make('Biaya')
                     ->schema([
                         Forms\Components\Select::make('rombel_biayas')
                             ->label('Biaya Terkait')
@@ -100,38 +100,6 @@ class RombelResource extends Resource
                             ->relationship('biayas', 'name')
                             ->preload()
                             ->columnSpanFull(),
-
-                        Forms\Components\Repeater::make('rombelsSubjectsTeachers')
-                            ->label('Mata Pelajaran dan Guru Pengampu')
-                            ->addActionLabel('Tambah Mapel')
-                            ->relationship('rombelsSubjectsTeachers')
-                            ->collapsible()
-                            ->grid(1)
-                            ->schema([
-                                Forms\Components\Section::make([
-                                    Forms\Components\Grid::make(2)
-                                        ->schema([
-                                            Forms\Components\Select::make('subject_id')
-                                                ->label('Mata Pelajaran')
-                                                ->options(Subject::pluck('name', 'id'))
-                                                ->searchable()
-                                                ->required(),
-
-                                            Forms\Components\Select::make('teacher_id')
-                                                ->label('Guru Pengampu')
-                                                ->options(Teacher::pluck('name', 'id'))
-                                                ->searchable()
-                                                ->required(),
-                                        ]),
-
-                                    Forms\Components\Textarea::make('keterangan')
-                                        ->label('Keterangan')
-                                        ->default('-')
-                                        ->nullable(),
-                            ]),
-                        ])
-                        ->defaultItems(1)
-                        ->columnSpanFull(),
                         ])
                         ->columns(1),
             ]);

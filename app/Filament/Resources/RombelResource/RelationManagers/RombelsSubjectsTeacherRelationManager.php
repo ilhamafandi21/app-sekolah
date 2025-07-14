@@ -59,7 +59,8 @@ class RombelsSubjectsTeacherRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->label('Tambah Baru'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

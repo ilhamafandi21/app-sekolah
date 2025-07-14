@@ -2,8 +2,9 @@
 
 namespace App\Filament\Resources\RombelResource\Pages;
 
-use App\Filament\Resources\RombelResource;
 use Filament\Actions;
+use App\Models\RombelsSubjectsTeacher;
+use App\Filament\Resources\RombelResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateRombel extends CreateRecord
@@ -12,6 +13,7 @@ class CreateRombel extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
+        // dd($data);
         $semestertahun = \App\Models\Semester::with('tahun_ajaran')->find($data['semester_id']);
         $tahun = $semestertahun?->tahun_ajaran?->thn_ajaran;
         $semester =  $data['semester_id'];
@@ -30,4 +32,20 @@ class CreateRombel extends CreateRecord
         // dd($data);
         return $data;
     }
+
+    // protected function afterCreate(): void
+    // {
+    //     $data = $this->form->getState();
+
+    //     if (!empty($data['mapels'])) {
+    //         foreach ($data['mapels'] as $mapel) {
+    //             \App\Models\RombelsSubjectsTeacher::create([
+    //                 'rombel_id' => $this->record->id,
+    //                 'subject_id' => $mapel['subject_id'],
+    //                 'teacher_id' => $mapel['teacher_id'],
+    //             ]);
+    //         }
+    //     }
+    // }
+
 }

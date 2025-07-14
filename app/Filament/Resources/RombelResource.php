@@ -2,21 +2,23 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Forms;
+use Filament\Tables;
+use App\Models\Rombel;
+use App\Models\Jurusan;
+use App\Models\Subject;
+use App\Models\Teacher;
+use Filament\Forms\Form;
+use Filament\Tables\Table;
 use App\Enums\StatusRombel;
 use App\Enums\TingkatKelas;
+use App\Traits\TahunAjaran;
+use Filament\Resources\Resource;
+use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\RombelResource\Pages;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\RombelResource\RelationManagers;
 use App\Filament\Resources\RombelResource\RelationManagers\RombelsSubjectsRelationManager;
-use App\Models\Jurusan;
-use App\Models\Rombel;
-use App\Traits\TahunAjaran;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class RombelResource extends Resource
 {
@@ -38,60 +40,100 @@ class RombelResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Section::make('Informasi Umum')
+                    ->schema([
+                        Forms\Components\Grid::make(3)
+                            ->schema([
+                                Forms\Components\Select::make('semester_id')
+                                    ->label('Semester')
+                                    ->relationship('semester', 'name')
+                                    ->getOptionLabelFromRecordUsing(fn ($record) =>
+                                        $record->name . ' - ' . optional($record->tahun_ajaran)->thn_ajaran
+                                    )
+                                    ->reactive()
+                                    ->required(),
 
-                Forms\Components\Select::make('semester_id')
-                    ->relationship('semester', 'name')
-                    ->label('Semester')
-                    ->getOptionLabelFromRecordUsing(function ($record) {
-                        // Anggap record adalah model Semester
-                        return $record->name . ' - ' . optional($record->tahun_ajaran)->thn_ajaran;
-                    })
-                    ->reactive()
-                    ->required(),
+                                Forms\Components\Select::make('tingkat_id')
+                                    ->label('Tingkat Kelas')
+                                    ->options(TingkatKelas::options())
+                                    ->reactive()
+                                    ->required(),
 
-                Forms\Components\TextInput::make('name')
-                    ->label('Nama Rombel')
-                    ->hidden(fn (string $context) => $context === 'create')
-                    ->unique('rombels', 'name', ignoreRecord: true,)
-                    ->helperText('Pastikan unik, Contoh: 2025/X/1 atau 2025/XI/IPA/1')
-                    ->validationMessages([
-                        'unique' => ':Attribute Sudah Digunakan.',
+                                Forms\Components\Select::make('jurusan_id')
+                                    ->label('Jurusan')
+                                    ->relationship('jurusan', 'nama')
+                                    ->reactive()
+                                    ->required(),
+
+                                Forms\Components\TextInput::make('divisi')
+                                    ->label('Divisi')
+                                    ->numeric()
+                                    ->required(),
+
+                                Forms\Components\Select::make('status')
+                                    ->label('Status')
+                                    ->options(StatusRombel::options())
+                                    ->default(StatusRombel::NONAKTIF)
+                                    ->required(),
+
+                                Forms\Components\TextInput::make('name')
+                                    ->label('Nama Rombel')
+                                    ->hidden(fn (string $context) => $context === 'create')
+                                    ->unique('rombels', 'name', ignoreRecord: true)
+                                    ->helperText('Contoh: 2025/X/1 atau 2025/XI/IPA/1')
+                                    ->validationMessages([
+                                        'unique' => ':Attribute sudah digunakan.',
+                                    ])
+                                    ->columnSpan(2)
+                                    ->required(),
+                            ]),
                     ])
-                    ->required(),
-                Forms\Components\Select::make('tingkat_id')
-                    ->label('Tingkat Kelas')
-                    ->options(TingkatKelas::options())
-                    ->reactive()
-                    ->required(),
-                Forms\Components\Select::make('jurusan_id')
-                    ->label('Jurusan')
-                    ->relationship('jurusan', 'nama')
-                    ->reactive()
-                    ->required(),
+                    ->columns(3),
 
-                Forms\Components\TextInput::make('divisi')
-                    ->numeric()
-                    ->label('Divisi')
-                    ->reactive()
-                    ->required(),
+                Forms\Components\Section::make('Biaya & Pengampu')
+                    ->schema([
+                        Forms\Components\Select::make('rombel_biayas')
+                            ->label('Biaya Terkait')
+                            ->multiple()
+                            ->relationship('biayas', 'name')
+                            ->preload()
+                            ->columnSpanFull(),
 
-                Forms\Components\Select::make('status')
-                    ->label('Active')
-                    ->options(StatusRombel::options())
-                    ->default(StatusRombel::NONAKTIF),
-                Forms\Components\Select::make('rombel_biayas')
-                    ->label('Biaya')
-                    ->multiple()
-                    ->relationship('biayas', 'name')
-                    ->preload(),
-                Forms\Components\Select::make('rombels_subjects')
-                    ->label('Mata pelajaran')
-                    ->multiple()
-                    ->relationship('subjects', 'name')
-                    ->preload(),
-                Forms\Components\Textarea::make('keterangan')
-                    ->default('-'),
+                        Forms\Components\Repeater::make('rombelsSubjectsTeachers')
+                            ->label('Mata Pelajaran dan Guru Pengampu')
+                            ->addActionLabel('Tambah Mapel')
+                            ->relationship('rombelsSubjectsTeachers')
+                            ->collapsible()
+                            ->grid(1)
+                            ->schema([
+                                Forms\Components\Section::make([
+                                    Forms\Components\Grid::make(2)
+                                        ->schema([
+                                            Forms\Components\Select::make('subject_id')
+                                                ->label('Mata Pelajaran')
+                                                ->options(Subject::pluck('name', 'id'))
+                                                ->searchable()
+                                                ->required(),
+
+                                            Forms\Components\Select::make('teacher_id')
+                                                ->label('Guru Pengampu')
+                                                ->options(Teacher::pluck('name', 'id'))
+                                                ->searchable()
+                                                ->required(),
+                                        ]),
+
+                                    Forms\Components\Textarea::make('keterangan')
+                                        ->label('Keterangan')
+                                        ->default('-')
+                                        ->nullable(),
+                                ]),
+                            ])
+                            ->defaultItems(1)
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(1),
             ]);
+
     }
 
     public static function table(Table $table): Table
@@ -167,7 +209,7 @@ class RombelResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RombelsSubjectsRelationManager::class,
+            //
         ];
     }
 

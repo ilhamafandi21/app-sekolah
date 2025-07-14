@@ -42,13 +42,8 @@ class Rombel extends Model
         return $this->belongsTo(Semester::class);
     }
 
-    public function subjects(): BelongsToMany
+    public function rombelsSubjectsTeachers(): HasMany
     {
-        return $this->belongsToMany(Subject::class, 'rombels_subjects');
-    }
-
-    public function rombelsSubjects(): HasMany
-    {
-        return $this->hasMany(RombelsSubjects::class, 'rombel_id');
+        return $this->hasMany(RombelsSubjectsTeacher::class, 'rombel_id');
     }
 }

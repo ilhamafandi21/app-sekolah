@@ -11,18 +11,24 @@ class RombelsSubjectsTeacher extends Model
     use HasFactory;
 
     protected $fillable = [
-        'rombels_subjects_id',
+        'rombel_id',
+        'subject_id',
         'teacher_id',
         'keterangan',
     ];
 
-    public function teacher() : BelongsTo
+    public function subject(): BelongsTo
     {
-        return $this->belongsTo(Teacher::class);
+        return $this->belongsTo(Subject::class);
     }
 
-     public function rombels_subjects() : BelongsTo
+    public function rombel(): BelongsTo
     {
-        return $this->belongsTo(RombelsSubjects::class);
+        return $this->belongsTo(Rombel::class);
+    }
+
+    public function teacher(): BelongsTo
+    {
+        return $this->belongsTo(Teacher::class);
     }
 }

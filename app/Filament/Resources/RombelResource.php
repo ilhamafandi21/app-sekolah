@@ -19,6 +19,8 @@ use App\Filament\Resources\RombelResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\RombelResource\RelationManagers;
 use App\Filament\Resources\RombelResource\RelationManagers\RombelsSubjectsRelationManager;
+use App\Filament\Resources\RombelResource\RelationManagers\RombelsSubjectsTeacherRelationManager;
+use App\Models\RombelsSubjectsTeacher;
 
 class RombelResource extends Resource
 {
@@ -126,14 +128,13 @@ class RombelResource extends Resource
                                         ->label('Keterangan')
                                         ->default('-')
                                         ->nullable(),
-                                ]),
-                            ])
-                            ->defaultItems(1)
-                            ->columnSpanFull(),
-                    ])
-                    ->columns(1),
+                            ]),
+                        ])
+                        ->defaultItems(1)
+                        ->columnSpanFull(),
+                        ])
+                        ->columns(1),
             ]);
-
     }
 
     public static function table(Table $table): Table
@@ -209,7 +210,7 @@ class RombelResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RombelsSubjectsTeacherRelationManager::class,
         ];
     }
 

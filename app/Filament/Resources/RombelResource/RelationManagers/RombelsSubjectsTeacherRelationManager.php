@@ -15,6 +15,8 @@ use Filament\Resources\RelationManagers\RelationManager;
 class RombelsSubjectsTeacherRelationManager extends RelationManager
 {
     protected static string $relationship = 'RombelsSubjectsTeachers';
+    
+    protected static ?string $title = 'Mapel - Guru';
 
 
     public static function getPluralModelLabel(): string

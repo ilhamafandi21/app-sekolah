@@ -3,23 +3,22 @@
 namespace App\Filament\Resources\RombelResource\RelationManagers;
 
 use Filament\Forms;
-use Filament\Tables;
 use Filament\Forms\Form;
+use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Resources\RelationManagers\RelationManager;
 
 class RombelsSubjectsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'rombelsSubjects';
+    protected static string $relationship = 'RombelsSubjects';
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('id')
+                Forms\Components\TextInput::make('rombel_id')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -28,13 +27,10 @@ class RombelsSubjectsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('id')
+            ->recordTitleAttribute('rombel_id')
             ->columns([
-                Tables\Columns\TextColumn::make('rombel.name'),
                 Tables\Columns\TextColumn::make('subject.name'),
-                Tables\Columns\TextColumn::make('rombel_id'),
-                Tables\Columns\TextColumn::make('teachers.name'),
-                
+                Tables\Columns\TextColumn::make('rombels_subjects_teachers.teacher.name'),
             ])
             ->filters([
                 //
@@ -44,18 +40,7 @@ class RombelsSubjectsRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
-                    ->before(function ($record, $action) {
-                        if ($record->teachers()->exists()) {
-                            Notification::make()
-                                ->title('Gagal Hapus!')
-                                ->body('Masih ada guru yg terlibat mata pelajaran ini, silahkan hapus dari sisi Guru dan Mapel')
-                                ->danger()
-                                ->send();
-
-                            $action->cancel(); 
-                        }
-                    }),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

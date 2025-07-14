@@ -7,6 +7,7 @@ use App\Models\RombelSubjectTeacher;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class RombelsSubjects extends Model
@@ -19,14 +20,19 @@ class RombelsSubjects extends Model
         'keterangan',
     ];
 
-    public function rombel()
+    public function rombel(): BelongsTo
     {
         return $this->belongsTo(Rombel::class);
     }
 
-    public function subject()
+    public function subject(): BelongsTo
     {
         return $this->belongsTo(Subject::class);
+    }
+
+     public function rombels_subjects_teachers(): HasMany
+    {
+        return $this->hasMany(RombelsSubjectsTeacher::class);
     }
 
 

@@ -48,8 +48,10 @@ class RombelsSubjectsTeacherRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('subject.name'),
-                Tables\Columns\TextColumn::make('teacher.name'),
+                Tables\Columns\TextColumn::make('subject.name')
+                    ->label('Mata Pelajaran'),
+                Tables\Columns\TextColumn::make('teacher.name')
+                    ->label('Guru Pengajar'),
             ])
             ->filters([
                 //

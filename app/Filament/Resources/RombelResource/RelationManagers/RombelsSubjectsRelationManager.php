@@ -23,9 +23,6 @@ class RombelsSubjectsRelationManager extends RelationManager
                         ->relationship('rombelsSubjects_teachers', 'name')
                         ->preload()
                         ->required(),
-                Forms\Components\TextInput::make('keterangan')
-                        ->label('Keterangan')
-                        ->required(),
             ]);
     }
 
@@ -34,7 +31,12 @@ class RombelsSubjectsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
-                Tables\Columns\TextColumn::make('subject.name'),
+                Tables\Columns\TextColumn::make('subject.name')
+                    ->label('Mata Pelajaran'),
+                Tables\Columns\TextColumn::make('rombelsSubjectsTeachers.teacher.name')
+                    ->label('Pengajar')
+                    ->badge()
+                    ->formatStateUsing(fn($record) => $record->rombelsSubjectsTeachers ?? '{$record->rombelsSubjectsTeachers.teacher.name}' : 'Null')
             ])
             ->filters([
                 //

@@ -108,8 +108,7 @@ class RombelResource extends Resource
                         ->label('Mata Pelajaran')
                         ->relationship('rombels_subjects', 'name')
                         ->multiple()
-                        ->preload()
-                        ->required(),
+                        ->preload(),
 
 
             ]);

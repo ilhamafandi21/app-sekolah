@@ -9,4 +9,6 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateTahunAjaran extends CreateRecord
 {
     protected static string $resource = TahunAjaranResource::class;
+    protected static ?string $navigationLabel = 'Tahun Ajaran';
+
 }

@@ -9,11 +9,14 @@ use Filament\Resources\Pages\ListRecords;
 class ListTahunAjarans extends ListRecords
 {
     protected static string $resource = TahunAjaranResource::class;
+    protected static ?string $title = 'Data Tahun Ajaran';
+
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->label('Tambah')
         ];
     }
 }

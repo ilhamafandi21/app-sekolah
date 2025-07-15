@@ -20,10 +20,10 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(2)->create();
         // Siswa::factory(25)->create();
-        Jurusan::factory(3)->create();
+        // Jurusan::factory(3)->create();
         // Subject::factory(15)->create();
-        Teacher::factory()->count(10)->create();
-        Semester::factory()->count(4)->create();
+        // Teacher::factory()->count(10)->create();
+        // Semester::factory()->count(4)->create();
 
 
         User::factory()->create([
@@ -32,12 +32,12 @@ class DatabaseSeeder extends Seeder
         ])->assignRole('admin');
 
         
-        for ($i = 1; $i <= 40; $i++) {
-            Subject::create([
-                'kode' => 'MP' . $i,
-                'name' => 'Subject ' . $i,
-                'deskripsi' => 'Deskripsi untuk subject ' . $i,
-            ]);
-        }
+        // for ($i = 1; $i <= 40; $i++) {
+        //     Subject::create([
+        //         'kode' => 'MP' . $i,
+        //         'name' => 'Subject ' . $i,
+        //         'deskripsi' => 'Deskripsi untuk subject ' . $i,
+        //     ]);
+        // }
     }
 }

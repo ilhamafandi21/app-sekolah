@@ -19,13 +19,21 @@ class TahunAjaranResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel = 'Tahun Ajaran';
-    protected static ?string $navigationGroup = 'Tahun ajaran - Semester';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('thn_ajaran')
+                    ->afterStateUpdated(fn ($state, callable $set) => 
+                        $set('thn_ajaran', preg_replace('/\s+/', '', $state))
+                    )
+                    ->rule('regex:/^\d{4}-\d{4}$/')
+                    ->unique(ignoreRecord: true)
+                    ->validationMessages([
+                        'regex' => 'Format tahun ajaran harus seperti Contoh: 2000-2001',
+                        'unique' => 'Tahun Ajaran ini sudah ada'
+                    ])
                     ->required(),
             ]);
     }
@@ -33,29 +41,35 @@ class TahunAjaranResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            
             ->columns([
                 Tables\Columns\TextColumn::make('thn_ajaran')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->label('Hapus')
+                    ->modalAlignment()
+                    ->modalSubmitActionLabel('hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label('Hapus'),
                 ]),
             ]);
+            
     }
 
     public static function getRelations(): array

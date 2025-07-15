@@ -21,8 +21,7 @@ class RombelsSubjectsRelationManager extends RelationManager
                  Forms\Components\Select::make('teachers')
                         ->label('Pengajar')
                         ->relationship('rombelsSubjects_teachers', 'name')
-                        ->preload()
-                        ->required(),
+                        ->preload(),
             ]);
     }
 
@@ -36,7 +35,6 @@ class RombelsSubjectsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('rombelsSubjectsTeachers.teacher.name')
                     ->label('Pengajar')
                     ->badge()
-                    ->formatStateUsing(fn($record) => $record->rombelsSubjectsTeachers ?? '{$record->rombelsSubjectsTeachers.teacher.name}' : 'Null')
             ])
             ->filters([
                 //

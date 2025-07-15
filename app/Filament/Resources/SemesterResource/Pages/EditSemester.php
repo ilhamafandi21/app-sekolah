@@ -9,11 +9,13 @@ use Filament\Resources\Pages\EditRecord;
 class EditSemester extends EditRecord
 {
     protected static string $resource = SemesterResource::class;
+    protected static ?string $title = "Edit Semester";
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+                ->label('Hapus'),
         ];
     }
 }

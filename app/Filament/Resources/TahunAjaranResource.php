@@ -72,11 +72,13 @@ class TahunAjaranResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
-                    ->label('Hapus')
-                    ->modalAlignment()
-                    ->modalSubmitActionLabel('hapus'),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make()
+                        ->label('Hapus')
+                        ->modalAlignment()
+                        ->modalSubmitActionLabel('hapus'),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -11,6 +11,7 @@ use App\Filament\Resources\SemesterResource;
 class CreateSemester extends CreateRecord
 {
     protected static string $resource = SemesterResource::class;
+    protected static ?string $title = "Tambah Semester Baru";
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {

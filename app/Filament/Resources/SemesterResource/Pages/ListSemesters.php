@@ -9,11 +9,14 @@ use Filament\Resources\Pages\ListRecords;
 class ListSemesters extends ListRecords
 {
     protected static string $resource = SemesterResource::class;
+    protected static ?string $title = "Data Semester";
+
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->label('Buat Baru'),
         ];
     }
 }

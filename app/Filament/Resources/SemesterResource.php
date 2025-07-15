@@ -23,8 +23,7 @@ class SemesterResource extends Resource
     protected static ?string $model = Semester::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationLabel = 'Semester';  
-    protected static ?string $navigationGroup = 'Tahun ajaran - Semester';
+    protected static ?string $navigationLabel = 'Semester';
 
 
 
@@ -75,7 +74,10 @@ class SemesterResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

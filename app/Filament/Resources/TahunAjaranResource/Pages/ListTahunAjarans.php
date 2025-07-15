@@ -4,6 +4,7 @@ namespace App\Filament\Resources\TahunAjaranResource\Pages;
 
 use App\Filament\Resources\TahunAjaranResource;
 use Filament\Actions;
+use Filament\Actions\ActionGroup;
 use Filament\Resources\Pages\ListRecords;
 
 class ListTahunAjarans extends ListRecords
@@ -15,8 +16,9 @@ class ListTahunAjarans extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()
-                ->label('Tambah')
+                Actions\CreateAction::make()
+                    ->label('Tambah')
+                    ->icon('heroicon-s-plus-circle')
         ];
     }
 }

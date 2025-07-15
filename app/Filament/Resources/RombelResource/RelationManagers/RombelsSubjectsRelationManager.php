@@ -18,14 +18,14 @@ class RombelsSubjectsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                // Forms\Components\Select::make('subjects')
-                //     ->relationship('subject', 'name')
-                //     ->multiple()
-                //     ->preload()
-                //     ->required(),
-                // Forms\Components\Textarea::make('keterangan')
-                //     ->default('-')
-                //     ->nullable(),
+                 Forms\Components\Select::make('teachers')
+                        ->label('Pengajar')
+                        ->relationship('rombelsSubjects_teachers', 'name')
+                        ->preload()
+                        ->required(),
+                Forms\Components\TextInput::make('keterangan')
+                        ->label('Keterangan')
+                        ->required(),
             ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\RombelsSubjects;
 use App\Models\RombelsSubjectsTeacher;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -30,13 +31,13 @@ class Teacher extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function rombelsSubjects(): BelongsToMany
+    {
+        return $this->belongsToMany(RombelsSubjects::class, 'rombels_subjects_teachers');
+    }
+
     public function rombelsSubjectsTeachers(): HasMany
     {
         return $this->hasMany(RombelsSubjectsTeacher::class);
-    }
-
-    public function subjects(): BelongsToMany
-    {
-        return $this->belongsToMany(Subject::class, 'teachers_subjects');
     }
 }

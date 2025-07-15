@@ -2,20 +2,21 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\SemesterEnum;
-use App\Enums\StatusEnum;
-use App\Filament\Resources\SemesterResource\Pages;
-use App\Filament\Resources\SemesterResource\RelationManagers;
-use App\Models\Semester;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Semester;
+use Filament\Forms\Form;
+use App\Enums\StatusEnum;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-
+use App\Enums\SemesterEnum;
+use Illuminate\Validation\Rule;
+use Filament\Resources\Resource;
 use function Pest\Laravel\options;
+use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\SemesterResource\Pages;
+
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\SemesterResource\RelationManagers;
 
 class SemesterResource extends Resource
 {
@@ -33,6 +34,7 @@ class SemesterResource extends Resource
             ->schema([
                 Forms\Components\Select::make('tahun_ajaran_id')
                     ->relationship('tahun_ajaran', 'thn_ajaran')
+                    ->reactive()
                     ->required(),
                 Forms\Components\Select::make('name')
                     ->label('Semester')
@@ -53,13 +55,13 @@ class SemesterResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('tahun_ajaran.thn_ajaran')
+                    ->numeric()
+                    ->sortable(),
                 Tables\Columns\ToggleColumn::make('status')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('keterangan')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('tahun_ajaran.thn_ajaran')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

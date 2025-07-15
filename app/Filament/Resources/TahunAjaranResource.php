@@ -24,6 +24,7 @@ class TahunAjaranResource extends Resource
     {
         return $form
             ->schema([
+
                 Forms\Components\TextInput::make('thn_ajaran')
                     ->afterStateUpdated(fn ($state, callable $set) => 
                         $set('thn_ajaran', preg_replace('/\s+/', '', $state))
@@ -35,6 +36,16 @@ class TahunAjaranResource extends Resource
                         'unique' => 'Tahun Ajaran ini sudah ada'
                     ])
                     ->required(),
+
+                Forms\Components\Textarea::make('keterangan')
+                    ->default('-')
+                    ->required(),
+
+                Forms\Components\Toggle::make('status')
+                    ->label('active')
+                    ->required()
+                    ->default(true),
+
             ]);
     }
 
@@ -44,6 +55,10 @@ class TahunAjaranResource extends Resource
             
             ->columns([
                 Tables\Columns\TextColumn::make('thn_ajaran')
+                    ->searchable(),
+                Tables\Columns\ToggleColumn::make('status')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('keterangan')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

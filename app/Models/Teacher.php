@@ -31,6 +31,11 @@ class Teacher extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function subjects(): BelongsToMany
+    {
+        return $this->belongsToMany(Subject::class, 'teachers_subjects');
+    }
+
     public function rombelsSubjects(): BelongsToMany
     {
         return $this->belongsToMany(RombelsSubjects::class, 'rombels_subjects_teachers');

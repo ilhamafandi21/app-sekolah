@@ -14,18 +14,18 @@ class CreateTeacher extends CreateRecord
 {
     protected static string $resource = TeacherResource::class;
 
-    // protected function mutateFormDataBeforeSave(array $data): array
-    // {
-    //     if (! Role::where('name', 'teacher')->where('guard_name', 'web')->exists()) {
-    //             Notification::make()
-    //                 ->title('Role teacher tidak ditemukan')
-    //                 ->body('Role "teacher" belum tersedia. Silakan buat role terlebih dahulu.')
-    //                 ->danger()
-    //                 ->send();   
-    //             }
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        if (! Role::where('name', 'teacher')->where('guard_name', 'web')->exists()) {
+                Notification::make()
+                    ->title('Role teacher tidak ditemukan')
+                    ->body('Role "teacher" belum tersedia. Silakan buat role terlebih dahulu.')
+                    ->danger()
+                    ->send();   
+                }
 
-    //      return $data; // atau kembalikan error lainnya
-    // }
+         return $data; // atau kembalikan error lainnya
+    }
 
 
     protected function handleRecordCreation(array $data): \Illuminate\Database\Eloquent\Model

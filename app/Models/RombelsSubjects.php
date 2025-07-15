@@ -2,18 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Rombel;
+use App\Models\Subject;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class RombelsSubjectsTeacher extends Model
+class RombelsSubjects extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'rombel_id',
         'subject_id',
-        'teacher_id',
         'keterangan',
     ];
 
@@ -21,14 +22,9 @@ class RombelsSubjectsTeacher extends Model
     {
         return $this->belongsTo(Subject::class);
     }
-
+    
     public function rombel(): BelongsTo
     {
         return $this->belongsTo(Rombel::class);
-    }
-
-    public function teacher(): BelongsTo
-    {
-        return $this->belongsTo(Teacher::class);
     }
 }

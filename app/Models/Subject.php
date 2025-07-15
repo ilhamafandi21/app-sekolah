@@ -30,8 +30,8 @@ class Subject extends Model
         return $this->belongsToMany(Jurusan::class, 'subjects_jurusans');
     }
 
-    public function rombelsSubjectsTeachers(): HasMany
+    public function rombels_subjects(): BelongsToMany
     {
-        return $this->hasMany(RombelsSubjectsTeacher::class);
+        return $this->belongsToMany(Rombel::class, 'rombels_subjects');
     }
 }

@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\RombelResource\RelationManagers;
 use App\Filament\Resources\RombelResource\RelationManagers\RombelsSubjectsRelationManager;
 use App\Filament\Resources\RombelResource\RelationManagers\RombelsSubjectsTeacherRelationManager;
+use App\Models\RombelsSubjects;
 use App\Models\RombelsSubjectsTeacher;
 
 class RombelResource extends Resource
@@ -102,6 +103,15 @@ class RombelResource extends Resource
                             ->columnSpanFull(),
                         ])
                         ->columns(1),
+
+                 Forms\Components\Select::make('subject')
+                        ->label('Mata Pelajaran')
+                        ->relationship('rombels_subjects', 'name')
+                        ->multiple()
+                        ->preload()
+                        ->required(),
+
+
             ]);
     }
 
@@ -178,7 +188,7 @@ class RombelResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RombelsSubjectsTeacherRelationManager::class,
+            RombelsSubjectsRelationManager::class,
         ];
     }
 

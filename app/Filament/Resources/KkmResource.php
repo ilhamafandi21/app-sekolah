@@ -18,6 +18,7 @@ class KkmResource extends Resource
     protected static ?string $model = Kkm::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationLabel = 'Nilai KKM';
 
     public static function form(Form $form): Form
     {
@@ -45,10 +46,13 @@ class KkmResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('subject.name')
+                    ->label('Mata Pelajaran')
+                    ->searchable()
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('nilai')
                     ->label('Nilai KKM')
+                    ->searchable()
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('keterangan')
@@ -65,8 +69,13 @@ class KkmResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->actions([ 
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make()
+                        ->slideOver()
+                        ->modalWidth('xl'),
+                    Tables\Actions\DeleteAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -86,8 +95,8 @@ class KkmResource extends Resource
     {
         return [
             'index' => Pages\ListKkms::route('/'),
-            'create' => Pages\CreateKkm::route('/create'),
-            'edit' => Pages\EditKkm::route('/{record}/edit'),
+            // 'create' => Pages\CreateKkm::route('/create'),
+            // 'edit' => Pages\EditKkm::route('/{record}/edit'),
         ];
     }
 }

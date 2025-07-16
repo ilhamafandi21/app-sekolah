@@ -59,7 +59,7 @@ class SubjectResource extends Resource
                     ->limit(15)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('kkms.nilai')
-                    ->limit(15)
+                    ->label('Nilai KKM')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('jurusans.nama')
                     ->limit(15)

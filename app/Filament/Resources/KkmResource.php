@@ -25,7 +25,11 @@ class KkmResource extends Resource
             ->schema([
                 Forms\Components\Select::make('subject_id')
                     ->relationship('subject', 'name')
+                    ->label('Mata Pelajaran')
                     ->unique(ignoreRecord:true)
+                    ->validationMessages([
+                        'unique' => 'Mata pelajaran ini sudah di set'
+                    ])
                     ->required(),
                 Forms\Components\TextInput::make('nilai')
                     ->label('Masukan Nilai Standart KKM Nasional')

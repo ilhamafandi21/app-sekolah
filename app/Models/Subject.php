@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Subject extends Model
 {
@@ -36,8 +37,8 @@ class Subject extends Model
         return $this->belongsToMany(Rombel::class, 'rombels_subjects');
     }
 
-    public function kkms(): HasMany
+    public function kkms(): HasOne
     {
-        return $this->hasMany(Kkm::class);
+        return $this->hasone(Kkm::class);
     }
 }

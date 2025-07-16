@@ -44,6 +44,7 @@ class KkmResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+        ->defaultSort('subject.name', 'asc')
             ->columns([
                 Tables\Columns\TextColumn::make('subject.name')
                     ->label('Mata Pelajaran')

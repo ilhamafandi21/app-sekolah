@@ -60,10 +60,17 @@ class SubjectResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('kkms.nilai')
                     ->label('Nilai KKM')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('jurusans.nama')
+                    ->searchable()
+                    ->getStateUsing(function ($record) {
+                        return $record->kkms?->nilai ?? '-';
+                    }),
+                Tables\Columns\TextColumn::make('jurusans_subjects.jurusan.nama')
+                    ->label("Jurusan")
                     ->limit(15)
-                    ->searchable(),
+                    ->searchable()
+                    ->getStateUsing(function ($record) {
+                        return $record->jurusans_subjects->first()?->jurusan?->nama ?? '-';
+                    }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

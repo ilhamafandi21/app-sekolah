@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('kkms', function (Blueprint $table) {
             $table->id();
             $table->foreignId('subject_id')->constrained('subjects', 'id')->cascadeOnDelete();
-            $table->int('nilai');
+            $table->integer('nilai')->nullable();
             $table->string('keterangan');
             $table->timestamps();
         });

@@ -21,18 +21,18 @@ class DatabaseSeeder extends Seeder
         // User::factory(2)->create();
         // Siswa::factory(25)->create();
         // Jurusan::factory(3)->create();
-        // Subject::factory(15)->create();
+        Subject::factory(15)->create();
         // Teacher::factory()->count(10)->create();
         // Semester::factory()->count(4)->create();
 
 
-        User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@admin.com',
-        ])->assignRole('admin');
+        // User::factory()->create([
+        //     'name' => 'Admin',
+        //     'email' => 'admin@admin.com',
+        // ])->assignRole('admin');
 
         
-        // for ($i = 1; $i <= 40; $i++) {
+        // for ($i = 1; $i <= 15; $i++) {
         //     Subject::create([
         //         'kode' => 'MP' . $i,
         //         'name' => 'Subject ' . $i,

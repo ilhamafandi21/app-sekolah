@@ -25,10 +25,13 @@ class KkmResource extends Resource
             ->schema([
                 Forms\Components\Select::make('subject_id')
                     ->relationship('subject', 'name')
+                    ->unique(ignoreRecord:true)
                     ->required(),
                 Forms\Components\TextInput::make('nilai')
+                    ->label('Masukan Nilai Standart KKM Nasional')
                     ->numeric(),
-                Forms\Components\TextInput::make('keterangan')
+                Forms\Components\Textarea::make('keterangan')
+                    ->default('-')
                     ->required(),
             ]);
     }
@@ -41,6 +44,7 @@ class KkmResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('nilai')
+                    ->label('Nilai KKM')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('keterangan')

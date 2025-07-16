@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Kkm;
 use App\Traits\GeneratesKodeFromName;
 use App\Models\RombelsSubjectsTeacher;
 use Illuminate\Database\Eloquent\Model;
@@ -33,5 +34,10 @@ class Subject extends Model
     public function rombels_subjects(): BelongsToMany
     {
         return $this->belongsToMany(Rombel::class, 'rombels_subjects');
+    }
+
+    public function kkms(): HasMany
+    {
+        return $this->hasMany(Kkm::class);
     }
 }

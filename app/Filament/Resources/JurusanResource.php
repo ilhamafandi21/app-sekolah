@@ -7,6 +7,7 @@ use Filament\Tables;
 use App\Models\Jurusan;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Illuminate\Validation\Rule;
 use Filament\Resources\Resource;
 use App\Traits\GenerateJurusanKode;
 use Filament\Tables\Filters\Filter;
@@ -37,14 +38,23 @@ class JurusanResource extends Resource
                     column: "kode",
                     ignoreRecord: true
                 )
-                // ->readOnly()
+                ->afterStateUpdated(function ($state, callable $set) {
+                    $set('kode', strtoupper($state));
+                })
                 ->validationMessages([
                     "unique" => "Kode sudah terpakai, ganti yg lain.",
                     "required" => "Kode wajib diisi.",
                 ])
                 ->required(),
+                
+
             Forms\Components\TextInput::make("nama")
                 ->unique(ignoreRecord: true)
+                ->extraAttributes(['style' => 'text-transform: uppercase'])
+                ->live(onBlur: true)
+                ->afterStateUpdated(function ($state, callable $set) {
+                    $set('nama', strtoupper($state));
+                })
                 ->validationMessages([
                     "unique" => "nama sudah terpakai, ganti yg lain.",
                     "required" => "wajib diisi.",
@@ -127,8 +137,8 @@ class JurusanResource extends Resource
     {
         return [
             "index" => Pages\ListJurusans::route("/"),
-            "create" => Pages\CreateJurusan::route("/create"),
-            "edit" => Pages\EditJurusan::route("/{record}/edit"),
+            // "create" => Pages\CreateJurusan::route("/create"),
+            // "edit" => Pages\EditJurusan::route("/{record}/edit"),
         ];
     }
 }

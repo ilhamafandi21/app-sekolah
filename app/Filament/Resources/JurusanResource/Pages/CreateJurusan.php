@@ -9,10 +9,13 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateJurusan extends CreateRecord
 {
     protected static string $resource = JurusanResource::class;
-    protected static ?string $title = 'Jurusan';
+
+    protected static ?string $title = 'Daftar Jurusan';
+
+
     protected function afterCreate(): void
     {
         // Refresh halaman setelah submit
-        $this->redirect(self::getResource()::getUrl('create'));
+        $this->redirect(self::getResource()::getUrl('index'));
     }
 }

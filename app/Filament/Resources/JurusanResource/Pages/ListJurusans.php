@@ -12,13 +12,15 @@ use Illuminate\Contracts\Database\Query\Builder;
 class ListJurusans extends ListRecords
 {
     protected static string $resource = JurusanResource::class;
-    protected static ?string $title = 'Jurusan';
+    protected static ?string $title = 'Data Jurusan';
 
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->slideOver()
+                ->modalWidth('xl'),
         ];
     }
 

@@ -39,12 +39,17 @@ class JurusanResource extends Resource
                 )
                 // ->readOnly()
                 ->validationMessages([
-                    "unique" =>
-                        "Kode sudah maksimal, tidak bisa tambah baru lagi.",
+                    "unique" => "Kode sudah terpakai, ganti yg lain.",
                     "required" => "Kode wajib diisi.",
                 ])
                 ->required(),
-            Forms\Components\TextInput::make("nama")->required(),
+            Forms\Components\TextInput::make("nama")
+                ->unique(ignoreRecord: true)
+                ->validationMessages([
+                    "unique" => "nama sudah terpakai, ganti yg lain.",
+                    "required" => "wajib diisi.",
+                ])
+                ->required(),
 
             Forms\Components\Select::make("subjects")
                 ->label("Tambah Mapel")

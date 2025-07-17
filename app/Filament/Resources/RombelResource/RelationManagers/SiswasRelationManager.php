@@ -59,7 +59,7 @@ class SiswasRelationManager extends RelationManager
             ->actions([
                 Tables\Actions\ViewAction::make()
                     ->label('Lihat')
-                    ->modalHeading('Detail Siswa'),
+                    ->modalHeading(''),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -78,10 +78,20 @@ class SiswasRelationManager extends RelationManager
                         ->label('Kelas')
                         ->getStateUsing(function ($record) {
                             return $record->rombels
-                                ->map(fn ($sr) => $sr->tingkat_id . '-' . Str::limit($sr->jurusan?->nama, 5) . '-' . $sr->divisi)
+                                ->map(fn ($sr) => $sr->tingkat_id . '-' . $sr->jurusan?->nama . '-' . $sr->divisi)
                                 ->filter()
                                 ->implode(', ') ?: '-';
                     }),
+                    TextEntry::make('tempat_lahir'),
+                    TextEntry::make('tanggal_lahir'),
+                    TextEntry::make('alamat'),
+                    TextEntry::make('agama'),
+                    TextEntry::make('jenis_kelamin'),
+                    TextEntry::make('asal_sekolah'),
+                    TextEntry::make('tahun_lulus'),
+                    TextEntry::make('status'),
+                    TextEntry::make('user.email'),
+                    TextEntry::make('user.password'),
                 ])
                 ->heading('Data Siswa')
 

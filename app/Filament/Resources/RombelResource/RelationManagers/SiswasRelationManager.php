@@ -4,15 +4,19 @@ namespace App\Filament\Resources\RombelResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Tables;
+use App\Models\Siswa;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use Filament\Infolists\Infolist;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\Actions\Action;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Infolists\Components\Actions\Action as ActionsAction;
 
 class SiswasRelationManager extends RelationManager
 {
@@ -71,30 +75,54 @@ class SiswasRelationManager extends RelationManager
     public function infolist(Infolist $infolist): Infolist
     {
         return $infolist
+           ->schema([
+        Section::make('Data Pribadi')
             ->schema([
-                Section::make([
-                    TextEntry::make('name'),
-                    TextEntry::make('kelas')
-                        ->label('Kelas')
-                        ->getStateUsing(function ($record) {
-                            return $record->rombels
-                                ->map(fn ($sr) => $sr->tingkat_id . '-' . $sr->jurusan?->nama . '-' . $sr->divisi)
-                                ->filter()
-                                ->implode(', ') ?: '-';
-                    }),
-                    TextEntry::make('tempat_lahir'),
-                    TextEntry::make('tanggal_lahir'),
-                    TextEntry::make('alamat'),
-                    TextEntry::make('agama'),
-                    TextEntry::make('jenis_kelamin'),
-                    TextEntry::make('asal_sekolah'),
-                    TextEntry::make('tahun_lulus'),
-                    TextEntry::make('status'),
-                    TextEntry::make('user.email'),
-                    TextEntry::make('user.password'),
-                ])
-                ->heading('Data Siswa')
+                TextEntry::make('name')->label('Nama Lengkap'),
+                TextEntry::make('tempat_lahir')->label('Tempat Lahir'),
+                TextEntry::make('tanggal_lahir')->label('Tanggal Lahir'),
+                TextEntry::make('jenis_kelamin')->label('Jenis Kelamin'),
+                TextEntry::make('agama')->label('Agama'),
+                TextEntry::make('alamat')->label('Alamat Lengkap'),
+            ])
+            ->columns(2),
 
-            ]);
+        Section::make('Data Akademik')
+            ->schema([
+                TextEntry::make('kelas')
+                    ->label('Kelas')
+                    ->getStateUsing(function ($record) {
+                        return $record->rombels
+                            ->map(fn ($sr) => $sr->tingkat_id . '-' . $sr->jurusan?->nama . '-' . $sr->divisi)
+                            ->filter()
+                            ->implode(', ') ?: '-';
+                    }),
+                TextEntry::make('asal_sekolah')->label('Asal Sekolah'),
+                TextEntry::make('tahun_lulus')->label('Tahun Lulus'),
+                TextEntry::make('status')->label('Status Siswa'),
+            ])
+            ->columns(2),
+
+        Section::make('Akun Pengguna')
+            ->schema([
+                TextEntry::make('user.email')->label('Email Akun'),
+                TextEntry::make('user.name')->label('Nama Akun'),
+                TextEntry::make('user.password')
+                    ->label('Password')
+                    ->action(
+                        Action::make('reset_password')
+                            ->icon('heroicon-m-clipboard')
+                            ->requiresConfirmation()
+                            ->action(function (Siswa $record) {
+                                $record->name = $record->name;
+                                $record->save();
+                                })
+                        ),
+                // ⚠️ Hindari menampilkan password
+                
+            ])
+            ->columns(2)
+            
+        ]);
     }
 }

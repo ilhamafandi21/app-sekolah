@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('kode')->unique(); // Kode mata pelajaran, misalnya ING101
             $table->string('name');           // Nama mata pelajaran, misalnya Bahasa Inggris
+            $table->integer('kkm')->nullable();           // Nama mata pelajaran, misalnya Bahasa Inggris
             $table->text('deskripsi')->nullable(); // Deskripsi opsional
             $table->timestamps();
             $table->softDeletes();

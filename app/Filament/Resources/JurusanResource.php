@@ -25,9 +25,6 @@ class JurusanResource extends Resource
 
     protected static ?string $navigationLabel = "Jurusan";
 
-    protected static ?string $navigationGroup = "Akademik";
-    protected static ?int $navigationSort = -7;
-
     use GenerateJurusanKode;
 
     public static function form(Form $form): Form

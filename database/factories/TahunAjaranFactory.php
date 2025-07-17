@@ -16,14 +16,14 @@ class TahunAjaranFactory extends Factory
      */
     public function definition(): array
     {
-         return [
-            'thn_ajaran' => $this->faker->unique()->randomElement([
-                '2022/2023',
-                '2023/2024',
-                '2024/2025',
-                '2025/2026',
-            ]),
+    
+            $start = $this->faker->unique()->numberBetween(2020, 2027);
+            $end = $start + 1;
+
+        return [
+            'thn_ajaran' => "{$start}-{$end}",
+            'status' => $this->faker->boolean(),
             'keterangan' => $this->faker->sentence(),
-        ];
+            ];
     }
 }

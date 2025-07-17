@@ -42,6 +42,14 @@ class SubjectResource extends Resource
                         'unique' => 'Kode sudah maksimal, tidak bisa tambah baru lagi.',
                         'required' => 'Kode wajib diisi.',
                     ]),
+                Forms\Components\TextInput::make('kkm')
+                    ->label('Nilai Standart KKM Nasional')
+                    ->numeric(),
+                Forms\Components\Select::make('jurusan')
+                    ->label('Pilih Jurusan')
+                    ->relationship('jurusans', 'nama')
+                    ->multiple()
+                    ->preload(),
                 Forms\Components\Textarea::make('deskripsi')
                     ->default('-')
                     ->columnSpanFull(),
@@ -58,18 +66,21 @@ class SubjectResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->limit(15)
                     ->searchable(),
-                Tables\Columns\TextColumn::make('kkms.nilai')
+                Tables\Columns\TextColumn::make('kkm')
                     ->label('Nilai KKM')
                     ->searchable()
                     ->getStateUsing(function ($record) {
-                        return $record->kkms?->nilai ?? '-';
+                        return $record->kkm ?? '-';
                     }),
                 Tables\Columns\TextColumn::make('jurusans_subjects.jurusan.nama')
                     ->label("Jurusan")
-                    ->limit(15)
+                    ->limit(105)
                     ->searchable()
                     ->getStateUsing(function ($record) {
-                        return $record->jurusans_subjects->first()?->jurusan?->nama ?? '-';
+                        return $record->jurusans_subjects
+                            ->map(fn ($js) => $js->jurusan?->nama)
+                            ->filter() // hilangkan null
+                            ->implode(', ') ?: '-';
                     }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -88,7 +99,9 @@ class SubjectResource extends Resource
                //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->slideOver()
+                    ->modalWidth('xl'),
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\ForceDeleteAction::make(),
                 Tables\Actions\RestoreAction::make(),
@@ -124,7 +137,7 @@ class SubjectResource extends Resource
         return [
             'index' => Pages\ListSubjects::route('/'),
             'create' => Pages\CreateSubject::route('/create'),
-            'edit' => Pages\EditSubject::route('/{record}/edit'),
+            // 'edit' => Pages\EditSubject::route('/{record}/edit'),
         ];
     }
 }

@@ -82,10 +82,10 @@ class SiswasRelationManager extends RelationManager
                 TextEntry::make('tempat_lahir')->label('Tempat Lahir'),
                 TextEntry::make('tanggal_lahir')->label('Tanggal Lahir'),
                 TextEntry::make('jenis_kelamin')->label('Jenis Kelamin'),
-                TextEntry::make('agama')->label('Agama'),
-                TextEntry::make('alamat')->label('Alamat Lengkap'),
+                // TextEntry::make('agama')->label('Agama'),
+                // TextEntry::make('alamat')->label('Alamat Lengkap'),
             ])
-            ->columns(2),
+            ->columns(4),
 
         Section::make('Data Akademik')
             ->schema([
@@ -97,31 +97,31 @@ class SiswasRelationManager extends RelationManager
                             ->filter()
                             ->implode(', ') ?: '-';
                     }),
-                TextEntry::make('asal_sekolah')->label('Asal Sekolah'),
-                TextEntry::make('tahun_lulus')->label('Tahun Lulus'),
+                // TextEntry::make('asal_sekolah')->label('Asal Sekolah'),
+                // TextEntry::make('tahun_lulus')->label('Tahun Lulus'),
                 TextEntry::make('status')->label('Status Siswa'),
             ])
             ->columns(2),
 
-        Section::make('Akun Pengguna')
-            ->schema([
-                TextEntry::make('user.email')->label('Email Akun'),
-                TextEntry::make('user.name')->label('Nama Akun'),
-                TextEntry::make('user.password')
-                    ->label('Password')
-                    ->action(
-                        Action::make('reset_password')
-                            ->icon('heroicon-m-clipboard')
-                            ->requiresConfirmation()
-                            ->action(function (Siswa $record) {
-                                $record->name = $record->name;
-                                $record->save();
-                                })
-                        ),
-                // ⚠️ Hindari menampilkan password
+        // Section::make('Akun Pengguna')
+        //     ->schema([
+        //         TextEntry::make('user.email')->label('Email Akun'),
+        //         TextEntry::make('user.name')->label('Nama Akun'),
+        //         TextEntry::make('user.password')
+        //             ->label('Password')
+        //             // ->action(
+        //             //     Action::make('reset_password')
+        //             //         ->icon('heroicon-m-clipboard')
+        //             //         ->requiresConfirmation()
+        //             //         ->action(function (Siswa $record) {
+        //             //             $record->name = $record->name;
+        //             //             $record->save();
+        //             //             })
+        //             //     ),
+        //         // ⚠️ Hindari menampilkan password
                 
-            ])
-            ->columns(2)
+        //     ])
+        //     ->columns(2)
             
         ]);
     }

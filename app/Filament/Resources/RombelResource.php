@@ -5,24 +5,18 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Rombel;
-use App\Models\Jurusan;
-use App\Models\Subject;
-use App\Models\Teacher;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Enums\StatusRombel;
 use App\Enums\TingkatKelas;
-use App\Traits\TahunAjaran;
+use Filament\Infolists;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\RombelResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\RombelResource\RelationManagers;
-use App\Filament\Resources\RombelResource\RelationManagers\RombelsSubjectsRelationManager;
-use App\Filament\Resources\RombelResource\RelationManagers\RombelsSubjectsTeacherRelationManager;
 use App\Filament\Resources\RombelResource\RelationManagers\SiswasRelationManager;
-use App\Models\RombelsSubjects;
-use App\Models\RombelsSubjectsTeacher;
+use App\Filament\Resources\RombelResource\RelationManagers\RombelsSubjectsRelationManager;
+use Filament\Tables\Actions\ActionGroup;
 
 class RombelResource extends Resource
 {
@@ -31,9 +25,6 @@ class RombelResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationLabel = 'Rombel';
-    
-    protected static ?string $navigationGroup = 'Akademik';
-    protected static ?int $navigationSort = -6;
 
     public static function getEloquentQuery(): Builder
     {
@@ -172,7 +163,11 @@ class RombelResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\ViewAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -205,6 +200,40 @@ class RombelResource extends Resource
             'index' => Pages\ListRombels::route('/'),
             'create' => Pages\CreateRombel::route('/create'),
             'edit' => Pages\EditRombel::route('/{record}/edit'),
+            'view' => Pages\ViewRombel::route('/{record}/view'),
         ];
     }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+           ->schema([
+                Infolists\Components\Section::make('Data Akademik')
+                    ->schema([
+                        Infolists\Components\TextEntry::make('name')->label('Nama Rombel'),
+                        Infolists\Components\TextEntry::make('semester.name')->label('Semester'),
+                        Infolists\Components\TextEntry::make('tingkat_id')
+                            ->label('Tingkat')
+                            ->getStateUsing(fn($record) => $record->tingkat_id.'-'.$record->divisi),
+                        Infolists\Components\TextEntry::make('jurusan.nama')->label('Jurusan'),
+                        Infolists\Components\TextEntry::make('status')->label('Status')
+                            ->getStateUsing(fn($record) => $record ? 'Aktif' : 'Nonaktif')
+                            ->badge()
+                            ->color('success'),                       
+                    ])
+                    ->columns(4),
+
+                Infolists\Components\Section::make('Details')
+                    ->schema([
+                        Infolists\Components\TextEntry::make('kelas')
+                            ->label('Kelas')
+                            ->getStateUsing(function ($record) {
+                                return $record->tingkat_id.'-'.$record->jurusan?->nama.' '.$record->divisi
+                                    ;
+                            }),
+                    ])
+                    ->columns(2),
+                ]);
+    }
+  
 }

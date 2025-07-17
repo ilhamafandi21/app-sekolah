@@ -7,13 +7,17 @@ use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
+use Filament\Infolists\Infolist;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
 
 class SiswasRelationManager extends RelationManager
 {
     protected static string $relationship = 'siswas';
+    protected static ?string $title = 'Data Siswa';
 
     public function form(Form $form): Form
     {
@@ -38,9 +42,6 @@ class SiswasRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('kelas')
                     ->label('Kelas')
-                    // ->getStateUsing(function ($record) {
-                    //     return "{$record->rombels->first()?->tingkat_id} {$record->jurusan?->nama} {$record->divisi}";
-                    // }),
                 ->getStateUsing(function ($record) {
                         return $record->rombels
                             ->map(fn ($sr) => $sr->tingkat_id. '-' .Str::limit($sr->jurusan->nama, 5).'-'.$sr->divisi)
@@ -53,17 +54,37 @@ class SiswasRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                // Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                // Tables\Actions\EditAction::make(),
-                // Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ViewAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->label('Lihat')
+                    ->modalHeading('Detail Siswa'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    // Tables\Actions\DeleteBulkAction::make(),
+                    // 
                 ]),
+            ]);
+    }
+
+    public function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make([
+                    TextEntry::make('name'),
+                    TextEntry::make('kelas')
+                        ->label('Kelas')
+                        ->getStateUsing(function ($record) {
+                            return $record->rombels
+                                ->map(fn ($sr) => $sr->tingkat_id . '-' . Str::limit($sr->jurusan?->nama, 5) . '-' . $sr->divisi)
+                                ->filter()
+                                ->implode(', ') ?: '-';
+                    }),
+                ])
+                ->heading('Data Siswa')
+
             ]);
     }
 }

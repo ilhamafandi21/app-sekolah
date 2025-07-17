@@ -50,7 +50,6 @@ class JurusanResource extends Resource
 
             Forms\Components\TextInput::make("nama")
                 ->unique(ignoreRecord: true)
-                ->extraAttributes(['style' => 'text-transform: uppercase'])
                 ->live(onBlur: true)
                 ->afterStateUpdated(function ($state, callable $set) {
                     $set('nama', strtoupper($state));

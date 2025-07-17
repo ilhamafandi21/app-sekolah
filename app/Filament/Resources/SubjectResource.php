@@ -33,6 +33,19 @@ class SubjectResource extends Resource
        
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->unique(
+                        table: Subject::class,
+                        column: "name",
+                        ignoreRecord: true
+                    )
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        $set('name', strtoupper($state));
+                    })
+                    ->validationMessages([
+                        "unique" => "nama sudah terpakai, ganti yg lain.",
+                        "required" => "wajib diisi.",
+                    ])
                     ->required(),
                 Forms\Components\TextInput::make('kode')
                     ->unique(table: Subject::class, column: 'kode', ignoreRecord: true)

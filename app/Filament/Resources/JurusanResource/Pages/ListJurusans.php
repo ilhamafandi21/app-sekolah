@@ -19,6 +19,7 @@ class ListJurusans extends ListRecords
     {
         return [
             Actions\CreateAction::make()
+                ->label('Tambah')
                 ->slideOver()
                 ->modalWidth('xl'),
         ];

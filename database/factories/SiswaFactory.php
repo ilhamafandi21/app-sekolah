@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\Siswa;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Siswa;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Siswa>
@@ -16,30 +17,38 @@ class SiswaFactory extends Factory
 
     public function definition(): array
     {
-        // Buat user secara otomatis untuk setiap siswa
-        // $user = User::factory()->create();
+      $ttl = $this->faker->date('Y-m-d'); // ex: 2006-08-15
+        $reverseTtl = date('dmY', strtotime($ttl)); // ex: 15082006
 
-        $ttl = $this->faker->date('Y-m-d'); // ex: 2005-12-01
-        $reverseTtl = date('dmY', strtotime($ttl)); // ex: 01122005
+        $name = $this->faker->name();
+        $email = $this->faker->unique()->safeEmail();
+
+        // Buat user dan isi otomatis
+        $user = User::create([
+            'name' => $name,
+            'email' => $email,
+            'email_verified_at' => now(),
+            'password' => Hash::make($reverseTtl),
+            'remember_token' => Str::random(10),
+        ]);
+
+        // Tambahkan role siswa (jika pakai spatie/permission)
+        if (method_exists($user, 'assignRole')) {
+            $user->assignRole('siswa');
+        }
 
         return [
-            'nama' => $this->faker->name(),
+            'name' => $name,
             'tempat_lahir' => $this->faker->city(),
-            'ttl' => $ttl,
-            'jenis_kelamin' => $this->faker->randomElement(['L', 'P']),
+            'tanggal_lahir' => $ttl,
             'alamat' => $this->faker->address(),
-            'email' => $this->faker->unique()->safeEmail(),
             'agama' => $this->faker->randomElement(['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha']),
-            'nis' => $this->faker->unique()->numerify('########'),
-            'nisn' => $this->faker->unique()->numerify('##########'),
+            'jenis_kelamin' => $this->faker->randomElement(['Laki-laki', 'Perempuan']),
             'asal_sekolah' => $this->faker->company(),
-            'status_pendaftaran' => $this->faker->randomElement(['pending', 'approved', 'rejected']),
-            'status_siswa' => $this->faker->randomElement(['aktif', 'nonaktif', 'alumni']),
-            'waktu_siswa_aktif' => now()->toDateTimeString(),
-            // 'password' => Hash::make('password'), // bisa disamakan dengan user kalau mau
-            'password' => Hash::make($reverseTtl),
-            'role' => 'siswa',
-            'user_id' => rand(1, 2),
+            'tahun_lulus' => (string) $this->faker->numberBetween(2018, 2024),
+            'documents' => null,
+            'status' => $this->faker->randomElement(['aktif', 'tidak aktif', 'lulus']),
+            'user_id' => $user->id,
         ];
     }
 }

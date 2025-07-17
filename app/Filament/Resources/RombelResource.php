@@ -110,6 +110,12 @@ class RombelResource extends Resource
                         ->multiple()
                         ->preload(),
 
+                 Forms\Components\Select::make('siswa')
+                        ->label('Siswa Terkait')
+                        ->relationship('siswas', 'name')
+                        ->multiple()
+                        ->preload(),
+
 
             ]);
     }

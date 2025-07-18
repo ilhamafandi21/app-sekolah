@@ -19,9 +19,10 @@ class RombelsSubjectsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('id')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\Select::make('rombel_id')
+                    ->relationship('rombel', 'name')
+                    ->getOptionLabelFromRecordUsing(fn ($record) =>'Kelas : '. $record->tingkat_id . ' || ' .'Divisi : '. $record->divisi . '   || ' .'Jurusan : '. $record->jurusan->nama)
+                    ->required(),
             ]);
     }
 

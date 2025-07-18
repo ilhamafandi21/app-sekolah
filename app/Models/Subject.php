@@ -43,4 +43,10 @@ class Subject extends Model
         return $this->belongsToMany(Rombel::class, 'rombels_subjects');
     }
 
+    
+    public function jenisNilai(): HasMany
+    {
+        return $this->hasMany(JenisNilai::class);
+    }
+
 }

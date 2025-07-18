@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use App\Filament\Resources\TeacherResource\Pages;
+use App\Filament\Resources\TeacherResource\RelationManagers\RombelsSubjectsTeachersRelationManager;
 use App\Filament\Resources\TeacherResource\RelationManagers\UserRelationManager;
 
 class TeacherResource extends Resource
@@ -138,6 +139,7 @@ class TeacherResource extends Resource
     {
         return [
             UserRelationManager::class,
+            RombelsSubjectsTeachersRelationManager::class,
         ];
     }
 

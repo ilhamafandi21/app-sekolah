@@ -8,11 +8,13 @@ use App\Models\Subject;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use App\Traits\GenerateSubjectsKode;
+use Filament\Forms\Components\Fieldset;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\SubjectResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\SubjectResource\RelationManagers;
-use App\Traits\GenerateSubjectsKode;
+use App\Filament\Resources\SubjectResource\RelationManagers\JenisNilaiRelationManager;
 
 class SubjectResource extends Resource
 {
@@ -55,6 +57,19 @@ class SubjectResource extends Resource
                         'unique' => 'Kode sudah maksimal, tidak bisa tambah baru lagi.',
                         'required' => 'Kode wajib diisi.',
                     ]),
+
+
+                //  Forms\Components\Repeater::make('indikators')
+                //     ->addActionLabel('Tambah Indikator')
+                //     ->relationship('jenisNilai')
+                //     ->schema([
+                //         Forms\Components\TextInput::make('indikator')
+                //             ->nullable(),
+                //         Forms\Components\Textarea::make('keterangan')
+                //             ->default('-')    
+                //             ->nullable(),
+                //     ]),
+
                 Forms\Components\TextInput::make('kkm')
                     ->label('Nilai Standart KKM Nasional')
                     ->numeric(),
@@ -112,9 +127,7 @@ class SubjectResource extends Resource
                //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                    ->slideOver()
-                    ->modalWidth('xl'),
+                Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\ForceDeleteAction::make(),
                 Tables\Actions\RestoreAction::make(),
@@ -131,7 +144,7 @@ class SubjectResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            JenisNilaiRelationManager::class,
         ];
     }
 
@@ -150,7 +163,7 @@ class SubjectResource extends Resource
         return [
             'index' => Pages\ListSubjects::route('/'),
             'create' => Pages\CreateSubject::route('/create'),
-            // 'edit' => Pages\EditSubject::route('/{record}/edit'),
+            'edit' => Pages\EditSubject::route('/{record}/edit'),
         ];
     }
 }

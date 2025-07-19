@@ -22,17 +22,22 @@ class RombelsSubjectsRelationManager extends RelationManager
                 Forms\Components\Select::make('rombel_id')
                     ->relationship('rombel', 'name')
                     ->getOptionLabelFromRecordUsing(fn ($record) =>'Kelas : '. $record->tingkat_id . ' || ' .'Divisi : '. $record->divisi . '   || ' .'Jurusan : '. $record->jurusan->nama)
-                    ->required(),
+                    ->required()
+                    ->reactive(),
                 Forms\Components\Select::make('subject_id')
                     ->unique(ignoreRecord:true)
                     ->validationMessages([
                         'unique' => 'Sudah ada pengajar untuk mapel ini!'
                     ])
-                    ->relationship(
-                        name: 'subject',
-                        titleAttribute: 'name',
-                        modifyQueryUsing: fn ($query) => $query->rombelsSubjectsTeachers->whereNull('teacher_id')
-                    )
+                    ->options(function () {
+                       $rombel = $this->getOwnerRecord(); // rombel dari relation manager
+
+                        if (!$rombel) {
+                            return [];
+                    }
+                    // Ambil subject yang terhubung dengan rombel ini
+                    return $rombel->subjects()->pluck('name', 'subject_id');
+                    })
                     ->required(),
             ]);
     }

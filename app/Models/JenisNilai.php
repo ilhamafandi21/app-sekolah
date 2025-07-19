@@ -20,4 +20,9 @@ class JenisNilai extends Model
     {
         return $this->belongsTo(Subject::class);
     }
+
+    public function nilais()
+    {
+        return $this->hasMany(Nilai::class, 'jenis_nilai_id');
+    }
 }

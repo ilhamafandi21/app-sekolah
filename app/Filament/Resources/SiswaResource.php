@@ -2,23 +2,24 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\Agama;
-use App\Enums\JenisKelamin;
-use App\Enums\StatusSiswa;
 use Filament\Forms;
+use App\Enums\Agama;
 use Filament\Tables;
 use App\Models\Siswa;
 use Filament\Forms\Form;
+use App\Enums\StatusSiswa;
+use App\Traits\TahunLulus;
 use Filament\Tables\Table;
+use App\Enums\JenisKelamin;
 use Filament\Resources\Resource;
 use function Laravel\Prompts\password;
 use Illuminate\Database\Eloquent\Builder;
-use Filament\Tables\Filters\TrashedFilter;
 
+use Filament\Tables\Filters\TrashedFilter;
 use App\Filament\Resources\SiswaResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\SiswaResource\RelationManagers;
-use App\Traits\TahunLulus;
+use App\Filament\Resources\SiswaResource\RelationManagers\NilaisRelationManager;
 
 class SiswaResource extends Resource
 {
@@ -146,7 +147,7 @@ class SiswaResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            NilaisRelationManager::class,
         ];
     }
 

@@ -45,4 +45,8 @@ class Teacher extends Model
     {
         return $this->hasMany(RombelsSubjectsTeacher::class);
     }
+    public function nilais(): HasMany
+    {
+        return $this->hasMany(Nilai::class, 'teacher_id');
+    }
 }

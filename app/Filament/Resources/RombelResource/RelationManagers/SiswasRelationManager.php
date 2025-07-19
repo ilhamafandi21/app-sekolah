@@ -63,7 +63,9 @@ class SiswasRelationManager extends RelationManager
             ->actions([
                 Tables\Actions\ViewAction::make()
                     ->label('Lihat')
-                    ->modalHeading(''),
+                    ->modalHeading('')
+                    ->slideOver()
+                    ->modalWidth('full')
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -103,25 +105,14 @@ class SiswasRelationManager extends RelationManager
             ])
             ->columns(2),
 
-        // Section::make('Akun Pengguna')
-        //     ->schema([
-        //         TextEntry::make('user.email')->label('Email Akun'),
-        //         TextEntry::make('user.name')->label('Nama Akun'),
-        //         TextEntry::make('user.password')
-        //             ->label('Password')
-        //             // ->action(
-        //             //     Action::make('reset_password')
-        //             //         ->icon('heroicon-m-clipboard')
-        //             //         ->requiresConfirmation()
-        //             //         ->action(function (Siswa $record) {
-        //             //             $record->name = $record->name;
-        //             //             $record->save();
-        //             //             })
-        //             //     ),
-        //         // ⚠️ Hindari menampilkan password
+        Section::make('Data Nilai')
+            ->schema([
+                TextEntry::make('rombelsSiswa.rombel.rombels_subjects.name')
+                    ->label('Mata Pelajaran'),
                 
-        //     ])
-        //     ->columns(2)
+            ])
+            ->columns(2)
+    
             
         ]);
     }

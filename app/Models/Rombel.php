@@ -61,4 +61,9 @@ class Rombel extends Model
     {
         return $this->belongsToMany(Siswa::class, 'rombels_siswas');
     }
+    public function nilais(): HasMany
+    {
+        return $this->hasMany(Nilai::class, 'rombel_id');
+    }
+
 }

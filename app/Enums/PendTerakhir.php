@@ -14,7 +14,7 @@ enum PendTerakhir: string
         return match($this) {
             self::SD => 'SD',
             self::SMP => 'SMP',
-            self::SMA_SMK => 'SMA_SMK',
+            self::SMA_SMK => 'SMA/SMK',
             self::PERGURUAN_TINGGI => 'PERGURUAN_TINGGI',
         };
     }

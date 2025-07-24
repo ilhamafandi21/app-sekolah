@@ -10,4 +10,11 @@ class CreateSiswa extends CreateRecord
 {
     protected static string $resource = SiswaResource::class;
     protected static ?string $title = 'Pendaftaran Siswa Baru'; 
+
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        return dd($data);
+    }
+
 }

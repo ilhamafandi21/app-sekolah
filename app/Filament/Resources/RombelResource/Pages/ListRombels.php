@@ -23,7 +23,7 @@ class ListRombels extends ListRecords
         {
             return [
                 'all' => Tab::make()
-                    ->label('Semua')
+                    ->label('Semuanya')
                     ->modifyQueryUsing(fn (Builder $query) => $query->withoutGlobalScopes()),
                 'ganjil' => Tab::make()
                     ->label('Ganjil')

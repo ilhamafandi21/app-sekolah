@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
+use App\Models\TahunAjaran;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Semester extends Model
 {
@@ -33,11 +35,28 @@ class Semester extends Model
                 }
                 $model->updated_by = Auth::user()->name;
             }
+
+            if ($model->is_active) {
+                static::where('tahun_ajaran_id', $model->tahun_ajaran_id)
+                    ->where('id', '!=', $model->id)
+                    ->update(['is_active' => false]);
+            }
         });
     }
 
-    public function tahunAjaran()
+    public function tahunAjaran(): BelongsTo
     {
         return $this->belongsTo(TahunAjaran::class);
     }
+
+    public function scopeAktif($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    public function getLabelAttribute()
+    {
+        return "{$this->name} - {$this->tahunAjaran->name}";
+    }
+
 }

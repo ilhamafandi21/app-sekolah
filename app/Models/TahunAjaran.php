@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Semester;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TahunAjaran extends Model
 {
@@ -95,5 +97,10 @@ class TahunAjaran extends Model
     public function getFormattedEndDateAttribute()
     {
         return $this->end_date?->format('d M Y');
+    }
+
+    public function semesters(): HasMany
+    {
+        return $this->hasMany(Semester::class);
     }
 }

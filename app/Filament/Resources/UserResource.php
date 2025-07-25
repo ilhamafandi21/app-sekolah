@@ -34,7 +34,7 @@ class UserResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('role')
                     ->options(\Spatie\Permission\Models\Role::pluck('name', 'name')) 
-                    ->visible(fn (string $context) => $context === 'edit'),
+                    ->visible(fn (string $context) => $context === 'create'),
                 Forms\Components\DateTimePicker::make('email_verified_at'),
                 Forms\Components\TextInput::make('password')
                     ->visible(fn (string $context) => $context === 'create')

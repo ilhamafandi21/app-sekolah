@@ -17,8 +17,23 @@ class CreateRombel extends CreateRecord
         $semester =  $data['semester_id'];
         $tingkat = $data['tingkat_id'];
         $jurusan = \App\Models\Jurusan::find($data['jurusan_id'])?->kode ?? 'UNV';
-        $divisi = $data['divisi'] ?-> $data['divisi'] ?? '1';
+        $divisi = $data['divisi'];
         $data['name'] = "{$tahun}/{$semester}/{$tingkat}/{$jurusan}/{$divisi}";
+        // Cek duplikat
+        if (\App\Models\Rombel::where('name', $data['name'])->exists()) {
+            // Notifikasi error & hentikan proses
+            \Filament\Notifications\Notification::make()
+                ->title('Duplikat Rombel')
+                ->body("Nama rombel sudah ada: {$data['name']}")
+                ->danger()
+                ->send();
+
+            // throw ValidationException supaya tidak lanjut create
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'name' => 'Nama rombel sudah ada. Silakan cek data!',
+            ]);
+        }
+
         return $data;
     }
 }

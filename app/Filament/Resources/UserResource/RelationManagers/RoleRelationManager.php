@@ -42,7 +42,7 @@ class RoleRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DetachAction::make()->label('Hapus Role dari User'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

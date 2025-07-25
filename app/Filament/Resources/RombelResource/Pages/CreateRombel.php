@@ -18,9 +18,12 @@ class CreateRombel extends CreateRecord
         $tingkat = $data['tingkat_id'];
         $jurusan = \App\Models\Jurusan::find($data['jurusan_id'])?->kode ?? 'UNV';
         $divisi = $data['divisi'];
-        $data['name'] = "{$tahun}/{$semester}/{$tingkat}/{$jurusan}/{$divisi}";
+        $data['name'] = "{$tahun}/{$tingkat}/{$jurusan}/{$divisi}";
         // Cek duplikat
-        if (\App\Models\Rombel::where('name', $data['name'])->exists()) {
+
+        if (\App\Models\Rombel::where('name', $data['name'])
+            ->where('semester_id', $data['semester_id'])
+            ->exists()) {
             // Notifikasi error & hentikan proses
             \Filament\Notifications\Notification::make()
                 ->title('Duplikat Rombel')

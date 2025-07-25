@@ -38,10 +38,11 @@ class RoleRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                // Tables\Actions\CreateAction::make(),
+                Tables\Actions\AttachAction::make()
+                    ->label('Tambah Role')
+                    ->preloadRecordSelect()
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
                 Tables\Actions\DetachAction::make()->label('Hapus Role dari User'),
             ])
             ->bulkActions([

@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('rombels', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tahun_ajaran_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('semester_id')->constrained()->cascadeOnDelete();
+            $table->string('name'); // contoh: X IPA 1
+            $table->foreignId('wali_kelas_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }

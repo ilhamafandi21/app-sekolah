@@ -16,6 +16,4 @@ class ListSiswas extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
-
-    protected static ?string $title = 'Daftar Siswa'; 
 }

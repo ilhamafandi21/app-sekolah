@@ -11,6 +11,7 @@ use Illuminate\Contracts\Database\Query\Builder;
 class ListRombels extends ListRecords
 {
     protected static string $resource = RombelResource::class;
+    protected static ?string $title = 'Daftar Rombel';
 
     protected function getHeaderActions(): array
     {

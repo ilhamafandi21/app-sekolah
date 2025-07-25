@@ -22,6 +22,7 @@ use App\Filament\Resources\RombelResource\RelationManagers\RombelsSubjectsRelati
 use App\Filament\Resources\RombelResource\RelationManagers\RombelsSubjectsTeacherRelationManager;
 use App\Models\RombelsSubjects;
 use App\Models\RombelsSubjectsTeacher;
+use Filament\Tables\Actions\ActionGroup;
 
 class RombelResource extends Resource
 {
@@ -165,7 +166,11 @@ class RombelResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                     Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                ]),
+               
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

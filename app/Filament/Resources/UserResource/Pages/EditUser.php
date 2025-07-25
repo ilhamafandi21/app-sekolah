@@ -18,4 +18,16 @@ class EditUser extends EditRecord
              
         ];
     }
+
+    protected function afterSave(): void
+    {
+        $record = $this->record; // User yang diedit
+        $role = $this->data['role']; // Role dari form
+        $record->assignRole([$role]);
+
+        Notification::make()
+            ->title('User updated successfully')
+            ->success()
+            ->send();
+    }
 }

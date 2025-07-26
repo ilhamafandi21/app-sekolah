@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\SemesterEnum;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Rombel;
@@ -52,7 +53,7 @@ class RombelResource extends Resource
                                     ->label('Semester')
                                     ->relationship('semester', 'name')
                                     ->getOptionLabelFromRecordUsing(fn ($record) =>
-                                        $record->name . ' - ' . optional($record->tahun_ajaran)->thn_ajaran
+                                        SemesterEnum::from($record->name)->label() . ' - ' . optional($record->tahun_ajaran)->thn_ajaran
                                     )
                                     ->reactive()
                                     ->required(),
@@ -125,6 +126,7 @@ class RombelResource extends Resource
                     ->color(fn ($record) => $record->status ? 'success' : 'danger')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('semester.name')
+                    ->formatStateUsing(fn ($state) => $state ? SemesterEnum::from($state)->label() : '-')
                     ->description(fn ($record) => $record->semester?->tahun_ajaran?->thn_ajaran)
                     ->badge()
                     ->color(fn ($record) => $record->status ? 'success' : 'danger')

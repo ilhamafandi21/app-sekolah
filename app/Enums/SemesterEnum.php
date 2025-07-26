@@ -2,10 +2,10 @@
 
 namespace App\Enums;
 
-enum SemesterEnum: string
+enum SemesterEnum: int
 {
-    case GANJIL = 'GANJIL';
-    case GENAP = 'GENAP';
+    case GANJIL = 1;
+    case GENAP = 2;
 
     public function label(): string
     {

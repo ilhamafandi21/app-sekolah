@@ -2,10 +2,12 @@
 
 namespace App\Filament\Resources\RombelResource\Pages;
 
+use App\Enums\SemesterEnum;
 use Filament\Actions;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use App\Filament\Resources\RombelResource;
+use App\Models\Semester;
 use Illuminate\Contracts\Database\Query\Builder;
 
 class ListRombels extends ListRecords
@@ -28,10 +30,10 @@ class ListRombels extends ListRecords
                     ->modifyQueryUsing(fn (Builder $query) => $query->withoutGlobalScopes()),
                 'ganjil' => Tab::make()
                     ->label('Ganjil')
-                    ->modifyQueryUsing(fn (Builder $query) => $query->where('semester_id', 1)),
+                    ->modifyQueryUsing(fn (Builder $query) => $query->where('name', SemesterEnum::GANJIL)),
                 'genap' => Tab::make()
                     ->label('Genap')
-                    ->modifyQueryUsing(fn (Builder $query) => $query->where('semester_id', 2)),
+                    ->modifyQueryUsing(fn (Builder $query) => $query->where('name', SemesterEnum::GENAP)),
             ];
         }
 }

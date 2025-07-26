@@ -53,6 +53,7 @@ class SemesterResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->formatStateUsing(fn ($state) => $state ? SemesterEnum::from($state)->label() : '-')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tahun_ajaran.thn_ajaran')
                     ->numeric()

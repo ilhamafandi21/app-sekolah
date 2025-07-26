@@ -134,11 +134,16 @@ class SiswaResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ForceDeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
+
                 ]),
             ]);
     }
@@ -148,6 +153,21 @@ class SiswaResource extends Resource
         return [
             //
         ];
+    }
+
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('status', 'aktif')->count();
+    }
+
+     public static function getNavigationBadgeColor(): ?string
+    {
+       // Hitung jumlah siswa aktif
+        $aktif = static::getModel()::where('status', 'aktif')->count();
+
+        // Jika ada yang aktif, tampilkan 'success', jika tidak, tampilkan 'primary'
+        return $aktif > 0 ? 'success' : 'primary';
     }
 
     public static function getPages(): array

@@ -21,118 +21,137 @@ class TeacherResource extends Resource
     protected static ?int $navigationSort = -10;
 
   
-    public static function form(Form $form): Form
-    {
-        return $form->schema([
-            // Sembunyikan user_id dari pengguna
-            Forms\Components\TextInput::make('user_id')
-                ->required()
-                ->dehydrated(false)
-                ->hidden(),
+        public static function form(Form $form): Form
+        {
+            return $form->schema([
+                    Forms\Components\Section::make([
+                        Forms\Components\Fieldset::make('Data Pribadi')->schema([
+                            Forms\Components\Grid::make()->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->label('Nama Lengkap')
+                                    ->placeholder('Masukkan nama lengkap guru...')
+                                    ->required(),
+                                Forms\Components\DatePicker::make('tgl_lahir')
+                                    ->label('Tanggal Lahir')
+                                    ->native(false)
+                                    ->required(),
+                                Forms\Components\TextInput::make('kota_lahir')
+                                    ->label('Tempat Lahir')
+                                    ->required(),
+                                Forms\Components\TextInput::make('pendidikan')
+                                    ->label('Pendidikan Terakhir')
+                                    ->required(),
+                            ]),
+                            Forms\Components\Textarea::make('alamat')
+                                ->label('Alamat')
+                                ->placeholder('Alamat lengkap...')
+                                ->required(),
+                            Forms\Components\FileUpload::make('foto')
+                                ->label('Foto Profil')
+                                ->avatar()
+                                ->image()
+                                ->directory('img_teacher')
+                                ->imageEditor()
+                                ->imagePreviewHeight('80')
+                                ->helperText('Upload foto terbaru, rasio 1:1 (square) untuk hasil terbaik.'),
+                        ])
+                    ]),
 
-            Forms\Components\Fieldset::make('Data Pribadi')->schema([
-                Forms\Components\Grid::make(2)->schema([
-                    Forms\Components\TextInput::make('name')
-                        ->label('Nama Lengkap')
-                        ->required(),
+                    Forms\Components\Section::make([
+                        Forms\Components\Fieldset::make('Akun Pengguna')->schema([
+                            Forms\Components\Grid::make()->schema([
+                                Forms\Components\TextInput::make('user.email')
+                                    ->label('Email')
+                                    ->email()
+                                    ->required(),
+                                Forms\Components\TextInput::make('user.password')
+                                    ->password()
+                                    ->label('Password')
+                                    ->default('password')
+                                    ->revealable()
+                                    ->helperText('Default "password". Ganti jika perlu.')
+                                    ->nullable()
+                            ]),
+                        ]),
+                    ])->visible(fn (string $operation) => $operation !== 'edit'),
 
-                    Forms\Components\DatePicker::make('tgl_lahir')
-                        ->label('Tanggal Lahir')
-                        ->native(false)
-                        ->required(),
-
-                    Forms\Components\TextInput::make('kota_lahir')
-                        ->label('Tempat Lahir')
-                        ->required(),
-
-                    Forms\Components\TextInput::make('pendidikan')
-                        ->label('Pendidikan Terakhir')
-                        ->required(),
-                ]),
-
-                Forms\Components\Textarea::make('alamat')
-                    ->label('Alamat')
-                    ->required(),
-
-                Forms\Components\FileUpload::make('foto')
-                    ->label('Foto Profil')
-                    ->image()
-                    ->directory('img_teacher'),
-            ]),
-
-            Forms\Components\Fieldset::make('Akun Pengguna')->schema([
-                Forms\Components\Grid::make(2)->schema([
-                    Forms\Components\TextInput::make('user.email')
-                        ->label('Email')
-                        ->email()
-                        ->required(),
-                    Forms\Components\TextInput::make('user.password')
-                        ->password()
-                        ->label('Password')
-                        ->default('password')
-                        ->revealable()
-                        ->helperText('ini secara default "password" silahkan ganti jika butuh penyesuaian!')
-                        ->nullable()
-                ]),
-            ])
-            ->visible(fn (string $operation) => $operation !== 'edit'),
-
-            Forms\Components\Fieldset::make('Pengajaran')->schema([
-                Forms\Components\Select::make('subject')
-                    ->label('Mata Pelajaran')
-                    ->relationship('subjects', 'name')
-                    ->multiple()
-                    ->preload(),
-            ]),
-        ]);
-    }
-
-
-    public static function table(Table $table): Table
-    {
-        return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('user.email')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('tgl_lahir')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('kota_lahir')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('alamat')
-                    ->limit(10)
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('pendidikan')
-                    ->searchable(),
-                Tables\Columns\ImageColumn::make('foto')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                    Forms\Components\Section::make([
+                        Forms\Components\Fieldset::make('Pengajaran')->schema([
+                            Forms\Components\Select::make('subject')
+                                ->label('Mata Pelajaran')
+                                ->relationship('subjects', 'name')
+                                ->multiple()
+                                ->preload()
+                                ->searchable()
+                                ->placeholder('Pilih mata pelajaran'),
+                        ]),
+                    ]),
+               
             ]);
-    }
+        }
+
+
+
+        public static function table(Table $table): Table
+        {
+            return $table
+                ->columns([
+                    Tables\Columns\ImageColumn::make('foto')
+                        ->label('Foto')
+                        ->rounded()
+                        ->circular()
+                        ->height(48)
+                        ->width(48),
+                    Tables\Columns\TextColumn::make('name')
+                        ->label('Nama')
+                        ->weight('bold')
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('user.email')
+                        ->label('Email')
+                        ->icon('heroicon-o-at-symbol')
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('tgl_lahir')
+                        ->label('Tgl Lahir')
+                        ->date()
+                        ->sortable(),
+                    Tables\Columns\TextColumn::make('kota_lahir')
+                        ->label('Kota Lahir')
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('pendidikan')
+                        ->label('Pendidikan')
+                        ->badge()
+                        ->color('primary')
+                        ->searchable(),
+                    Tables\Columns\TagsColumn::make('subjects.name')
+                        ->label('Mapel')
+                        ->separator(',')
+                        ->limit(3),
+                    Tables\Columns\TextColumn::make('alamat')
+                        ->label('Alamat')
+                        ->limit(15)
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('created_at')
+                        ->dateTime()
+                        ->sortable()
+                        ->toggleable(isToggledHiddenByDefault: true),
+                    Tables\Columns\TextColumn::make('updated_at')
+                        ->dateTime()
+                        ->sortable()
+                        ->toggleable(isToggledHiddenByDefault: true),
+                ])
+                ->filters([
+                    // Tambah filter aktif/nonaktif kalau ada
+                ])
+                ->actions([
+                    Tables\Actions\EditAction::make(),
+                ])
+                ->bulkActions([
+                    Tables\Actions\BulkActionGroup::make([
+                        Tables\Actions\DeleteBulkAction::make(),
+                    ]),
+                ]);
+        }
+
 
     public static function getRelations(): array
     {

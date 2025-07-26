@@ -47,7 +47,20 @@ class JurusanResource extends Resource
                     "required" => "Kode wajib diisi.",
                 ])
                 ->required(),
-            Forms\Components\TextInput::make("nama")->required(),
+
+            Forms\Components\TextInput::make("nama")
+                ->unique(
+                    table: Jurusan::class,
+                    column: "nama",
+                    ignoreRecord: true)
+                ->validationMessages([
+                    "unique" => "Jurusan dengan nama tersebut sudah ada.",
+                    "required" => "Nama jurusan wajib diisi.",
+                ])
+                ->dehydrateStateUsing(
+                    fn ($state) => strtoupper($state)
+                )
+                ->required(),
 
             Forms\Components\Select::make("subjects")
                 ->label("Tambah Mapel")

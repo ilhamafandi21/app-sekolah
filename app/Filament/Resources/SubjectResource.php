@@ -33,7 +33,16 @@ class SubjectResource extends Resource
        
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label('Nama Mata Pelajaran')
+                    ->unique(table: Subject::class, column: 'name', ignoreRecord: true)
+                    ->validationMessages([
+                        'unique' => 'Mata pelajaran dengan nama tersebut sudah ada.',
+                        'required' => 'Nama mata pelajaran wajib diisi.',
+                    ])
+                    ->dehydrateStateUsing(fn ($state) => strtoupper($state))
                     ->required(),
+
+
                 Forms\Components\TextInput::make('kode')
                     ->unique(table: Subject::class, column: 'kode', ignoreRecord: true)
                     ->readOnly()

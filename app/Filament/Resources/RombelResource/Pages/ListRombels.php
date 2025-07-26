@@ -22,18 +22,48 @@ class ListRombels extends ListRecords
         ];
     }
 
+
+
+
+
+
+
     public function getTabs(): array
-        {
-            return [
-                'all' => Tab::make()
-                    ->label('Semua')
-                    ->modifyQueryUsing(fn (Builder $query) => $query->withoutGlobalScopes()),
-                'ganjil' => Tab::make()
-                    ->label('Ganjil')
-                    ->modifyQueryUsing(fn (Builder $query) => $query->where('name', SemesterEnum::GANJIL)),
-                'genap' => Tab::make()
-                    ->label('Genap')
-                    ->modifyQueryUsing(fn (Builder $query) => $query->where('name', SemesterEnum::GENAP)),
-            ];
-        }
+{
+    return [
+        'all' => Tab::make()
+            ->label('Semua')
+            ->modifyQueryUsing(fn (Builder $query) =>
+                $query->with('semester')->withoutGlobalScopes()
+            ),
+        'ganjil' => Tab::make()
+            ->label('Semester Ganjil')
+            ->modifyQueryUsing(fn (Builder $query) =>
+                $query->with('semester')
+                      ->whereHas('semester', fn ($q) => $q->where('name', SemesterEnum::GANJIL->value))
+            ),
+        'genap' => Tab::make()
+            ->label('Semester Genap')
+            ->modifyQueryUsing(fn (Builder $query) =>
+                $query->with('semester')
+                      ->whereHas('semester', fn ($q) => $q->where('name', SemesterEnum::GENAP->value))
+            ),
+        
+        'aktif' => Tab::make()
+            ->label('Rombel Aktif')
+            ->modifyQueryUsing(fn (Builder $query) =>
+                $query->where('status', true) // atau 0 jika status tipe int
+            ),
+        
+        'nonaktif' => Tab::make()
+            ->label('Rombel Non-aktif')
+            ->modifyQueryUsing(fn (Builder $query) =>
+                $query->where('status', false) // atau 0 jika status tipe int
+            ),
+    ];
+}
+
+    
+    
+
 }

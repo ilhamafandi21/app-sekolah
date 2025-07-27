@@ -43,7 +43,7 @@ class UserFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (User $user) {
-            $role = Role::firstOrCreate(['name' => 'siswa']);
+            $role = Role::firstOrCreate(['name' => 'admin']);
             $user->assignRole($role);
         });
     }

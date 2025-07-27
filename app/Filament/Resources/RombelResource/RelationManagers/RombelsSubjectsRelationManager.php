@@ -14,6 +14,15 @@ class RombelsSubjectsRelationManager extends RelationManager
 {
     protected static string $relationship = 'rombels_subjects';
 
+    public function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+            ]);
+    }
 
     public function table(Table $table): Table
     {
@@ -26,11 +35,14 @@ class RombelsSubjectsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make()
-                    ->label('Tambah Mata Pelajaran'),
+                Tables\Actions\AttachAction::make(),
             ])
             ->actions([
-                Tables\Actions\DetachAction::make(),
+                Tables\Actions\DetachAction::make()
+                    ->label('Hapus Mata Pelajaran dari Rombel')
+                    ->icon('heroicon-o-trash')
+                    ->requiresConfirmation()
+                    ->successNotificationTitle('Mata Pelajaran berhasil dihapus dari Rombel'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

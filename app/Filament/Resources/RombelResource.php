@@ -84,11 +84,8 @@ class RombelResource extends Resource
                                 Forms\Components\TextInput::make('name')
                                     ->label('Nama Rombel')
                                     ->hidden(fn (string $context) => $context === 'create')
-                                    ->unique('rombels', 'name', ignoreRecord: true)
                                     ->helperText('Contoh: 2025/X/1 atau 2025/XI/IPA/1')
-                                    ->validationMessages([
-                                        'unique' => ':Attribute sudah digunakan.',
-                                    ])
+                                    ->disabled()
                                     ->columnSpan(2)
                                     ->required(),
                             ]),
@@ -102,7 +99,7 @@ class RombelResource extends Resource
                             ->multiple()
                             ->relationship('biayas', 'name')
                             ->preload()
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
                         ])
                         ->columns(1),
 

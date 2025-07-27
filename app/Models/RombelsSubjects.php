@@ -18,6 +18,7 @@ class RombelsSubjects extends Model
 
     protected $fillable = [
         'rombel_id',
+        'semester_id',
         'subject_id',
         'keterangan',
     ];

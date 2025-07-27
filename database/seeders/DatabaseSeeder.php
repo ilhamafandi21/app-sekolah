@@ -26,10 +26,10 @@ class DatabaseSeeder extends Seeder
         // Semester::factory()->count(4)->create();
 
 
-        // User::factory()->create([
-        //     'name' => 'Admin',
-        //     'email' => 'admin@admin.com',
-        // ])->assignRole('admin');
+        User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@admin.com',
+        ])->assignRole('admin');
 
         
         // for ($i = 1; $i <= 40; $i++) {

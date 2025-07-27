@@ -2,10 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Siswa;
+use App\Enums\Agama;
+use App\Enums\JenisKelamin;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Siswa;
+use App\Enums\StatusSiswa;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Siswa>
@@ -27,12 +30,12 @@ class SiswaFactory extends Factory
             'tempat_lahir'   => $this->faker->city,
             'tanggal_lahir'  => $this->faker->date(),
             'alamat'         => $this->faker->address,
-            'agama'          => $this->faker->randomElement(['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu']),
-            'jenis_kelamin'  => $this->faker->randomElement(['Laki-laki', 'Perempuan']),
+            'agama'          => $this->faker->randomElement(Agama::cases()),
+            'jenis_kelamin'  => $this->faker->randomElement(JenisKelamin::cases()),
             'asal_sekolah'   => $this->faker->company,
             'tahun_lulus'    => $this->faker->year,
             'documents'      => null,
-            'status'         => $this->faker->randomElement(['Aktif', 'Lulus', 'Pindah']),
+            'status'         => $this->faker->randomElement(StatusSiswa::cases()),
             // Buatkan user baru sekaligus
             'user_id'        => User::factory(),
         ];

@@ -33,7 +33,9 @@ class Subject extends Model
 
     public function rombels_subjects(): BelongsToMany
     {
-        return $this->belongsToMany(Rombel::class, 'rombels_subjects');
+        return $this->belongsToMany(Rombel::class, 'rombels_subjects')
+            ->withPivot(['id', 'semester_id'])
+            ->withTimestamps();
     }
 
     public function kkms(): HasMany

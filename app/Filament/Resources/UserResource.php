@@ -71,7 +71,7 @@ class UserResource extends Resource
             // Tidak wajib set query di sini karena sudah dijamin di getEloquentQuery().
             // ->query(fn (Builder $query) => $query->with('roles'))
             ->defaultPaginationPageOption(5)
-            ->paginationPageOptions([5, 10, 25])
+            ->paginationPageOptions([5, 10,])
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nama')

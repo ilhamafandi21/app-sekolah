@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class RombelsSubjectsRelationManager extends RelationManager
 {
     protected static string $relationship = 'rombels_subjects';
+    protected static ?string $inverseRelationship = 'rombels_subjects'; 
 
     public function form(Form $form): Form
     {
@@ -35,7 +36,9 @@ class RombelsSubjectsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make(),
+                Tables\Actions\AttachAction::make()
+                    ->label('Tambah Mata Pelajaran')
+                    ->preloadRecordSelect(true),
             ])
             ->actions([
                 Tables\Actions\DetachAction::make()

@@ -170,7 +170,7 @@ class TeacherResource extends Resource
                 ])
                 ->filters([
                     // Tambah filter aktif/nonaktif kalau ada
-                    TrashedFilter::make(),
+                    // TrashedFilter::make(),
                 ])
                 ->actions([
                         Tables\Actions\DeleteAction::make(),

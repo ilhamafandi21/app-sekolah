@@ -9,7 +9,10 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use App\Filament\Resources\TeacherResource\Pages;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TeacherResource\RelationManagers\UserRelationManager;
+use Filament\Tables\Filters\TrashedFilter;
 
 class TeacherResource extends Resource
 {
@@ -21,6 +24,15 @@ class TeacherResource extends Resource
     protected static ?int $navigationSort = -10;
 
   
+
+        public static function getEloquentQuery(): Builder
+        {
+            return parent::getEloquentQuery()
+                ->withoutGlobalScopes([
+                    SoftDeletingScope::class,
+                ]);
+        }
+
         public static function form(Form $form): Form
         {
             return $form->schema([
@@ -108,10 +120,14 @@ class TeacherResource extends Resource
         public static function table(Table $table): Table
         {
             return $table
+                ->defaultSort('name', 'asc')
                 ->columns([
+                     Tables\Columns\TextColumn::make('nip')
+                        ->label('NIP')
+                        ->sortable()
+                        ->searchable(),
                     Tables\Columns\ImageColumn::make('foto')
                         ->label('Foto')
-                        ->rounded()
                         ->circular()
                         ->height(48)
                         ->width(48),
@@ -135,7 +151,7 @@ class TeacherResource extends Resource
                         ->badge()
                         ->color('primary')
                         ->searchable(),
-                    Tables\Columns\TagsColumn::make('subjects.name')
+                    Tables\Columns\TextColumn::make('subjects.name')
                         ->label('Mapel')
                         ->separator(',')
                         ->limit(3),
@@ -154,13 +170,18 @@ class TeacherResource extends Resource
                 ])
                 ->filters([
                     // Tambah filter aktif/nonaktif kalau ada
+                    TrashedFilter::make(),
                 ])
                 ->actions([
-                    Tables\Actions\EditAction::make(),
+                        Tables\Actions\DeleteAction::make(),
+                        Tables\Actions\ForceDeleteAction::make(),
+                        Tables\Actions\RestoreAction::make(),
                 ])
                 ->bulkActions([
                     Tables\Actions\BulkActionGroup::make([
                         Tables\Actions\DeleteBulkAction::make(),
+                        Tables\Actions\ForceDeleteBulkAction::make(),
+                        Tables\Actions\RestoreBulkAction::make(),
                     ]),
                 ]);
         }

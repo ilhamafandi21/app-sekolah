@@ -6,8 +6,8 @@ use Filament\Actions;
 use App\Models\Teacher;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\TeacherResource;
-use Illuminate\Contracts\Database\Query\Builder;
 
 class ListTeachers extends ListRecords
 {
@@ -24,7 +24,7 @@ class ListTeachers extends ListRecords
         {
            return [
             'semua' => Tab::make('Semua')
-                ->badge(Teacher::count())
+                ->badge(Teacher::withoutTrashed()->count())
                 ->badgeColor('success'),
 
             'sampah' => Tab::make('Sampah')

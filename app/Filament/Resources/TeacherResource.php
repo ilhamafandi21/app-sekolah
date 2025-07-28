@@ -23,15 +23,6 @@ class TeacherResource extends Resource
     protected static ?string $navigationLabel = 'Guru';
     protected static ?int $navigationSort = -10;
 
-  
-
-        public static function getEloquentQuery(): Builder
-        {
-            return parent::getEloquentQuery()
-                ->withoutGlobalScopes([
-                    SoftDeletingScope::class,
-                ]);
-        }
 
         public static function form(Form $form): Form
         {
@@ -43,6 +34,7 @@ class TeacherResource extends Resource
                                     ->label('NIP')
                                     ->default(fn () => Teacher::generateNip())
                                     ->placeholder('Masukkan NIP guru...')
+                                    ->readOnly()
                                     ->numeric()
                                     ->unique(Teacher::class, 'nip', ignoreRecord: true)
                                     ->maxLength(20)

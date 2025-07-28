@@ -7,7 +7,7 @@ use App\Models\Jurusan;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use App\Filament\Resources\JurusanResource;
-use Illuminate\Contracts\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 class ListJurusans extends ListRecords
 {

@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('teachers', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('nip')->unique();
+            $table->string('name')->nullable();
             $table->date('tgl_lahir')->nullable();
             $table->string('kota_lahir')->nullable();
             $table->string('alamat')->nullable();

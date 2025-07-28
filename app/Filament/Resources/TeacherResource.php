@@ -27,6 +27,19 @@ class TeacherResource extends Resource
                     Forms\Components\Section::make([
                         Forms\Components\Fieldset::make('Data Pribadi')->schema([
                             Forms\Components\Grid::make()->schema([
+                                 Forms\Components\TextInput::make('nip')
+                                    ->label('NIP')
+                                    ->default(fn () => Teacher::generateNip())
+                                    ->placeholder('Masukkan NIP guru...')
+                                    ->numeric()
+                                    ->unique(Teacher::class, 'nip', ignoreRecord: true)
+                                    ->maxLength(20)
+                                    ->validationMessages([
+                                        'unique' => 'NIP sudah terdaftar. Silakan gunakan NIP lain.'
+                                    ])
+                                    ->helperText('NIP harus unik dan tidak boleh kosong.')
+                                    ->columnSpanFull()
+                                    ->required(),
                                 Forms\Components\TextInput::make('name')
                                     ->label('Nama Lengkap')
                                     ->placeholder('Masukkan nama lengkap guru...')

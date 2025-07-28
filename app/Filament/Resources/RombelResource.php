@@ -103,11 +103,11 @@ class RombelResource extends Resource
                         ])
                         ->columns(1),
 
-                 Forms\Components\Select::make('subject')
-                        ->label('Mata Pelajaran')
-                        ->relationship('rombels_subjects', 'name')
-                        ->multiple()
-                        ->preload(),
+                //  Forms\Components\Select::make('subject')
+                //         ->label('Mata Pelajaran')
+                //         ->relationship('rombels_subjects', 'name')
+                //         ->multiple()
+                //         ->preload(),
 
 
             ]);

@@ -65,18 +65,27 @@ class RombelsSubjectsRelationManager extends RelationManager
                     ->form(fn (AttachAction $action) => [
                         $action->getRecordSelect()
                             ->label('Mata Pelajaran')
+                            ->multiple()
                             ->searchable()
-                            ->options(
-                                Subject::query()
-                                    ->select(['id', 'name'])
-                                    ->orderBy('name')
-                                    ->pluck('name', 'id')
-                                    ->all()
+                            ->options(function () {
+                                    $rombelId = $this->getOwnerRecord()?->id;
+
+                                    return Subject::query()
+                                        ->select(['id', 'name'])
+                                        ->whereDoesntHave('rombels_subjects', fn ($q) =>
+                                            $q->where('rombel_id', $rombelId)
+                                        )
+                                        ->orderBy('name')
+                                        ->pluck('name', 'id')
+                                        ->all();
+                                    }
                             ),
 
                         Forms\Components\TextInput::make('semester_id')
                             ->label('Semester')
                             ->readOnly()
+                            ->disabled()
+                            ->dehydrated(true)
                             ->default(fn () => $this->getOwnerRecord()?->semester_id)
                             ->required(),
                     ])
@@ -95,8 +104,12 @@ class RombelsSubjectsRelationManager extends RelationManager
                     ]),
                 Tables\Actions\DetachAction::make(),
             ])
+            ->bulkActions([
+                Tables\Actions\DetachBulkAction::make()
+                    
+            ]);
 
             // jika 1 subject boleh di-attach beberapa kali (beda semester)
-            ->allowDuplicates(); // :contentReference[oaicite:2]{index=2}
+            ; // :contentReference[oaicite:2]{index=2}
     }
 }

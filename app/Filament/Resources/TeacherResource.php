@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\TeacherResource\RelationManagers\SubjectsRelationManager;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Teacher;
@@ -183,6 +184,7 @@ class TeacherResource extends Resource
     {
         return [
             UserRelationManager::class,
+            SubjectsRelationManager::class,
         ];
     }
 

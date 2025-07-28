@@ -12,6 +12,7 @@ use Filament\Tables\Actions\AttachAction;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Actions\BulkAction;
 
 class RombelsSubjectsRelationManager extends RelationManager
 {
@@ -51,9 +52,13 @@ class RombelsSubjectsRelationManager extends RelationManager
                             ),
 
                         // pilih / set semester pivot
-                        Forms\Components\TextInput::make('semester_id')
+                        Forms\Components\Select::make('semester_id')
                             ->label('Semester')
-                            
+                            ->options(fn () => Semester::query()
+                                ->orderBy('name')
+                                ->pluck('name', 'id')
+                                ->all()
+                            )
                             // atau kalau ingin default mengikuti rombel induk:
                             ->default(fn () => $this->getOwnerRecord()->semester_id)
                             ->required(),
@@ -71,6 +76,13 @@ class RombelsSubjectsRelationManager extends RelationManager
                         Forms\Components\TextInput::make('keterangan')->maxLength(255),
                     ]),
                 Tables\Actions\DetachAction::make(),
+                
+               
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DetachBulkAction::make(),
+                ]),
             ]);
     }
 }

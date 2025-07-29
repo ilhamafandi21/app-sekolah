@@ -20,6 +20,7 @@ class RombelsSubjects extends Model
         'rombel_id',
         'semester_id',
         'subject_id',
+        'teacher_id',
         'keterangan',
     ];
 
@@ -32,16 +33,8 @@ class RombelsSubjects extends Model
     {
         return $this->belongsTo(Rombel::class);
     }
-
-    public function teachers(): BelongsToMany
+    public function teacher(): BelongsTo
     {
-        return $this->belongsToMany(Teacher::class, 'rombels_subjects_teachers', 'rombels_subjects_id', 'teacher_id')
-            ->withPivot(['semester_id'])
-            ->withTimestamps();
-    }
-
-     public function rombelsSubjectsTeachers(): HasMany
-    {
-        return $this->hasMany(RombelsSubjectsTeacher::class);
+        return $this->belongsTo(Teacher::class);
     }
 }

@@ -2,16 +2,17 @@
 
 namespace App\Filament\Resources\RombelResource\RelationManagers;
 
-use App\Enums\SemesterEnum;
-use App\Models\Subject;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use App\Models\Subject;
+use App\Models\Teacher;
+use Filament\Forms\Form;
+use Filament\Tables\Table;
+use App\Enums\SemesterEnum;
 use Filament\Tables\Actions\AttachAction;
 use Filament\Tables\Actions\DetachAction;
-use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Resources\RelationManagers\RelationManager;
 
 class RombelsSubjectsRelationManager extends RelationManager
 {
@@ -30,6 +31,29 @@ class RombelsSubjectsRelationManager extends RelationManager
             ])
             ->select([
                 'id','name','semester_id','tingkat_id','jurusan_id','divisi','status','keterangan','created_at','updated_at',
+            ]);
+    }
+
+
+    public function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Forms\Components\Section::make('Guru Pengajar')
+                    ->schema([
+                        Forms\Components\Grid::make(3)
+                            ->schema([
+                                Forms\Components\Select::make('teacher_id')
+                                    ->label('Guru Pengajar')
+                                    ->options(
+                                        Teacher::query()
+                                            ->select(['id', 'name'])
+                                            ->orderBy('name')
+                                            ->pluck('name', 'id')
+                                    )
+                                    ->searchable(),
+                            ]),
+                    ]),
             ]);
     }
 
@@ -91,46 +115,20 @@ class RombelsSubjectsRelationManager extends RelationManager
                     ->requiresConfirmation()
                     ->successNotificationTitle('Mata Pelajaran berhasil dihapus dari Rombel'),
 
-                Tables\Actions\Action::make('rombelsSubjects_teachers')
-                    ->label('Tambah Pengajar')
-                    ->form([
-                        Forms\Components\Select::make('teacher_id')
-                            ->options(
-                                fn () => \App\Models\Teacher::query()
-                                    ->pluck('name', 'id')
-                                    ->all()
-                            ),
-                        Forms\Components\TextInput::make('semester_id')
-                            ->label('Semester')
-                            ->disabled()
-                            ->dehydrated()
-                            ->default(fn () => SemesterEnum::tryFrom($this->getOwnerRecord()?->semester_id))
-                            ->required(),
-                         Forms\Components\TextInput::make('rombels_subjects_id')
-                            ->label('Mata Pelajaran')
-                            ->disabled()
-                            ->dehydrated()
-                            ->default(fn ($record) => $record->name)
-                            ->required(),
-                    ])
-                    ->successNotificationTitle('Pengajar berhasil ditambahkan.')
-                    ->action(function ($record, array $data) {
-
-                      
-                        $rombelSubjectId = $record->id;
-                        $semesterId = $record->semester_id;
-                        
-                        $record->teachers()->rombelssubjects()->firstOrCreate([
-                            
-                            'rombel_subject_id' => $rombelSubjectId,
-                            'semester_id' => $semesterId,
-                            'teacher_id'  => $data['teacher_id'],
-                        ]);
-
-                        filament()->notify('success', 'Pengajar berhasil ditambahkan.');
-                    })
-            ])
-            
+                Tables\Actions\EditAction::make()
+                ->form([
+        Forms\Components\Select::make('teacher_id')
+            ->label('Guru Pengajar')
+            ->options(
+                Teacher::query()
+                    ->orderBy('name')
+                    ->pluck('name', 'id')
+            )
+            ->searchable()
+            ->required(),
+    ])
+                  
+            ])  
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DetachBulkAction::make(),

@@ -195,7 +195,7 @@ class TeacherResource extends Resource
 
     public static function getNavigationBadgeColor(): ?string
     {
-        return static::getModel()::count() < 10 ? 'success' : 'primary';
+        return static::getModel()::count() < 10 ? 'primary' : 'primary';
     }
 
     public static function getPages(): array

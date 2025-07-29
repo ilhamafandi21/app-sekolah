@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('rombels_subjects_teachers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('rombels_subjects_id')->constrained('rombels_subjects', 'id')->cascadeOnDelete();
+            $table->string('semester_id');
             $table->foreignId('teacher_id')->constrained('teachers', 'id')->cascadeOnDelete();
             $table->timestamps();
         });

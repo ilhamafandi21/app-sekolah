@@ -23,7 +23,7 @@ class Subject extends Model
     
     public function teachers(): BelongsToMany
     {
-        return $this->belongsToMany(Teacher::class, 'teachers_subjects');
+        return $this->belongsToMany(Teacher::class, 'teachers_subjects')->withTimestamps();
     }
 
     public function jurusans(): BelongsToMany

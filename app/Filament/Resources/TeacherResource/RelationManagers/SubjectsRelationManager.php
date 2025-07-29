@@ -30,8 +30,16 @@ class SubjectsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('id'),
+                Tables\Columns\TextColumn::make('kode')
+                    ->label('Kode')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('teachers.name')
+                    ->label('Guru Pengajar')
+                    ->sortable()
+                    ->bulleted()
+                    ->searchable(),
             ])
             ->filters([
                 //

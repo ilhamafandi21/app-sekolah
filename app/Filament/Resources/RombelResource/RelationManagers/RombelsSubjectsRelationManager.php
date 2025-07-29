@@ -24,6 +24,8 @@ class RombelsSubjectsRelationManager extends RelationManager
                 'jurusan:id,nama,kode',
                 'semester:id,name,tahun_ajaran_id',
                 'semester.tahunAjaran:id,thn_ajaran',
+                'teachers:id,name',
+
             ])
             ->select([
                 'id','name','semester_id','tingkat_id','jurusan_id','divisi','status','keterangan','created_at','updated_at',
@@ -93,15 +95,26 @@ class RombelsSubjectsRelationManager extends RelationManager
             ])
 
             ->actions([
-                Tables\Actions\EditAction::make()
+                Tables\Actions\Action::make('rombels_subjects_teacher')
+                    ->label('Tetapkan Guru')
                     ->form([
-                        Forms\Components\Select::make('semester_id')
-                            ->label('Semester')
-                            ->options(SemesterEnum::options())
+                        Forms\Components\Select::make('teacher_id')
+                            ->label('Guru')
+                            ->relationship('teachers', 'name')
+                            ->preload()
                             ->required(),
-                        Forms\Components\TextInput::make('keterangan')
-                            ->maxLength(255),
-                    ]),
+                       Forms\Components\TextInput::make('semester_id')
+                        ->default(fn ($livewire) => $livewire->getOwnerRecord()?->semester_id)
+                        ->dehydrated()
+                        ->disabled()
+                    ])
+                    ->action(function ($record, $data) {
+                        $record->rombelsSubjects_teachers()
+                            ->create([
+                                'teacher_id' => $data['teacher_id'],
+                                'semester_id' => $data['semester_id'],
+                            ]);
+                    }),
                 Tables\Actions\DetachAction::make(),
             ])
             ->bulkActions([

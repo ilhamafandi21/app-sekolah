@@ -38,9 +38,9 @@ class Teacher extends Model
         return $this->belongsToMany(Subject::class, 'teachers_subjects')->withTimestamps();
     }
 
-    public function rombelsSubjects_teachers(): BelongsToMany
+    public function rombelssubjects(): BelongsToMany
     {
-        return $this->belongsToMany(RombelsSubjects::class, 'rombels_subjects_teachers')
+        return $this->belongsToMany(RombelsSubjects::class, 'rombels_subjects_teachers', 'teacher_id', 'rombels_subjects_id')
             ->withPivot(['semester_id'])
             ->withTimestamps();
     }

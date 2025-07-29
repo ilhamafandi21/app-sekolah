@@ -46,7 +46,10 @@ class RombelsSubjectsRelationManager extends RelationManager
 
                 Tables\Columns\TextColumn::make('semester_id')
                     ->formatStateUsing(fn ($state) => SemesterEnum::from($state)->label())
-                    ->label('Semester')
+                    ->label('Semester'),
+                
+                Tables\Columns\TextColumn::make('Guru Pengajar')
+                    ->label('Guru Pengajar')
             ])
 
             ->headerActions([
@@ -87,6 +90,45 @@ class RombelsSubjectsRelationManager extends RelationManager
                     ->label('Hapus Mata Pelajaran')
                     ->requiresConfirmation()
                     ->successNotificationTitle('Mata Pelajaran berhasil dihapus dari Rombel'),
+
+                Tables\Actions\Action::make('rombelsSubjects_teachers')
+                    ->label('Tambah Pengajar')
+                    ->form([
+                        Forms\Components\Select::make('teacher_id')
+                            ->options(
+                                fn () => \App\Models\Teacher::query()
+                                    ->pluck('name', 'id')
+                                    ->all()
+                            ),
+                        Forms\Components\TextInput::make('semester_id')
+                            ->label('Semester')
+                            ->disabled()
+                            ->dehydrated()
+                            ->default(fn () => SemesterEnum::tryFrom($this->getOwnerRecord()?->semester_id))
+                            ->required(),
+                         Forms\Components\TextInput::make('rombels_subjects_id')
+                            ->label('Mata Pelajaran')
+                            ->disabled()
+                            ->dehydrated()
+                            ->default(fn ($record) => $record->name)
+                            ->required(),
+                    ])
+                    ->successNotificationTitle('Pengajar berhasil ditambahkan.')
+                    ->action(function ($record, array $data) {
+
+                      
+                        $rombelSubjectId = $record->id;
+                        $semesterId = $record->semester_id;
+                        
+                        $record->teachers()->rombelssubjects()->firstOrCreate([
+                            
+                            'rombel_subject_id' => $rombelSubjectId,
+                            'semester_id' => $semesterId,
+                            'teacher_id'  => $data['teacher_id'],
+                        ]);
+
+                        filament()->notify('success', 'Pengajar berhasil ditambahkan.');
+                    })
             ])
             
             ->bulkActions([

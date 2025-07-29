@@ -19,6 +19,13 @@ class RombelsSubjectsRelationManager extends RelationManager
     protected static string $relationship = 'subjects';
     protected static ?string $inverseRelationship = 'rombels';
 
+    public static function modifyQueryUsing(Builder $query): Builder
+    {
+        return $query->with(['rombelsSubjects.teacher'])
+            ->orderBy('name');
+    }
+
+
     public function table(Table $table): Table
     {
         return $table
@@ -29,7 +36,7 @@ class RombelsSubjectsRelationManager extends RelationManager
                     ->formatStateUsing(fn ($state) => SemesterEnum::from($state)->label())
                     ->label('Semester'),
                 
-                Tables\Columns\TextColumn::make('Guru Pengajar')
+                Tables\Columns\TextColumn::make('rombelsSubjects.teacher.name') 
                     ->label('Guru Pengajar')
             ])
 

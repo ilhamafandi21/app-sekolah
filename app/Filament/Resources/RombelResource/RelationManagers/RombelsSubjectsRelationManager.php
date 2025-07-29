@@ -38,13 +38,14 @@ class RombelsSubjectsRelationManager extends RelationManager
         return $table
             ->modifyQueryUsing(function (Builder $query) {
                 $query
-                    ->select(['subjects.id', 'subjects.name']) ;
+                    ->select(['subjects.id', 'subjects.name', 'semester_id']) ;
             })
 
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
 
-                Tables\Columns\TextColumn::make('pivot.semester_id')
+                Tables\Columns\TextColumn::make('semester_id')
+                    ->formatStateUsing(fn ($state) => SemesterEnum::from($state)->label())
                     ->label('Semester')
             ])
 

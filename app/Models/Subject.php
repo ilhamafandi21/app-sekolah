@@ -31,10 +31,22 @@ class Subject extends Model
         return $this->belongsToMany(Jurusan::class, 'subjects_jurusans');
     }
 
+   public function rombelsSubjects_teachers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(
+            \App\Models\Teacher::class,
+            'rombels_subjects_teachers',   // nama tabel pivot
+            'subject_id',                  // FK ke Subject
+            'teacher_id'                   // FK ke Teacher
+        )
+        ->withPivot(['rombel_id', 'semester_id'])
+        ->withTimestamps();
+    }
+
     public function rombels_subjects(): BelongsToMany
     {
         return $this->belongsToMany(Rombel::class, 'rombels_subjects')
-            ->withPivot(['semester_id'])
+            ->withPivot(['id', 'semester_id'])
             ->withTimestamps();
     }
 

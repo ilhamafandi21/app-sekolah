@@ -19,16 +19,6 @@ class RombelsSubjectsRelationManager extends RelationManager
     protected static string $relationship = 'subjects';
     protected static ?string $inverseRelationship = 'rombels';
 
-
-
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                //
-            ]);
-    }
-
     public function table(Table $table): Table
     {
         return $table
@@ -73,24 +63,35 @@ class RombelsSubjectsRelationManager extends RelationManager
                             ->default(fn () => $this->getOwnerRecord()?->semester_id)
                             ->required(),
 
-                            Forms\Components\Select::make('teacher_id')
-                                    ->label('Guru Pengajar')
-                                    ->options(
-                                        Teacher::query()
-                                            ->select(['id', 'name'])
-                                            ->orderBy('name')
-                                            ->pluck('name', 'id')
-                                    )
-                                    ->searchable(),
+                    
                     ])
                     ->recordTitleAttribute('name'),
             ])
 
             ->actions([
                 Tables\Actions\DetachAction::make()
-                    ->label('Hapus Mata Pelajaran')
+                    ->label('Hapus')
                     ->requiresConfirmation()
                     ->successNotificationTitle('Mata Pelajaran berhasil dihapus dari Rombel'),
+
+
+
+
+                Tables\Actions\EditAction::make()
+                    ->label('Pengajar')
+                    ->form([
+                        Forms\Components\Select::make('teacher_id')
+                            ->label('Guru Pengajar')
+                            ->options(
+                                Teacher::query()
+                                    ->select(['id', 'name'])
+                                    ->orderBy('name')
+                                    ->pluck('name', 'id')
+                        )
+                        ->searchable(),
+                    ])
+
+
 
              
             ])  

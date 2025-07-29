@@ -16,55 +16,22 @@ use Filament\Resources\RelationManagers\RelationManager;
 
 class RombelsSubjectsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'rombels_subjects';
-    protected static ?string $inverseRelationship = 'rombels_subjects';
+    protected static string $relationship = 'subjects';
+    protected static ?string $inverseRelationship = 'rombels';
 
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->with([
-                'jurusan:id,nama,kode',
-                'semester:id,name,tahun_ajaran_id',
-                'semester.tahunAjaran:id,thn_ajaran',
-                'teachers:id,name',
-
-            ])
-            ->select([
-                'id','name','semester_id','tingkat_id','jurusan_id','divisi','status','keterangan','created_at','updated_at',
-            ]);
-    }
 
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Guru Pengajar')
-                    ->schema([
-                        Forms\Components\Grid::make(3)
-                            ->schema([
-                                Forms\Components\Select::make('teacher_id')
-                                    ->label('Guru Pengajar')
-                                    ->options(
-                                        Teacher::query()
-                                            ->select(['id', 'name'])
-                                            ->orderBy('name')
-                                            ->pluck('name', 'id')
-                                    )
-                                    ->searchable(),
-                            ]),
-                    ]),
+                //
             ]);
     }
 
     public function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(function (Builder $query) {
-                $query
-                    ->select(['subjects.id', 'subjects.name', 'semester_id']) ;
-            })
-
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
 
@@ -89,7 +56,7 @@ class RombelsSubjectsRelationManager extends RelationManager
 
                                     return Subject::query()
                                         ->select(['id', 'name'])
-                                        ->whereDoesntHave('rombels_subjects', fn ($q) =>
+                                        ->whereDoesntHave('rombels', fn ($q) =>
                                             $q->where('rombel_id', $rombelId)
                                         )
                                         ->orderBy('name')
@@ -105,6 +72,16 @@ class RombelsSubjectsRelationManager extends RelationManager
                             ->dehydrated(true)
                             ->default(fn () => $this->getOwnerRecord()?->semester_id)
                             ->required(),
+
+                            Forms\Components\Select::make('teacher_id')
+                                    ->label('Guru Pengajar')
+                                    ->options(
+                                        Teacher::query()
+                                            ->select(['id', 'name'])
+                                            ->orderBy('name')
+                                            ->pluck('name', 'id')
+                                    )
+                                    ->searchable(),
                     ])
                     ->recordTitleAttribute('name'),
             ])
@@ -115,19 +92,7 @@ class RombelsSubjectsRelationManager extends RelationManager
                     ->requiresConfirmation()
                     ->successNotificationTitle('Mata Pelajaran berhasil dihapus dari Rombel'),
 
-                Tables\Actions\EditAction::make()
-                ->form([
-        Forms\Components\Select::make('teacher_id')
-            ->label('Guru Pengajar')
-            ->options(
-                Teacher::query()
-                    ->orderBy('name')
-                    ->pluck('name', 'id')
-            )
-            ->searchable()
-            ->required(),
-    ])
-                  
+             
             ])  
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

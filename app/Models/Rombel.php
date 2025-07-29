@@ -42,10 +42,10 @@ class Rombel extends Model
         return $this->belongsTo(Semester::class);
     }
 
-    public function rombels_subjects(): BelongsToMany
+    public function subjects(): BelongsToMany
     {
-        return $this->belongsToMany(Subject::class, 'rombels_subjects')
-            ->withPivot(['id', 'semester_id'])
+        return $this->belongsToMany(Subject::class, 'rombels_subjects', 'rombel_id', 'subject_id')
+            ->withPivot(['semester_id', 'teacher_id'])
             ->withTimestamps();
     }
 

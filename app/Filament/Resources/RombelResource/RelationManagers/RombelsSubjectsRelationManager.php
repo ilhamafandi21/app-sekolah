@@ -103,13 +103,13 @@ class RombelsSubjectsRelationManager extends RelationManager
                             ->relationship('teachers', 'name')
                             ->preload()
                             ->required(),
-                       Forms\Components\TextInput::make('semester_id')
+                       Forms\Components\TextInput::make('semester.name')
                         ->default(fn ($livewire) => $livewire->getOwnerRecord()?->semester_id)
                         ->dehydrated()
                         ->disabled()
                     ])
                     ->action(function ($record, $data) {
-                        $record->rombelsSubjects_teachers()
+                        $record->rombels_subjects()
                             ->create([
                                 'teacher_id' => $data['teacher_id'],
                                 'semester_id' => $data['semester_id'],

@@ -146,7 +146,7 @@ class SiswaResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                // TrashedFilter::make()
+                TrashedFilter::make()
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -9,50 +9,56 @@ use App\Models\TahunAjaran;          // tabel tahun_ajarans
 
 Trait GenerateNis
 {
+  
     public static function generateNis(): ?string
     {
-         // Ambil tahun ajaran aktif
-    $ta = TahunAjaran::where('status', 1)->first();
+        /* ───── 1. Tahun ajaran aktif ───── */
+        $ta = TahunAjaran::where('status', 1)->first();
 
-    if (! $ta) {
+        if (! $ta) {
+            Notification::make()
+                ->title('Tahun ajaran aktif belum ada.')
+                ->danger()
+                ->send();
+            return null;
+        }
+
+        /* ───── 2. Format "2023-2024" → prefix 4 digit ───── */
+        $parts = explode('-', $ta->thn_ajaran, 2);    // pakai 2 limit agar aman
+        if (count($parts) !== 2) {
+            Notification::make()
+                ->title('Format tahun ajaran salah (contoh: 2023-2024).')
+                ->danger()
+                ->send();
+            return null;
+        }
+
+        [$awal, $akhir] = $parts;
+
+        $prefix = $awal[0]                               // digit pertama 2023 → 2
+                . substr($akhir, -2)                     // dua digit akhir 2024 → 24
+                . substr(now()->format('m'), -1);        // digit terakhir bulan → 7
+        // Contoh: 2247
+
+        /* ───── 3. Cari urutan terkecil yang belum dipakai (termasuk soft-delete) ───── */
+        for ($seq = 1; $seq <= 9998; $seq++) {
+            $nis = $prefix . str_pad($seq, 4, '0', STR_PAD_LEFT);
+
+            $exists = Siswa::withTrashed()               // hitung yg soft-delete juga
+                ->where('nis', $nis)
+                ->exists();
+
+            if (! $exists) {                             // belum dipakai → pakai
+                return $nis;
+            }
+        }
+
+        /* ───── 4. Penuh ───── */
         Notification::make()
-            ->title('Tahun ajaran aktif belum ada.')
+            ->title('NIS untuk tahun ajaran ini sudah penuh.')
             ->danger()
             ->send();
+
         return null;
-    }
-
-    // Pecah '2023-2024' → ['2023', '2024']
-    $parts = explode('-', $ta->thn_ajaran);
-    if (count($parts) !== 2) {
-        Notification::make()
-            ->title('Format tahun ajaran salah (harus 2023-2024).')
-            ->danger()
-            ->send();
-        return null;
-    }
-
-    [$awal, $akhir] = $parts;
-
-    $prefix = $awal[0]                     // 2
-            . substr($akhir, -2)           // 24
-            . substr(now()->format('m'), -1); // bulan → 7
-    // → 2247
-
-    $lastNis = Siswa::where('nis', 'like', $prefix.'%')
-                    ->orderBy('nis', 'desc')
-                    ->value('nis');
-
-    $next = $lastNis ? (int) substr($lastNis, -4) + 1 : 1;
-
-    if ($next > 9998) {
-        Notification::make()
-            ->title('NIS penuh untuk tahun ajaran ini.')
-            ->danger()
-            ->send();
-        return null;
-    }
-
-    return $prefix . str_pad($next, 4, '0', STR_PAD_LEFT);
     }
 }

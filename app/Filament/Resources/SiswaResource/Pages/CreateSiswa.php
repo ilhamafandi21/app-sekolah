@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Filament\Notifications\Notification;
 use App\Filament\Resources\SiswaResource;
 use Filament\Resources\Pages\CreateRecord;
+use App\Traits\GenerateNis;
 
 class CreateSiswa extends CreateRecord
 {
@@ -33,7 +34,16 @@ class CreateSiswa extends CreateRecord
 
     protected function handleRecordCreation(array $data): \Illuminate\Database\Eloquent\Model
     {
+
+        // $nis = GenerateNis::generateNis();
+        //     if ($nis === null) {
+        //         $this->halt(); // batalkan simpan, notifikasi sudah muncul
+        //     }
+        //     $data['nis'] = $nis;
        
+
+
+
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['user']['email'],

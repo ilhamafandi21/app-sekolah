@@ -36,7 +36,16 @@ class SiswaResource extends Resource
                 Forms\Components\TextInput::make('nis')
                     ->label('NIS')
                     ->default(fn () => Siswa::generateNis())
-                    
+                    ->placeholder('Masukkan NIS siswa...')
+                    ->readOnly()
+                    ->numeric()
+                    ->unique(Siswa::class, 'nis', ignoreRecord: true)
+                    ->maxLength(20)
+                    ->validationMessages([
+                        'unique' => 'NIS sudah terdaftar. Silakan gunakan NIS lain.'
+                    ])
+                    ->helperText('NIS harus unik dan tidak boleh kosong.')
+                    ->columnSpanFull()
                     ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required(),

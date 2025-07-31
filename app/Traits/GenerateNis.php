@@ -2,37 +2,50 @@
 
 namespace App\Traits;
 
-use App\Models\Siswa;
-use App\Models\TahunAjaran;          // tabel tahun_ajarans
 use Carbon\Carbon;
+use App\Models\Siswa;
+use Filament\Notifications\Notification;
+use App\Models\TahunAjaran;          // tabel tahun_ajarans
 
 Trait GenerateNis
 {
-    public static function next(): string
+    public static function generateNis(): string
     {
-        // 1) ambil tahun ajaran aktif (ubah query sesuai skema kamu)
-        $ta = TahunAjaran::where('aktif', 1)->firstOrFail();   // kolom 'aktif' boolean
-        [$awal, $akhir] = explode('-', $ta->nama);             // '2022-2023'
+        $ta = TahunAjaran::where('aktif', 1)->first();
 
-        // 2) bentuk 4-digit prefix
-        $firstDigit   = substr($awal, 0, 1);                   // 2
-        $lastTwo      = substr($akhir, -2);                    // 23
-        $monthDigit   = substr(Carbon::now()->format('m'), -1);// 7
-        $prefix       = $firstDigit . $lastTwo . $monthDigit;  // 2237
+        if (! $ta) {
+            Notification::make()
+                ->title('Tahun ajaran aktif belum ditetapkan.')
+                ->danger()
+                ->send();
 
-        // 3) cari urutan terakhir untuk prefix ini
+            return null;                                  // ⬅ batal
+        }
+
+        // Pecah "2022-2023"
+        [$awal, $akhir] = explode('-', $ta->nama);
+
+        // Prefix 4 digit
+        $prefix = $awal[0]                     // 2
+                . substr($akhir, -2)           // 23
+                . substr(Carbon::now()->format('m'), -1); // 7  => 2237
+
+        // Urutan terakhir
         $lastNis = Siswa::where('nis', 'like', $prefix . '%')
                         ->orderBy('nis', 'desc')
                         ->value('nis');
 
-        $nextSeq = $lastNis
-            ? ((int) substr($lastNis, -4)) + 1                 // increment
-            : 1;                                               // mulai 0001
+        $next = $lastNis ? (int) substr($lastNis, -4) + 1 : 1;
 
-        if ($nextSeq > 9998) {                                 // penuh
-            throw new \RuntimeException('NIS untuk tahun ajaran ini sudah penuh.');
+        if ($next > 9998) {
+            Notification::make()
+                ->title('NIS untuk tahun ajaran ini sudah penuh.')
+                ->danger()
+                ->send();
+
+            return null;                                  // ⬅ batal
         }
 
-        return $prefix . str_pad($nextSeq, 4, '0', STR_PAD_LEFT);
+        return $prefix . str_pad($next, 4, '0', STR_PAD_LEFT);
     }
 }

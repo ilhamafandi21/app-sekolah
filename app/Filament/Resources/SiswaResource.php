@@ -34,7 +34,9 @@ class SiswaResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('nis')
-                    ->numeric()
+                    ->label('NIS')
+                    ->default(fn () => Siswa::generateNis())
+                    
                     ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required(),

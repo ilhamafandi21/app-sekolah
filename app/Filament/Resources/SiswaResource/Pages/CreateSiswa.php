@@ -14,6 +14,25 @@ class CreateSiswa extends CreateRecord
 {
     protected static string $resource = SiswaResource::class;
 
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        // Pastikan role 'siswa' tersedia
+        $role = Role::where('name', 'siswa')->where('guard_name', 'web')->first();
+
+        if (! $role) {
+            Notification::make()
+                ->title('Role siswa belum dibuat.')
+                ->danger()
+                ->send();
+
+            // Bisa batalkan simpan dengan error atau pakai default fallback
+            throw new \Exception('Role siswa belum tersedia di sistem.');
+            }
+
+        return $data;
+    }
+
     protected function handleRecordCreation(array $data): \Illuminate\Database\Eloquent\Model
     {
        

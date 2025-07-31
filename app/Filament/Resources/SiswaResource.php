@@ -33,6 +33,9 @@ class SiswaResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\TextInput::make('nis')
+                    ->numeric()
+                    ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required(),
                 Forms\Components\TextInput::make('tempat_lahir'),
@@ -94,6 +97,8 @@ class SiswaResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('nis')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tempat_lahir')

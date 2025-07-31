@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Document;
+use App\Traits\GenerateNis;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Siswa extends Model
 {
 
-    use HasFactory, HasRoles, SoftDeletes;
+    use HasFactory, HasRoles, SoftDeletes, GenerateNis;
 
     protected $table = 'siswas';
 

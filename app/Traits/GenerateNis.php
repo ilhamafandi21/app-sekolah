@@ -9,13 +9,13 @@ use App\Models\TahunAjaran;          // tabel tahun_ajarans
 
 Trait GenerateNis
 {
-    public static function generateNis(): string
+    public static function generateNis(): ?string
     {
         $ta = TahunAjaran::where('aktif', 1)->first();
 
         if (! $ta) {
             Notification::make()
-                ->title('Tahun ajaran aktif belum ditetapkan.')
+                ->title('Tahun ajaran aktif belum ditetapkan. Diharapkan untuk membuat terlebih dulu Tahun Ajaran Aktif agar bisa generate NIS otomatis')
                 ->danger()
                 ->send();
 

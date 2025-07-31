@@ -37,6 +37,12 @@ class Rombel extends Model
         return $this->belongsToMany(Biaya::class, 'rombel_biayas');
     }
 
+    public function rombelBiayas(): HasMany
+    {
+        return $this->hasMany(RombelBiaya::class);
+    }
+
+
     public function semester(): BelongsTo
     {
         return $this->belongsTo(Semester::class);

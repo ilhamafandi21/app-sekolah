@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\RombelResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\RombelResource\RelationManagers;
+use App\Filament\Resources\RombelResource\RelationManagers\RombelBiayaRelationManager;
 use App\Filament\Resources\RombelResource\RelationManagers\RombelsSubjectsRelationManager;
 use App\Filament\Resources\RombelResource\RelationManagers\RombelsSubjectsTeacherRelationManager;
 use App\Filament\Resources\RombelResource\RelationManagers\SiswasRelationManager;
@@ -56,6 +57,7 @@ class RombelResource extends Resource
                                     ->getOptionLabelFromRecordUsing(fn ($record) =>
                                         SemesterEnum::from($record->name)->label() . ' - ' . optional($record->tahun_ajaran)->thn_ajaran
                                     )
+                                    ->disabled(fn (string $context) => $context === 'edit')
                                     ->reactive()
                                     ->required(),
 
@@ -87,6 +89,7 @@ class RombelResource extends Resource
                                     ->hidden(fn (string $context) => $context === 'create')
                                     ->helperText('Contoh: 2025/X/1 atau 2025/XI/IPA/1')
                                     ->disabled()
+                                    ->dehydrated()
                                     ->columnSpan(2)
                                     ->required(),
                             ]),
@@ -194,6 +197,7 @@ class RombelResource extends Resource
         return [
             RombelsSubjectsRelationManager::class,
             SiswasRelationManager::class,
+            RombelBiayaRelationManager::class
         ];
     }
 

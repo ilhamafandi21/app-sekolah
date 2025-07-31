@@ -12,12 +12,19 @@ class AppServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        Model::preventLazyLoading(! app()->isProduction());
+        // Model::preventLazyLoading(! app()->isProduction());
+        // Model::preventLazyLoading(true);
 
-        if (!app()->isProduction()) {
-            Model::handleLazyLoadingViolationUsing(function ($model, $relation) {
-                logger()->warning("Lazy loading detected: {$relation} on " . get_class($model));
-            });
-        }
+        // if (!app()->isProduction()) {
+        //     Model::handleLazyLoadingViolationUsing(function ($model, $relation) {
+        //         logger()->warning("Lazy loading detected: {$relation} on " . get_class($model));
+        //     });
+        // }
+
+       Model::preventLazyLoading(! app()->isProduction());
+        Model::handleLazyLoadingViolationUsing(function ($model, $relation) {
+            logger()->warning("⚠️ Lazy loading detected: {$relation} on " . get_class($model));
+        });
+
     }
 }

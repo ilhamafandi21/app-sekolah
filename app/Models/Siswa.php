@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Siswa extends Model
 {
@@ -41,5 +42,23 @@ class Siswa extends Model
     public function documents(): HasMany
     {
         return $this->hasMany(Document::class);
+    }
+
+    public function rombels(): BelongsToMany
+    {
+        return $this->belongsToMany(Rombel::class, 
+            'rombels_siswas',
+            'siswa_id',
+            'rombel_id',
+        )->withPivot(
+            'tingkat_id',
+            'jurusan_id',
+            'divisi',
+        )->withTimestamps();
+    }
+
+    public function rombelsSiswas(): HasMany
+    {
+        return $this->hasMany(RombelsSiswa::class);
     }
 }

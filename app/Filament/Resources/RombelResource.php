@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\RombelResource\RelationManagers;
 use App\Filament\Resources\RombelResource\RelationManagers\RombelsSubjectsRelationManager;
 use App\Filament\Resources\RombelResource\RelationManagers\RombelsSubjectsTeacherRelationManager;
+use App\Filament\Resources\RombelResource\RelationManagers\SiswasRelationManager;
 use App\Models\RombelsSubjects;
 use App\Models\RombelsSubjectsTeacher;
 use Filament\Tables\Actions\ActionGroup;
@@ -192,6 +193,7 @@ class RombelResource extends Resource
     {
         return [
             RombelsSubjectsRelationManager::class,
+            SiswasRelationManager::class,
         ];
     }
 

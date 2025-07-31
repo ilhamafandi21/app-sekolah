@@ -15,7 +15,7 @@ Trait GenerateNis
 
         if (! $ta) {
             Notification::make()
-                ->title('Tahun ajaran aktif belum ditetapkan. Diharapkan untuk membuat atau meng-aktifkan terlebih dulu Tahun Ajaran Aktif agar bisa generate NIS otomatis')
+                ->title('Tahun ajaran aktif belum ditetapkan. Diharapkan untuk membuat atau meng-aktifkan terlebih dulu Tahun Ajaran agar bisa generate NIS otomatis')
                 ->danger()
                 ->send();
 

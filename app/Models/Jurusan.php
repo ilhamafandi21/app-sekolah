@@ -34,12 +34,14 @@ class Jurusan extends Model
         return $this->belongsTo(Tingkat::class);
     }
 
+    public function rombels(): HasMany
+    {
+        return $this->hasMany(Rombel::class);
+    }
+    
     public function subjects(): BelongsToMany
     {
         return $this->belongsToMany(Subject::class, 'subjects_jurusans');
     }
-    public function rombels(): HasMany
-    {
-        return $this->hasMany(Rombel::class, 'subjects_jurusans');
-    }
+  
 }

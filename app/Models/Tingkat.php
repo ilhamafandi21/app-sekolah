@@ -24,4 +24,9 @@ class Tingkat extends Model
     {
         return $this->hasMany(Jurusan::class);
     }
+
+    public function rombels(): HasMany
+    {
+        return $this->hasMany(Rombel::class);
+    }
 }

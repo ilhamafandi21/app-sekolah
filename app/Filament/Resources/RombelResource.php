@@ -2,30 +2,16 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\SemesterEnum;
-use Filament\Forms;
-use Filament\Tables;
-use App\Models\Rombel;
-use App\Models\Jurusan;
-use App\Models\Subject;
-use App\Models\Teacher;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use App\Enums\StatusRombel;
-use App\Enums\TingkatKelas;
-use App\Traits\TahunAjaran;
-use Filament\Resources\Resource;
-use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\RombelResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\RombelResource\RelationManagers;
-use App\Filament\Resources\RombelResource\RelationManagers\RombelBiayaRelationManager;
-use App\Filament\Resources\RombelResource\RelationManagers\RombelsSubjectsRelationManager;
-use App\Filament\Resources\RombelResource\RelationManagers\RombelsSubjectsTeacherRelationManager;
-use App\Filament\Resources\RombelResource\RelationManagers\SiswasRelationManager;
-use App\Models\RombelsSubjects;
-use App\Models\RombelsSubjectsTeacher;
-use Filament\Tables\Actions\ActionGroup;
+use App\Models\Rombel;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class RombelResource extends Resource
 {
@@ -33,128 +19,50 @@ class RombelResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationLabel = 'Rombel';
-    
-    protected static ?string $navigationGroup = 'Akademik';
-    protected static ?int $navigationSort = -6;
-
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()->with('jurusan:id,nama,kode');
-    }
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Informasi Umum')
-                    ->schema([
-                        Forms\Components\Grid::make(3)
-                            ->schema([
-                                Forms\Components\Select::make('semester_id')
-                                    ->label('Semester')
-                                    ->relationship('semester', 'name')
-                                    ->getOptionLabelFromRecordUsing(fn ($record) =>
-                                        SemesterEnum::from($record->name)->label() . ' - ' . optional($record->tahun_ajaran)->thn_ajaran
-                                    )
-                                    ->disabled(fn (string $context) => $context === 'edit')
-                                    ->reactive()
-                                    ->required(),
-
-                                Forms\Components\Select::make('tingkat_id')
-                                    ->label('Tingkat Kelas')
-                                    ->options(TingkatKelas::options())
-                                    ->reactive()
-                                    ->required(),
-
-                                Forms\Components\Select::make('jurusan_id')
-                                    ->label('Jurusan')
-                                    ->relationship('jurusan', 'nama')
-                                    ->reactive()
-                                    ->required(),
-
-                                Forms\Components\TextInput::make('divisi')
-                                    ->label('Divisi')
-                                    ->numeric()
-                                    ->required(),
-
-                                Forms\Components\Select::make('status')
-                                    ->label('Status')
-                                    ->options(StatusRombel::options())
-                                    ->default(StatusRombel::NONAKTIF)
-                                    ->required(),
-
-                                Forms\Components\TextInput::make('name')
-                                    ->label('Nama Rombel')
-                                    ->hidden(fn (string $context) => $context === 'create')
-                                    ->helperText('Contoh: 2025/X/1 atau 2025/XI/IPA/1')
-                                    ->disabled()
-                                    ->dehydrated()
-                                    ->columnSpan(2)
-                                    ->required(),
-                            ]),
-                    ])
-                    ->columns(3),
-
-                Forms\Components\Section::make('Biaya')
-                    ->schema([
-                        Forms\Components\Select::make('rombel_biayas')
-                            ->label('Biaya Terkait')
-                            ->multiple()
-                            ->relationship('biayas', 'name')
-                            ->preload()
-                            ->columnSpanFull()
-                        ])
-                        ->columns(1),
-
-                //  Forms\Components\Select::make('subject')
-                //         ->label('Mata Pelajaran')
-                //         ->relationship('rombels_subjects', 'name')
-                //         ->multiple()
-                //         ->preload(),
-
-
+                Forms\Components\TextInput::make('kode')
+                    ->nullable(),
+                Forms\Components\Select::make('tahun_ajaran_id')
+                    ->relationship('tahun_ajaran', 'id')
+                    ->required(),
+                Forms\Components\Select::make('tingkat_id')
+                    ->relationship('tingkat', 'id')
+                    ->required(),
+                Forms\Components\Select::make('jurusan_id')
+                    ->relationship('jurusan', 'id')
+                    ->required(),
+                Forms\Components\TextInput::make('divisi'),
+                Forms\Components\Toggle::make('status')
+                    ->required(),
+                Forms\Components\TextInput::make('keterangan')
+                    ->default('-')
+                    ->nullable(),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultSort('created_at', 'desc')
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->badge()
-                    ->color(fn ($record) => $record->status ? 'success' : 'danger')
+                Tables\Columns\TextColumn::make('kode')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('semester.name')
-                    ->formatStateUsing(fn ($state) => $state ? SemesterEnum::from($state)->label() : '-')
-                    ->description(fn ($record) => $record->semester?->tahun_ajaran?->thn_ajaran)
-                    ->badge()
-                    ->color(fn ($record) => $record->status ? 'success' : 'danger')
-                    ->searchable(),
-                Tables\Columns\ToggleColumn::make('status'),
-
-                Tables\Columns\TextColumn::make('info_rinci')
-                    ->label('Info Rombel')
-                    ->getStateUsing(fn(Rombel $record) => 
-                        $record->tingkat_id . ' ' . 
-                        $record->jurusan?->nama . ' ' .
-                        $record->divisi
-                    )
-                    ->searchable()
+                Tables\Columns\TextColumn::make('tahun_ajaran.id')
+                    ->numeric()
                     ->sortable(),
-
-                Tables\Columns\TextColumn::make('tingkat_id')
-                    ->label('Tingkat')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('jurusan.nama')
-                    ->description(fn(Rombel $record)=>"Kode jurusan:".' ' .$record->jurusan->kode)
+                Tables\Columns\TextColumn::make('tingkat.id')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('jurusan.id')
+                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('divisi')
                     ->searchable(),
-                
+                Tables\Columns\IconColumn::make('status')
+                    ->boolean(),
                 Tables\Columns\TextColumn::make('keterangan')
-                    ->label('Ket')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -169,11 +77,7 @@ class RombelResource extends Resource
                 //
             ])
             ->actions([
-                ActionGroup::make([
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
-                ]),
-               
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -182,22 +86,10 @@ class RombelResource extends Resource
             ]);
     }
 
-     public static function getNavigationBadge(): ?string
-    {
-        return static::getModel()::count();
-    }
-
-    public static function getNavigationBadgeColor(): ?string
-    {
-        return static::getModel()::count() < 10 ? 'success' : 'primary';
-    }
-
     public static function getRelations(): array
     {
         return [
-            RombelsSubjectsRelationManager::class,
-            SiswasRelationManager::class,
-            RombelBiayaRelationManager::class
+            //
         ];
     }
 

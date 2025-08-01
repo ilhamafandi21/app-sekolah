@@ -32,13 +32,6 @@ class JurusanResource extends Resource
 
                         Forms\Components\TextInput::make('nama_jurusan')
                             ->label('Nama Jurusan')
-                            // ->afterStateUpdated(function ($set, $state) {
-                            //     $set('nama_jurusan', strtoupper($state));
-                            // })
-                            // ->unique(ignoreRecord: true)
-                            // ->validationMessages([
-                            //     'unique' => 'Jurusan sudah ada',
-                            // ])
                             ->required(),
 
                         Forms\Components\Select::make('tingkat_id')

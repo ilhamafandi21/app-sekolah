@@ -23,25 +23,36 @@ class JurusanResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('tahun_ajaran_id')
-                    ->relationship('tahun_ajaran', 'thn_ajaran')
-                    ->required(),
-                Forms\Components\Select::make('tingkat_id')
-                    ->relationship('tingkat', 'nama_tingkat')
-                    ->required(),
-                Forms\Components\Hidden::make('kode')
-                    ->dehydrated()
-                    ->nullable(),
-                Forms\Components\TextInput::make('nama_jurusan')
-                    ->afterStateUpdated(function ($set, $state) {
-                        $set('nama_jurusan', strtoupper($state));
-                    })
-                    ->unique(ignoreRecord:true)
-                    ->validationMessages([
-                        'unique' => 'Jurusan sudah ada'
-                    ])
-                    ->required(),
+                Forms\Components\Grid::make(3)
+                    ->schema([
+                        Forms\Components\Select::make('tahun_ajaran_id')
+                            ->label('Tahun Ajaran')
+                            ->relationship('tahun_ajaran', 'thn_ajaran')
+                            ->required(),
+
+                        Forms\Components\TextInput::make('nama_jurusan')
+                            ->label('Nama Jurusan')
+                            // ->afterStateUpdated(function ($set, $state) {
+                            //     $set('nama_jurusan', strtoupper($state));
+                            // })
+                            // ->unique(ignoreRecord: true)
+                            // ->validationMessages([
+                            //     'unique' => 'Jurusan sudah ada',
+                            // ])
+                            ->required(),
+
+                        Forms\Components\Select::make('tingkat_id')
+                            ->label('Tingkat')
+                            ->relationship('tingkat', 'nama_tingkat')
+                            ->required(),
+
+                        Forms\Components\Hidden::make('kode')
+                            ->dehydrated()
+                            ->nullable(),
+                    ]),
+
                 Forms\Components\Textarea::make('keterangan')
+                    ->label('Keterangan')
                     ->default('-')
                     ->columnSpanFull(),
             ]);

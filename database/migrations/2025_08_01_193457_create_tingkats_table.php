@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('tingkats', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tahun_ajaran_id')->constrained('tahun_ajarans', 'id')->nullOnDelete();
+            $table->string('nama_tingkat')->unique();
+            $table->string('keterangan')->nullable();
             $table->timestamps();
         });
     }

@@ -28,11 +28,6 @@ class TingkatResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('nama_tingkat')
                     ->label('Tingkat Kelas')
-                    ->unique(ignoreRecord:true)
-                    ->numeric()
-                    ->validationMessages([
-                        'unique' => 'Kelas sudah ada',
-                    ])
                     ->required(),
                 Forms\Components\TextInput::make('keterangan')
                     ->default('-')

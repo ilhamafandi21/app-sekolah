@@ -24,11 +24,19 @@ class TingkatResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('tahun_ajaran_id')
-                    ->relationship('tahun_ajaran', 'id')
+                    ->relationship('tahun_ajaran', 'thn_ajaran')
                     ->required(),
                 Forms\Components\TextInput::make('nama_tingkat')
+                    ->label('Tingkat Kelas')
+                    ->unique(ignoreRecord:true)
+                    ->numeric()
+                    ->validationMessages([
+                        'unique' => 'Kelas sudah ada',
+                    ])
                     ->required(),
-                Forms\Components\TextInput::make('keterangan'),
+                Forms\Components\TextInput::make('keterangan')
+                    ->default('-')
+                    ->nullable()
             ]);
     }
 
@@ -36,10 +44,11 @@ class TingkatResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('tahun_ajaran.id')
+                Tables\Columns\TextColumn::make('tahun_ajaran.thn_ajaran')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('nama_tingkat')
+                    ->label('Tingkat Kelas')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('keterangan')
                     ->searchable(),

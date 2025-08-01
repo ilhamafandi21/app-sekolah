@@ -23,8 +23,11 @@ class JurusanResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Select::make('tahun_ajaran_id')
+                    ->relationship('tahun_ajaran', 'thn_ajaran')
+                    ->required(),
                 Forms\Components\Select::make('tingkat_id')
-                    ->relationship('tingkat', 'id')
+                    ->relationship('tingkat', 'nama_tingkat')
                     ->required(),
                 Forms\Components\TextInput::make('kode')
                     ->required(),
@@ -39,6 +42,9 @@ class JurusanResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('tahun_ajaran.id')
+                    ->numeric()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('tingkat.id')
                     ->numeric()
                     ->sortable(),

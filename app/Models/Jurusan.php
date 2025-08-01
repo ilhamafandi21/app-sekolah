@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\TahunAjaran;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Jurusan extends Model
@@ -16,13 +17,20 @@ class Jurusan extends Model
     protected $table = 'jurusans';
 
     protected $fillable = [
+        'tahun_ajaran_id',
         'tingkat_id',
         'kode',
         'nama_jurusan',
         'keterangan',
     ];
 
-     public function tingkat(): BelongsTo
+
+    public function tahun_ajaran(): BelongsTo
+    {
+        return $this->belongsTo(TahunAjaran::class);
+    }
+
+    public function tingkat(): BelongsTo
     {
         return $this->belongsTo(Tingkat::class);
     }

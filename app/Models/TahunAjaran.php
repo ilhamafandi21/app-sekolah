@@ -31,4 +31,9 @@ class TahunAjaran extends Model
     {
         return $this->hasMany(Tingkat::class);
     }
+
+    public function jurusans(): HasMany
+    {
+        return $this->hasMany(Jurusan::class);
+    }
 }

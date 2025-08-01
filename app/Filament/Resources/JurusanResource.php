@@ -29,11 +29,20 @@ class JurusanResource extends Resource
                 Forms\Components\Select::make('tingkat_id')
                     ->relationship('tingkat', 'nama_tingkat')
                     ->required(),
-                Forms\Components\TextInput::make('kode')
-                    ->required(),
+                Forms\Components\Hidden::make('kode')
+                    ->dehydrated()
+                    ->nullable(),
                 Forms\Components\TextInput::make('nama_jurusan')
+                    ->afterStateUpdated(function ($set, $state) {
+                        $set('nama_jurusan', strtoupper($state));
+                    })
+                    ->unique(ignoreRecord:true)
+                    ->validationMessages([
+                        'unique' => 'Jurusan sudah ada'
+                    ])
                     ->required(),
                 Forms\Components\Textarea::make('keterangan')
+                    ->default('-')
                     ->columnSpanFull(),
             ]);
     }
@@ -42,10 +51,10 @@ class JurusanResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('tahun_ajaran.id')
+                Tables\Columns\TextColumn::make('tahun_ajaran.thn_ajaran')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('tingkat.id')
+                Tables\Columns\TextColumn::make('tingkat.nama_tingkat')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('kode')
@@ -66,6 +75,7 @@ class JurusanResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

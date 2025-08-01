@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Jurusan extends Model
@@ -15,10 +16,16 @@ class Jurusan extends Model
     protected $table = 'jurusans';
 
     protected $fillable = [
+        'tingkat_id',
         'kode',
-        'nama',
-        'deskripsi',
+        'nama_jurusan',
+        'keterangan',
     ];
+
+     public function tingkat(): BelongsTo
+    {
+        return $this->belongsTo(Tingkat::class);
+    }
 
     public function subjects(): BelongsToMany
     {

@@ -19,9 +19,20 @@ class EditJurusan extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
+
+       $record = $this->record;
+
         $thn = \App\Models\TahunAjaran::find($data['tahun_ajaran_id']);
         $tingkat = \App\Models\Tingkat::find($data['tingkat_id']);
         $namaJurusan = strtoupper($data['nama_jurusan']);
+
+       $original = $record->tahun_ajaran_id == $data['tahun_ajaran_id'] &&
+                    $record->tingkat_id == $data['tingkat_id'] &&
+                    $record->nama_hurusan == $data['nama_jurusan'];
+
+        if($original){
+            return $data;
+        }
 
         $cekdata = \App\Models\Jurusan::where('tahun_ajaran_id', $data['tahun_ajaran_id'])
             ->where('tingkat_id', $data['tingkat_id'])
@@ -39,7 +50,6 @@ class EditJurusan extends EditRecord
             $this->halt();
 
         } else {
-            $data['nama_jurusan'] = $namaJurusan;
             $data['kode'] = "{$thn->thn_ajaran}/{$tingkat->nama_tingkat}/{$namaJurusan}";
         }
 

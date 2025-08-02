@@ -37,6 +37,7 @@ class EditJurusan extends EditRecord
         $cekdata = \App\Models\Jurusan::where('tahun_ajaran_id', $data['tahun_ajaran_id'])
             ->where('tingkat_id', $data['tingkat_id'])
             ->whereRaw('UPPER(nama_jurusan) = ?', [$namaJurusan])
+            ->where('id', '!=', $record->id)
             ->exists();
 
         if ($cekdata) {
@@ -55,4 +56,8 @@ class EditJurusan extends EditRecord
 
         return $data;
     }
+
+
+    
+
 }

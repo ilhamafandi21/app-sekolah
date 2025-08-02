@@ -23,6 +23,19 @@ class JurusanResource extends Resource
     {
         return $form
             ->schema([
+
+                 Forms\Components\Placeholder::make('ringkasan')
+                    ->label('Original')
+                    ->visible(fn (string $context) => $context === 'edit') 
+                    ->content(fn ($record) => <<<HTML
+                        <ul class="list-disc list-inside text-sm text-gray-500 dark:text-gray-400 space-y-1">
+                            <li><strong>Kode:</strong> {$record->kode}</li>
+                            <li><strong>Tingkat:</strong> {$record->tingkat?->nama_tingkat}</li>
+                            <li><strong>Jurusan:</strong> {$record->nama_jurusan}</li>
+                        </ul>
+                    HTML)
+                    ->columnSpanFull(),
+
                 Forms\Components\Grid::make(3)
                     ->schema([
                         Forms\Components\Select::make('tahun_ajaran_id')
@@ -64,6 +77,8 @@ class JurusanResource extends Resource
                 Tables\Columns\TextColumn::make('kode')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nama_jurusan')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('keterangan')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

@@ -11,7 +11,6 @@ class DetailJurusan extends Page
 
     protected static string $view = 'filament.resources.jurusan-resource.pages.detail-jurusan';
 
-    // Di DetailJurusan.php
     public const VIEW_PATH = 'filament.resources.jurusan-resource.pages.detail-jurusan';
 
 }

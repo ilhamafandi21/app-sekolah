@@ -25,8 +25,7 @@ class JurusanResource extends Resource
         return $form
             ->schema([
 
-                 Forms\Components\Placeholder::make('ringkasan')
-                    ->label('Original')
+                 Forms\Components\Placeholder::make('detail-jurusan')
                     ->visible(fn (string $context) => $context === 'edit') 
                     ->viewData(fn ($record) => ['record' => $record])
                     ->view(DetailJurusan::VIEW_PATH)

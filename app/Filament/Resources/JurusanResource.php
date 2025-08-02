@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\JurusanResource\Pages;
+use App\Filament\Resources\JurusanResource\Pages\DetailJurusan;
 use App\Filament\Resources\JurusanResource\RelationManagers;
 use App\Models\Jurusan;
 use Filament\Forms;
@@ -27,13 +28,8 @@ class JurusanResource extends Resource
                  Forms\Components\Placeholder::make('ringkasan')
                     ->label('Original')
                     ->visible(fn (string $context) => $context === 'edit') 
-                    ->content(fn ($record) => <<<HTML
-                        <ul class="list-disc list-inside text-sm text-gray-500 dark:text-gray-400 space-y-1">
-                            <li><strong>Kode:</strong> {$record->kode}</li>
-                            <li><strong>Tingkat:</strong> {$record->tingkat?->nama_tingkat}</li>
-                            <li><strong>Jurusan:</strong> {$record->nama_jurusan}</li>
-                        </ul>
-                    HTML)
+                    ->viewData(fn ($record) => ['record' => $record])
+                    ->view(DetailJurusan::VIEW_PATH)
                     ->columnSpanFull(),
 
                 Forms\Components\Grid::make(3)

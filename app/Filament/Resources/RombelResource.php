@@ -35,12 +35,13 @@ class RombelResource extends Resource
                     ->nullable(),
                 Forms\Components\Select::make('tahun_ajaran_id')
                     ->relationship('tahun_ajaran', 'thn_ajaran')
+                    ->disabled(fn (string $context) => $context === 'edit')
                     ->reactive()
                     ->required(),
                 Forms\Components\Select::make('tingkat_id')
                     ->required()
                     ->preload()
-                    ->disabled(fn (callable $get) => !$get('tahun_ajaran_id'))
+                    ->disabled(fn (string $context, callable $get) => $context === 'edit' || !$get('tahun_ajaran_id'))
                     ->reactive()
                     ->options(function (callable $get) {
                         $tahunAjaranId = $get('tahun_ajaran_id');
@@ -51,7 +52,7 @@ class RombelResource extends Resource
                     }),
                 Forms\Components\Select::make('jurusan_id')
                     ->required()
-                    ->disabled(fn (callable $get) => !$get('tingkat_id'))
+                    ->disabled(fn (string $context, callable $get) => $context === 'edit' || !$get('tahun_ajaran_id'))
                     ->reactive()
                     ->options(function (callable $get) {
                         $tingkatId = $get('tingkat_id');
@@ -60,6 +61,7 @@ class RombelResource extends Resource
                             ->pluck('nama_jurusan', 'id');
                     }),
                 Forms\Components\TextInput::make('divisi')
+                    ->disabled(fn (string $context) => $context === 'edit')
                     ->required()
                     ->numeric(),
                 Forms\Components\Toggle::make('status')

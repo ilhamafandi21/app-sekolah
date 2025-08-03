@@ -20,13 +20,21 @@ class EditRombel extends EditRecord
     }
 
     
-    // protected function getSaveFormAction(): Action
-    // {
-    //     return Action::make('save')
-    //         ->label('Simpan Perubahan')
-    //         ->submit('save')
-    //         ->keyBindings(['mod+s']);
-    // }
+    protected function getSaveFormAction(): Action
+    {
+        return Action::make('save')
+            ->label('💾 Simpan Perubahan')
+            ->submit('save')
+            ->keyBindings(['mod+s']);
+    }
+
+    protected function getCancelFormAction(): Action
+    {
+        return Action::make('cancel')
+            ->label(__('✖️ Batal'))
+            ->alpineClickHandler('document.referrer ? window.history.back() : (window.location.href = ' . \Illuminate\Support\Js::from($this->previousUrl ?? static::getResource()::getUrl()) . ')')
+            ->color('gray');
+    }
 
 
     protected function getHeaderActions(): array

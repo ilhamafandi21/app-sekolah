@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\RombelResource\Pages;
 
 use Filament\Actions;
+use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use App\Filament\Resources\RombelResource;
@@ -17,6 +18,16 @@ class EditRombel extends EditRecord
     {
         return 'Ubah Rombel '.$this->record->kode;
     }
+
+    
+    // protected function getSaveFormAction(): Action
+    // {
+    //     return Action::make('save')
+    //         ->label('Simpan Perubahan')
+    //         ->submit('save')
+    //         ->keyBindings(['mod+s']);
+    // }
+
 
     protected function getHeaderActions(): array
     {

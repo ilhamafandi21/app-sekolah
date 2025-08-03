@@ -31,7 +31,7 @@ class RombelResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('🧾 Informasi Rombel')
+                Forms\Components\Section::make('📟 Informasi Rombel')
                     ->description('Silakan lengkapi data rombongan belajar')
                     ->schema([
                         Forms\Components\Hidden::make('kode')
@@ -85,7 +85,7 @@ class RombelResource extends Resource
                                     ->required()
                                     ->disabled(fn (string $context) => $context === 'edit')
                                     ->dehydrated(),
-                                    
+
                             ])
                             ->columns(2),
                     ])
@@ -123,7 +123,7 @@ class RombelResource extends Resource
                                 ($record->jurusan?->nama_jurusan ?? '-') . '-' .
                                 ($record->divisi ?? '-');
                     })
-                    ->wrap() // biar nggak terlalu panjang ke kanan
+                    ->wrap()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tahun_ajaran.thn_ajaran')
                     ->numeric()
@@ -149,9 +149,7 @@ class RombelResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+            ->filters([])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
@@ -164,9 +162,7 @@ class RombelResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

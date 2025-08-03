@@ -23,7 +23,6 @@ class EditRombel extends EditRecord
     {
         return [
             Actions\DeleteAction::make()
-                ->label('Hapus'),
         ];
     }
 

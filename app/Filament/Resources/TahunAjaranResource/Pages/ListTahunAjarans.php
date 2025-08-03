@@ -16,9 +16,7 @@ class ListTahunAjarans extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-                Actions\CreateAction::make()
-                    ->label('Tambah')
-                    ->icon('heroicon-s-plus-circle')
+                Actions\CreateAction::make(),
         ];
     }
 }

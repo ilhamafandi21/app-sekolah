@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\RombelResource\Pages;
 
-use App\Filament\Resources\RombelResource;
 use Filament\Actions;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use App\Filament\Resources\RombelResource;
 use Illuminate\Contracts\Support\Htmlable;
 
 class EditRombel extends EditRecord
@@ -15,9 +15,8 @@ class EditRombel extends EditRecord
 
     public function getTitle(): string
     {
-        return $record->kode;
+        return 'Ubah Rombel '.$this->record->kode;
     }
-
 
     protected function getHeaderActions(): array
     {

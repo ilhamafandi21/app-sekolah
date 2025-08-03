@@ -42,30 +42,31 @@ class RombelResource extends Resource
                             ->schema([
                                 Forms\Components\Select::make('tahun_ajaran_id')
                                     ->label('Tahun Ajaran')
+                                    ->required()
+                                    ->reactive()
                                     ->relationship('tahun_ajaran', 'thn_ajaran')
                                     ->disabled(fn (string $context) => $context === 'edit')
-                                    ->reactive()
-                                    ->required(),
+                                    ->dehydrated(),
 
                                 Forms\Components\Select::make('tingkat_id')
                                     ->label('Tingkat')
                                     ->required()
-                                    ->preload()
-                                    ->reactive()
-                                    ->disabled(fn (string $context, callable $get) =>
-                                        $context === 'edit' || !$get('tahun_ajaran_id'))
                                     ->options(function (callable $get) {
                                         $tahunAjaranId = $get('tahun_ajaran_id');
                                         if (!$tahunAjaranId) return [];
                                         return \App\Models\Tingkat::where('tahun_ajaran_id', $tahunAjaranId)
-                                            ->orderBy('nama_tingkat')
-                                            ->pluck('nama_tingkat', 'id');
-                                    }),
+                                        ->orderBy('nama_tingkat')
+                                        ->pluck('nama_tingkat', 'id');
+                                    })
+                                    ->disabled(fn (string $context, callable $get) =>
+                                    $context === 'edit' || !$get('tahun_ajaran_id'))
+                                    ->preload()
+                                    ->reactive()
+                                    ->dehydrated(),
 
                                 Forms\Components\Select::make('jurusan_id')
                                     ->label('Jurusan')
                                     ->required()
-                                    ->reactive()
                                     ->disabled(fn (string $context, callable $get) =>
                                         $context === 'edit' || !$get('tingkat_id'))
                                     ->options(function (callable $get) {
@@ -74,13 +75,17 @@ class RombelResource extends Resource
                                         return \App\Models\Jurusan::where('tingkat_id', $tingkatId)
                                             ->orderBy('nama_jurusan')
                                             ->pluck('nama_jurusan', 'id');
-                                    }),
+                                    })
+                                    ->reactive()
+                                    ->dehydrated(),
 
                                 Forms\Components\TextInput::make('divisi')
                                     ->label('Divisi')
-                                    ->required()
                                     ->numeric()
-                                    ->disabled(fn (string $context) => $context === 'edit'),
+                                    ->required()
+                                    ->disabled(fn (string $context) => $context === 'edit')
+                                    ->dehydrated(),
+                                    
                             ])
                             ->columns(2),
                     ])

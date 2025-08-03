@@ -6,15 +6,24 @@ use App\Filament\Resources\RombelResource;
 use Filament\Actions;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Contracts\Support\Htmlable;
 
 class EditRombel extends EditRecord
 {
     protected static string $resource = RombelResource::class;
+    
+
+    public function getTitle(): string
+    {
+        return $record->kode;
+    }
+
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+                ->label('Hapus'),
         ];
     }
 

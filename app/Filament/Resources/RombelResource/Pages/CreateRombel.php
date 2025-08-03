@@ -10,6 +10,7 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateRombel extends CreateRecord
 {
     protected static string $resource = RombelResource::class;
+    protected static ?string $title = 'Buat Rombel Baru';
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {

@@ -9,11 +9,14 @@ use Filament\Resources\Pages\ListRecords;
 class ListRombels extends ListRecords
 {
     protected static string $resource = RombelResource::class;
+    protected static ?string $title = 'Daftar Rombel';
+
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->label('Tambah'),
         ];
     }
 }

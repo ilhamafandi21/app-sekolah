@@ -15,7 +15,7 @@ class RombelResource extends Resource
 {
     protected static ?string $model = Rombel::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-arrow-right-start-on-rectangle';
     protected static ?string $navigationLabel = 'Rombel';
 
     public static function getEloquentQuery(): Builder

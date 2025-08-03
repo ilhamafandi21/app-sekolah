@@ -16,6 +16,7 @@ class RombelResource extends Resource
     protected static ?string $model = Rombel::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationLabel = 'Rombel';
 
     public static function getEloquentQuery(): Builder
     {
@@ -26,49 +27,80 @@ class RombelResource extends Resource
         ]);
     }
 
-    public static function form(Form $form): Form
+   public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Hidden::make('kode')
-                    ->dehydrated()
-                    ->nullable(),
-                Forms\Components\Select::make('tahun_ajaran_id')
-                    ->relationship('tahun_ajaran', 'thn_ajaran')
-                    ->disabled(fn (string $context) => $context === 'edit')
-                    ->reactive()
-                    ->required(),
-                Forms\Components\Select::make('tingkat_id')
-                    ->required()
-                    ->preload()
-                    ->disabled(fn (string $context, callable $get) => $context === 'edit' || !$get('tahun_ajaran_id'))
-                    ->reactive()
-                    ->options(function (callable $get) {
-                        $tahunAjaranId = $get('tahun_ajaran_id');
-                        if (!$tahunAjaranId) return [];
-                        return \App\Models\Tingkat::where('tahun_ajaran_id', $tahunAjaranId)
-                            ->orderBy('nama_tingkat')
-                            ->pluck('nama_tingkat', 'id');
-                    }),
-                Forms\Components\Select::make('jurusan_id')
-                    ->required()
-                    ->disabled(fn (string $context, callable $get) => $context === 'edit' || !$get('tahun_ajaran_id'))
-                    ->reactive()
-                    ->options(function (callable $get) {
-                        $tingkatId = $get('tingkat_id');
-                        if (!$tingkatId) return [];
-                        return \App\Models\Jurusan::where('tingkat_id', $tingkatId)
-                            ->pluck('nama_jurusan', 'id');
-                    }),
-                Forms\Components\TextInput::make('divisi')
-                    ->disabled(fn (string $context) => $context === 'edit')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\Toggle::make('status')
-                    ->default(true),
-                Forms\Components\TextInput::make('keterangan')
-                    ->default('-')
-                    ->nullable(),
+                Forms\Components\Section::make('🧾 Informasi Rombel')
+                    ->description('Silakan lengkapi data rombongan belajar')
+                    ->schema([
+                        Forms\Components\Hidden::make('kode')
+                            ->dehydrated()
+                            ->nullable(),
+
+                        Forms\Components\Grid::make(2)
+                            ->schema([
+                                Forms\Components\Select::make('tahun_ajaran_id')
+                                    ->label('Tahun Ajaran')
+                                    ->relationship('tahun_ajaran', 'thn_ajaran')
+                                    ->disabled(fn (string $context) => $context === 'edit')
+                                    ->reactive()
+                                    ->required(),
+
+                                Forms\Components\Select::make('tingkat_id')
+                                    ->label('Tingkat')
+                                    ->required()
+                                    ->preload()
+                                    ->reactive()
+                                    ->disabled(fn (string $context, callable $get) =>
+                                        $context === 'edit' || !$get('tahun_ajaran_id'))
+                                    ->options(function (callable $get) {
+                                        $tahunAjaranId = $get('tahun_ajaran_id');
+                                        if (!$tahunAjaranId) return [];
+                                        return \App\Models\Tingkat::where('tahun_ajaran_id', $tahunAjaranId)
+                                            ->orderBy('nama_tingkat')
+                                            ->pluck('nama_tingkat', 'id');
+                                    }),
+
+                                Forms\Components\Select::make('jurusan_id')
+                                    ->label('Jurusan')
+                                    ->required()
+                                    ->reactive()
+                                    ->disabled(fn (string $context, callable $get) =>
+                                        $context === 'edit' || !$get('tingkat_id'))
+                                    ->options(function (callable $get) {
+                                        $tingkatId = $get('tingkat_id');
+                                        if (!$tingkatId) return [];
+                                        return \App\Models\Jurusan::where('tingkat_id', $tingkatId)
+                                            ->orderBy('nama_jurusan')
+                                            ->pluck('nama_jurusan', 'id');
+                                    }),
+
+                                Forms\Components\TextInput::make('divisi')
+                                    ->label('Divisi')
+                                    ->required()
+                                    ->numeric()
+                                    ->disabled(fn (string $context) => $context === 'edit'),
+                            ])
+                            ->columns(2),
+                    ])
+                    ->collapsible(),
+
+                Forms\Components\Section::make('📌 Status & Keterangan')
+                    ->description('Informasi tambahan')
+                    ->schema([
+                        Forms\Components\Toggle::make('status')
+                            ->label('Aktifkan Rombel')
+                            ->default(true),
+
+                        Forms\Components\TextInput::make('keterangan')
+                            ->label('Catatan / Keterangan')
+                            ->default('-')
+                            ->nullable()
+                            ->columnSpanFull(),
+                    ])
+                    ->collapsible()
+                    ->collapsed(false),
             ]);
     }
 

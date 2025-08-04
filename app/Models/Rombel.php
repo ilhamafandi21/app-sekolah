@@ -62,6 +62,7 @@ class Rombel extends Model
         return $this->belongsToMany(Subject::class, 'rombels_subjects', 'rombel_id', 'subject_id')
             ->using(\App\Models\RombelsSubjects::class)
             ->withPivot(['semester_id', 'teacher_id'])
+            ->as('rombelsSubject')
             ->withTimestamps();
     }
 

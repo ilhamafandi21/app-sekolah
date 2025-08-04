@@ -21,7 +21,7 @@ class SubjectsRelationManager extends RelationManager
     protected static function modifyQuery(Builder $query): Builder
     {
         return $query->with([
-            'pivot.teacher', // pastikan ini dipanggil
+            'rombelsSubject.teacher'
         ]);
     }
 
@@ -41,10 +41,10 @@ class SubjectsRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('teacher')
+                Tables\Columns\TextColumn::make('rombelsSubject.teacher.name')
                     ->label('Pengajar')
-                    ->getStateUsing(function($record){
-                        return $record->pivot->teacher->name ?? 'Belum diatur';
+                    ->getStateUsing(function ($record) {
+                        return $record->rombelsSubject->teacher->name ?? 'Belum diatur';
                     }),
             ])
             ->filters([

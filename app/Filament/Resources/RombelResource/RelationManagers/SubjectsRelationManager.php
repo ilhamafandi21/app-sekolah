@@ -71,7 +71,7 @@ class SubjectsRelationManager extends RelationManager
 
                         // dd($record->pivot_teacher_id);
 
-                        $record->pivot->update([
+                        $record->rombelsSubject->update([
                             'teacher_id' => $data['teacher_id'],
                         ]);
 

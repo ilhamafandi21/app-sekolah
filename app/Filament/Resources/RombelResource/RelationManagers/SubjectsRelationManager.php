@@ -47,6 +47,7 @@ class SubjectsRelationManager extends RelationManager
                 Tables\Actions\DetachAction::make()
                     ->icon('heroicon-o-trash'),
                 Tables\Actions\Action::make('tambahTeacher')
+                    ->color(fn ($record) => $record->teacher_id ? 'danger' : 'primary')
                     ->label(fn ($record) => $record->teacher_id ? 'Edit/Kosongkan Teacher' : 'Tambah Teacher')
                     ->form([
                          Forms\Components\Select::make('teacher_id')

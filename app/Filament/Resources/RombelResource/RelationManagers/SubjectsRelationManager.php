@@ -51,8 +51,25 @@ class SubjectsRelationManager extends RelationManager
                          Forms\Components\Select::make('teacher_id')
                             ->options(\App\Models\Teacher::pluck('name', 'id'))
                             ->searchable()
-                            ->required(),
-                    ]),
+                            ->required()      
+                    ])
+                    ->action(function(array $data, $record){
+
+                        // dd($record->pivot_teacher_id);
+
+                        $record->pivot->update([
+                            'teacher_id' => $data['teacher_id'],
+                        ]);
+
+                        \Filament\Notifications\Notification::make()
+                            ->title('Berhasil')
+                            ->body('Guru telah berhasil ditambahkan ke mata pelajaran.')
+                            ->success()
+                            ->send();
+                    })
+                    ->icon('heroicon-o-plus')
+                    ->modalHeading('Tambah Guru')
+                    ->requiresConfirmation(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

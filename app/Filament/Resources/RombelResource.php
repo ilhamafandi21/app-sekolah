@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\RombelResource\Pages;
+use App\Filament\Resources\RombelResource\RelationManagers\SubjectsRelationManager;
 use App\Models\Rombel;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -162,7 +163,9 @@ class RombelResource extends Resource
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            SubjectsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

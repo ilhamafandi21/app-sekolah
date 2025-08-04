@@ -8,12 +8,18 @@ use App\Models\Teacher;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
 
 class SubjectsRelationManager extends RelationManager
 {
     protected static string $relationship = 'subjects';
+
+    protected static function getEloquentQuery(): Builder
+    {
+        return static::getModel()::with([
+            'rombelsSubjects.teacher:id,name',
+        ]);
+    }
 
     public function form(Form $form): Form
     {
@@ -31,7 +37,7 @@ class SubjectsRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('teacher_id')
+                Tables\Columns\TextColumn::make('rombelsSubjects.teacher.name')
                     ->label('Pengajar'),
             ])
             ->filters([

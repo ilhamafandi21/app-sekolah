@@ -13,10 +13,15 @@ class SubjectsRelationManager extends RelationManager
 {
     protected static string $relationship = 'subjects';
 
+    // protected static function modifyQuery(Builder $query): Builder
+    // {
+    //     return $query->withPivot('teacher_id');
+    // }
+
     protected static function modifyQuery(Builder $query): Builder
     {
         return $query->with([
-            'rombelsSubjects.teacher:id,name',
+            'pivot.teacher', // pastikan ini dipanggil
         ]);
     }
 
@@ -36,8 +41,11 @@ class SubjectsRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('rombelsSubjects.teacher.name')
-                    ->label('Pengajar'),
+                Tables\Columns\TextColumn::make('teacher')
+                    ->label('Pengajar')
+                    ->getStateUsing(function($record){
+                        return $record->pivot->teacher->name ?? 'Belum diatur';
+                    }),
             ])
             ->filters([
                 //

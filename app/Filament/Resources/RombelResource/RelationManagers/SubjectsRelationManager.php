@@ -4,7 +4,6 @@ namespace App\Filament\Resources\RombelResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Tables;
-use App\Models\Teacher;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,9 +13,9 @@ class SubjectsRelationManager extends RelationManager
 {
     protected static string $relationship = 'subjects';
 
-    protected static function getEloquentQuery(): Builder
+    protected static function modifyQuery(Builder $query): Builder
     {
-        return static::getModel()::with([
+        return $query->with([
             'rombelsSubjects.teacher:id,name',
         ]);
     }

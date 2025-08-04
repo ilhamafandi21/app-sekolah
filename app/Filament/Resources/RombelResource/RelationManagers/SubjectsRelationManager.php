@@ -47,11 +47,11 @@ class SubjectsRelationManager extends RelationManager
                 Tables\Actions\DetachAction::make()
                     ->icon('heroicon-o-trash'),
                 Tables\Actions\Action::make('tambahTeacher')
+                    ->label(fn ($record) => $record->teacher_id ? 'Edit teacher' : 'Tambah teacher')
                     ->form([
                          Forms\Components\Select::make('teacher_id')
                             ->options(\App\Models\Teacher::pluck('name', 'id'))
-                            ->searchable()
-                            ->required()      
+                            ->searchable()      
                     ])
                     ->action(function(array $data, $record){
 
@@ -68,7 +68,7 @@ class SubjectsRelationManager extends RelationManager
                             ->send();
                     })
                     ->icon('heroicon-o-plus')
-                    ->modalHeading('Tambah Guru')
+                    ->modalHeading(fn ($record) => $record->teacher_id ? 'Edit teacher' : 'Tambah teacher')
                     ->requiresConfirmation(),
             ])
             ->bulkActions([

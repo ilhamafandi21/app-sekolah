@@ -47,7 +47,7 @@ class SubjectsRelationManager extends RelationManager
                 Tables\Actions\DetachAction::make()
                     ->icon('heroicon-o-trash'),
                 Tables\Actions\Action::make('tambahTeacher')
-                    ->label(fn ($record) => $record->teacher_id ? 'Edit teacher' : 'Tambah teacher')
+                    ->label(fn ($record) => $record->teacher_id ? 'Edit/Kosongkan Teacher' : 'Tambah Teacher')
                     ->form([
                          Forms\Components\Select::make('teacher_id')
                             ->options(\App\Models\Teacher::pluck('name', 'id'))
@@ -63,12 +63,16 @@ class SubjectsRelationManager extends RelationManager
 
                         \Filament\Notifications\Notification::make()
                             ->title('Berhasil')
-                            ->body('Guru telah berhasil ditambahkan ke mata pelajaran.')
+                            ->body(
+                                is_null($data['teacher_id'])
+                                    ? 'Guru telah dikosongkan dari mata pelajaran.'
+                                    : 'Guru telah ditambahkan/diedit untuk mata pelajaran.'
+                            )
                             ->success()
                             ->send();
                     })
                     ->icon('heroicon-o-plus')
-                    ->modalHeading(fn ($record) => $record->teacher_id ? 'Edit teacher' : 'Tambah teacher')
+                    ->modalHeading(fn ($record) => $record->teacher_id ? 'Edit/Kosongkan Teacher' : 'Tambah teacher')
                     ->requiresConfirmation(),
             ])
             ->bulkActions([

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Schedull;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -13,6 +14,6 @@ class Day extends Model
 
     public function schedulls(): HasMany
     {
-        return $this->hasMany(Day::class, 'day_id');
+        return $this->hasMany(Schedull::class, 'day_id');
     }
 }

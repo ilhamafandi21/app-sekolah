@@ -19,6 +19,13 @@ class SchedullResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static function modifyQueryUsing()
+    {
+        return static::getModel()::with([
+            'day:id,nama_hari',
+        ]);
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -40,7 +47,7 @@ class SchedullResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('kode')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('day.id')
+                Tables\Columns\TextColumn::make('day.nama_hari')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('start_at'),

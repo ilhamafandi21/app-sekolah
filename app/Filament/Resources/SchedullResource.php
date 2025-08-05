@@ -19,7 +19,7 @@ class SchedullResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static function modifyQueryUsing()
+    public static function getEloquentQuery(): Builder
     {
         return static::getModel()::with([
             'day:id,nama_hari',

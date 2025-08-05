@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Day;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -16,6 +17,6 @@ class Schedull extends Model
 
      public function day(): BelongsTo
      {
-        return $this->belongsTo(\App\Models\Day::class);
+        return $this->belongsTo(Day::class);
      }
 }

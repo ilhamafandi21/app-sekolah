@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Day extends Model
 {
+    protected $table = 'days';
+    
     protected $fillable = [
         'nama_hari',
     ];

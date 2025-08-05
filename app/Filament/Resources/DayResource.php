@@ -24,12 +24,12 @@ class DayResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('nama_hari')
+                    ->mutateDehydratedStateUsing(fn($state)=>strtoupper($state))
+                    ->required()
                     ->unique()
                     ->validationMessages([
                         'unique' => 'Hasri sudah tersedia!'
-                    ])
-                    ->afterStateUpdated(fn($state) => strtoupper($state))
-                    ->required(),
+                ]),
             ]);
     }
 

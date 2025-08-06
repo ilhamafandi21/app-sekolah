@@ -34,7 +34,6 @@ class SchedullResource extends Resource
                 Forms\Components\Hidden::make('kode'),
                 Forms\Components\Select::make('day_id')
                     ->relationship('day', 'nama_hari'),
-                    
                 Forms\Components\TimePicker::make('start_at'),
                 Forms\Components\TimePicker::make('end_at'),
             ]);

@@ -20,6 +20,11 @@ class DayResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with('schedulls');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -41,7 +46,17 @@ class DayResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('nama_hari')
+                    ->badge()
+                    ->color('secondary')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('schedulls.start_at')
+                    ->label('Start at')
+                    ->badge()
+                    ->color('success'),
+                Tables\Columns\TextColumn::make('schedulls.end_at')
+                    ->label('End at')
+                    ->badge()
+                    ->color('primary'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

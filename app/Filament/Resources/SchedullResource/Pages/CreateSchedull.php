@@ -6,6 +6,9 @@ use Filament\Actions;
 use Illuminate\Support\Carbon;
 use Filament\Resources\Pages\CreateRecord;
 use App\Filament\Resources\SchedullResource;
+use Filament\Notifications\Notification;
+
+use function Laravel\Prompts\form;
 
 class CreateSchedull extends CreateRecord
 {
@@ -18,6 +21,16 @@ class CreateSchedull extends CreateRecord
         $endAt =  Carbon::parse($data['end_at'])->format('H:i');
 
         $kombinasi = $hari. '/' .$startAt. '/' .$endAt;
+
+        if ($kombinasi){
+            Notification::make()
+                ->title('Error')
+                ->body('Jadwal sudah ada')
+                ->danger()
+                ->send();
+            
+            $this->halt();
+        }
 
         $data['kode'] = $kombinasi;
 

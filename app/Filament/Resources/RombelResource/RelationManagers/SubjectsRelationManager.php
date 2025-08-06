@@ -59,6 +59,29 @@ class SubjectsRelationManager extends RelationManager
             ->actions([
                 Tables\Actions\DetachAction::make()
                     ->icon('heroicon-o-trash'),
+                Tables\Actions\Action::make('tambahJadwal')
+                    ->label('Atur Jadwal')
+                    ->form([
+                        Forms\Components\Select::make('schedull_id')
+                            ->options(\App\Models\Schedull::pluck('kode', 'id'))
+                            ->multiple()
+                            ->searchable() 
+                    ])
+                    ->action(function(array $data, $record){
+                        $record->rombelsSubject->update([
+                            'schedull_id' => $data['schedull_id'],
+                    
+                        \Filament\Notifications\Notification::make()
+                            ->title('Berhasil')
+                            ->body(
+                                is_null($data['schedull_id'])
+                                    ? 'Jadwal berhasil diatur untuk mata pelajaran.'
+                                    : 'Jadwal telah ditambahkan/diedit untuk mata pelajaran.'
+                            )
+                            ->success()
+                            ->send()
+                        ]);
+                    }),
                 Tables\Actions\Action::make('tambahTeacher')
                     ->color(fn ($record) => $record->teacher_id ? 'danger' : 'primary')
                     ->label(fn ($record) => $record->teacher_id ? 'Edit/Kosongkan Teacher' : 'Tambah Teacher')

@@ -119,7 +119,9 @@ class TeacherResource extends Resource
                         ->sortable()
                         ->searchable(),
                     Tables\Columns\ImageColumn::make('foto')
-                        ->label('Foto'),
+                        ->label('Foto')
+                        ->height(48)
+                        ->width(48),
                     Tables\Columns\TextColumn::make('name')
                         ->label('Nama')
                         ->weight('bold')

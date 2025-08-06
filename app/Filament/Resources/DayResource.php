@@ -51,31 +51,15 @@ class DayResource extends Resource
                     ->color('secondary')
                     ->searchable(),
                 
-                // Tables\Columns\TextColumn::make('schedulls')
-                //     ->label('Waktu')
-                //     ->html() // ← INI PENTING!
-                //     ->formatStateUsing(function ($record) {
-                //         return $record->schedulls
-                //             ->map(fn ($s) => "{$s->start_at} - {$s->end_at}")
-                //             ->implode('<br>');
-                // }),
+                Tables\Columns\TextColumn::make('schedulls')
+                    ->label('Waktu')
+                    ->html() // ← INI PENTING!
+                    ->formatStateUsing(function ($record) {
+                        return $record->schedulls
+                            ->map(fn ($s) => "{$s->start_at} - {$s->end_at}")
+                            ->implode('<br>');
+                }),
 
-                ColumnGroup::make('jadwal',
-                [
-                    Tables\Columns\TextColumn::make('schedulls.start_at')
-                        ->label('Start at')
-                        ->listWithLineBreaks()
-                        ->badge()
-                        ->color('success'),
-                    Tables\Columns\TextColumn::make('schedulls.end_at')
-                        ->label('End at')
-                        ->listWithLineBreaks()
-                        ->badge()
-                        ->color('primary'),
-                ]),
-
-                
-                
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

@@ -33,7 +33,9 @@ class SchedullsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('kode'),
+                Tables\Columns\TextColumn::make('start_at'),
+                Tables\Columns\TextColumn::make('end_at'),
             ])
             ->filters([
                 //
@@ -41,13 +43,13 @@ class SchedullsRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->mutateFormDataUsing(function (Array $data){
-                        $hari = $this->day_id->nama_hari;
+                        $hari = $this->getOwnerRecord()->nama_hari;
                         $startAt =  Carbon::parse($data['start_at'])->format('H:i');
                         $endAt =  Carbon::parse($data['end_at'])->format('H:i');
                         $kombinasi = $hari. '/' .$startAt. '/' .$endAt;
 
                         $cek = Schedull::where('kode', $kombinasi)
-                                    ->where('day_id', $this->day_id)
+                                    ->where('day_id', $this->getOwnerRecord())
                                     ->where('start_at', $data['start_at'])
                                     ->where('end_at', $data['end_at'])
                                     ->exists();

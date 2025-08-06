@@ -41,6 +41,10 @@ class SubjectsRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('Jadwal Pelajaran')
+                    ->getStateUsing(function ($record) {
+                        return $record->rombelsSubject->schedull->kode ?? 'Belum diatur';
+                    }),
                 Tables\Columns\TextColumn::make('rombelsSubject.teacher.name')
                     ->label('Pengajar')
                     ->getStateUsing(function ($record) {

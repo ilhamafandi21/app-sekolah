@@ -16,7 +16,7 @@ class EditRombel extends EditRecord
 
     public function getTitle(): string
     {
-        return 'Ubah Rombel '.$this->record->kode;
+        return 'Rombel '.$this->record->kode;
     }
 
     protected function getHeaderActions(): array

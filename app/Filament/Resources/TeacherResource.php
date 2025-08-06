@@ -66,7 +66,6 @@ class TeacherResource extends Resource
                                 ->required(),
                             Forms\Components\FileUpload::make('foto')
                                 ->label('Foto Profil')
-                                ->avatar()
                                 ->image()
                                 ->directory('img_teacher')
                                 ->imageEditor()
@@ -120,10 +119,7 @@ class TeacherResource extends Resource
                         ->sortable()
                         ->searchable(),
                     Tables\Columns\ImageColumn::make('foto')
-                        ->label('Foto')
-                        ->circular()
-                        ->height(48)
-                        ->width(48),
+                        ->label('Foto'),
                     Tables\Columns\TextColumn::make('name')
                         ->label('Nama')
                         ->weight('bold')

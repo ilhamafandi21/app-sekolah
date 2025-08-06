@@ -30,9 +30,7 @@ class SchedullResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('kode')
-                    ->mutateDehydratedStateUsing(fn($state) => strtoupper($state))
-                    ->required(),
+                Forms\Components\Hidden::make('kode'),
                 Forms\Components\Select::make('day_id')
                     ->relationship('day', 'nama_hari'),
                     

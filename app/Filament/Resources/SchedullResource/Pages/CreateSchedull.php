@@ -19,8 +19,7 @@ class CreateSchedull extends CreateRecord
 
         $kombinasi = $hari. '/' .$startAt. '/' .$endAt;
 
-        dd($kombinasi);
-
+        $data['kode'] = $kombinasi;
 
         return $data;
     }

@@ -3,12 +3,13 @@
 namespace App\Filament\Resources\SchedullResource\Pages;
 
 use Filament\Actions;
+use App\Models\Schedull;
 use Illuminate\Support\Carbon;
-use Filament\Resources\Pages\CreateRecord;
-use App\Filament\Resources\SchedullResource;
+use function Laravel\Prompts\form;
 use Filament\Notifications\Notification;
 
-use function Laravel\Prompts\form;
+use Filament\Resources\Pages\CreateRecord;
+use App\Filament\Resources\SchedullResource;
 
 class CreateSchedull extends CreateRecord
 {
@@ -22,7 +23,12 @@ class CreateSchedull extends CreateRecord
 
         $kombinasi = $hari. '/' .$startAt. '/' .$endAt;
 
-        if ($kombinasi){
+        $cek = Schedull::where('day_id', $data['day_id'])
+                    ->where('start_at', $startAt)
+                    ->where('end_at', $endAt)
+                    ->exists();
+
+        if ($cek){
             Notification::make()
                 ->title('Error')
                 ->body('Jadwal sudah ada')

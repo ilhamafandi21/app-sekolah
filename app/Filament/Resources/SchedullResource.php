@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\DayResource\RelationManagers\SchedullsRelationManager;
 use App\Filament\Resources\SchedullResource\Pages;
 use App\Filament\Resources\SchedullResource\RelationManagers;
 use App\Models\Schedull;
@@ -75,7 +76,7 @@ class SchedullResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+           //
         ];
     }
 

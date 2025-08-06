@@ -2,16 +2,17 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\DayResource\Pages;
-use App\Filament\Resources\DayResource\RelationManagers;
 use App\Models\Day;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\DayResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\DayResource\RelationManagers;
+use App\Filament\Resources\DayResource\RelationManagers\SchedullsRelationManager;
 
 class DayResource extends Resource
 {
@@ -64,7 +65,7 @@ class DayResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            SchedullsRelationManager::class,
         ];
     }
 

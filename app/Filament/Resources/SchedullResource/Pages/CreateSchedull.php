@@ -10,6 +10,7 @@ use Filament\Notifications\Notification;
 
 use Filament\Resources\Pages\CreateRecord;
 use App\Filament\Resources\SchedullResource;
+use Illuminate\Validation\ValidationException;
 
 class CreateSchedull extends CreateRecord
 {
@@ -23,19 +24,24 @@ class CreateSchedull extends CreateRecord
 
         $kombinasi = $hari. '/' .$startAt. '/' .$endAt;
 
-        $cek = Schedull::where('day_id', $data['day_id'])
-                    ->where('start_at', $startAt)
-                    ->where('end_at', $endAt)
+        $cek = Schedull::where('kode', $kombinasi)
+                    ->where('day_id', $data['day_id'])
+                    ->where('start_at', $data['start_at'])
+                    ->where('end_at', $data['end_at'])
                     ->exists();
 
         if ($cek){
             Notification::make()
                 ->title('Error')
-                ->body('Jadwal sudah ada')
+                ->body('Jadwal dengan kombinasi hari & jam ini sudah ada.')
                 ->danger()
                 ->send();
             
             $this->halt();
+
+            throw ValidationException::withMessages([
+                'start_at' => ['Jadwal dengan kombinasi hari & jam ini sudah ada.'],
+            ]);
         }
 
         $data['kode'] = $kombinasi;

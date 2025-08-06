@@ -25,7 +25,9 @@ class DayResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('nama_hari')
+                    ->dehydrated()
                     ->mutateDehydratedStateUsing(fn($state)=>strtoupper($state))
+                    ->disabled( fn(string $context) => $context === 'edit')
                     ->required()
                     ->unique()
                     ->validationMessages([

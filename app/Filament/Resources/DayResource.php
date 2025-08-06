@@ -13,6 +13,7 @@ use App\Filament\Resources\DayResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\DayResource\RelationManagers;
 use App\Filament\Resources\DayResource\RelationManagers\SchedullsRelationManager;
+use Filament\Tables\Columns\ColumnGroup;
 
 class DayResource extends Resource
 {
@@ -50,24 +51,31 @@ class DayResource extends Resource
                     ->color('secondary')
                     ->searchable(),
                 
-                Tables\Columns\TextColumn::make('schedulls')
-                    ->label('Waktu')
-                    ->html() // ← INI PENTING!
-                    ->formatStateUsing(function ($record) {
-                        return $record->schedulls
-                            ->map(fn ($s) => "{$s->start_at} - {$s->end_at}")
-                            ->implode('<br>');
+                // Tables\Columns\TextColumn::make('schedulls')
+                //     ->label('Waktu')
+                //     ->html() // ← INI PENTING!
+                //     ->formatStateUsing(function ($record) {
+                //         return $record->schedulls
+                //             ->map(fn ($s) => "{$s->start_at} - {$s->end_at}")
+                //             ->implode('<br>');
+                // }),
 
-                    }),
+                ColumnGroup::make('jadwal',
+                [
+                    Tables\Columns\TextColumn::make('schedulls.start_at')
+                        ->label('Start at')
+                        ->listWithLineBreaks()
+                        ->badge()
+                        ->color('success'),
+                    Tables\Columns\TextColumn::make('schedulls.end_at')
+                        ->label('End at')
+                        ->listWithLineBreaks()
+                        ->badge()
+                        ->color('primary'),
+                ]),
 
-                // Tables\Columns\TextColumn::make('schedulls.start_at')
-                //     ->label('Start at')
-                //     ->badge()
-                //     ->color('success'),
-                // Tables\Columns\TextColumn::make('schedulls.end_at')
-                //     ->label('End at')
-                //     ->badge()
-                //     ->color('primary'),
+                
+                
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

@@ -42,24 +42,23 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                     ->reactive(),
                
 
-            Forms\Components\TextInput::make('rombels_subjects_id')
-                ->label('RombelsSubjects ID')
-                ->dehydrated()
-                ->default(function ($get) {
-                    $rombelId = $get('rombel_id');
-                    $subjectId = $get('subject_id');
-                        if ($rombelId && $subjectId) {
-                            $pivot = RombelsSubjects::with(['rombel', 'subject'])
-                                ->where('rombel_id', $rombelId)
-                                ->where('subject_id', $subjectId)
-                                ->first();
+                Forms\Components\TextInput::make('rombels_subjects_id')
+                        ->label('Rombel Subject ID')
+                        ->disabled() // biar readonly, tidak bisa diedit user
+                        ->reactive()
+                        ->default(function ($get) {
+                            $rombelId = $get('rombel_id');
+                            $subjectId = $get('subject_id');
+                            
+                            if ($rombelId && $subjectId) {
+                                $pivot = \App\Models\RombelsSubjects::where('rombel_id', $rombelId)
+                                    ->where('subject_id', $subjectId)
+                                    ->first();
 
-                            if ($pivot) {
-                                return $pivot->rombel->kode . ' - ' . $pivot->subject->name;
+                                return $pivot?->id;
                             }
-                        }
-                    return null; // default jika tidak ada rombel/subject atau guru tidak ditemukan
-                }),
+                            return null;
+                        }),
 
 
 

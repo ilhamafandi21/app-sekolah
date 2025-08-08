@@ -29,7 +29,6 @@ class CreateRombelsSubjectsSchedullsTeacher extends CreateRecord
 
                 $this->halt();
         }
-        
         $data['kode'] = $kode;
         return $data;
     }

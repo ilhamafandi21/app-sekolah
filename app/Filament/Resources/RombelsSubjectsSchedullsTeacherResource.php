@@ -33,8 +33,12 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                 Forms\Components\Select::make('subject_id')
                     ->options(function (callable $get) {
                         $rombelId = $get('rombel_id');
+
                         if (!$rombelId) return [];
+
+                        // Ambil semua subject dari relasi rombel
                         $rombel = Rombel::with('subjects')->find($rombelId);
+
                         return $rombel
                             ? $rombel->subjects->pluck('name', 'id')->toArray()
                             : [];
@@ -42,26 +46,39 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                     ->reactive(),
                
 
-                Forms\Components\TextInput::make('rombels_subjects_id')
-                        ->label('Rombel Subject ID')
-                        ->disabled() // biar readonly, tidak bisa diedit user
-                        ->reactive()
-                        ->default(function ($get) {
-                            $rombelId = $get('rombel_id');
-                            $subjectId = $get('subject_id');
-                            
-                            if ($rombelId && $subjectId) {
-                                $pivot = \App\Models\RombelsSubjects::where('rombel_id', $rombelId)
-                                    ->where('subject_id', $subjectId)
-                                    ->first();
+            Forms\Components\TextInput::make('rombels_subjects_id')
+                ->label('RombelsSubjects ID')
+                ->dehydrated() // biar dikirim ke server saat submit
+                ->reactive()
+                ->default(function ($get) {
+                        $rombelId = $get('rombel_id');
+                        $subjectId = $get('subject_id');
 
-                                return $pivot?->id;
+                        if ($rombelId && $subjectId) {
+                            $pivot = \App\Models\RombelsSubjects::where('rombel_id', $rombelId)
+                                ->where('subject_id', $subjectId)
+                                ->first();
+
+                            if ($pivot) {
+                                // Misalnya kamu hanya ingin menampilkan guru saat ini
+                                return [
+                                    $pivot->id => $pivot->rombel->kode . ' - ' . $pivot->subject->name,
+                                ];
                             }
-                            return null;
-                        }),
+                        }
+
+                        return []; // default jika tidak ada rombel/subject atau guru tidak ditemukan
+                    }),
 
 
 
+
+
+
+
+
+
+               
                 Forms\Components\Select::make('schedull_id')
                     ->relationship('schedull', 'kode'),
                 Forms\Components\Select::make('teacher_id')

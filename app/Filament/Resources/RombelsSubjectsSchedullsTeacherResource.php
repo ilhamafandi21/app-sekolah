@@ -50,7 +50,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                 ->label('RombelsSubjects ID')
                 ->dehydrated() // biar dikirim ke server saat submit
                 ->reactive()
-                ->formatStateUsing(function ($get) {
+                ->default(function ($get) {
                         $rombelId = $get('rombel_id');
                         $subjectId = $get('subject_id');
 
@@ -72,13 +72,6 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
 
 
 
-
-
-
-
-
-
-               
                 Forms\Components\Select::make('schedull_id')
                     ->relationship('schedull', 'kode'),
                 Forms\Components\Select::make('teacher_id')

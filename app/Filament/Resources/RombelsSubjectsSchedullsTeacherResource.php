@@ -14,6 +14,7 @@ use App\Models\RombelsSubjectsSchedullsTeacher;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\RombelsSubjectsSchedullsTeacherResource\Pages;
 use App\Filament\Resources\RombelsSubjectsSchedullsTeacherResource\RelationManagers;
+use Pest\Mutate\Options\IgnoreOption;
 
 class RombelsSubjectsSchedullsTeacherResource extends Resource
 {
@@ -26,9 +27,11 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('rombel_id')
+                    ->required()
                     ->relationship('rombel', 'kode')
                     ->reactive(),
                 Forms\Components\Select::make('subject_id')
+                    ->required()
                     ->options(function (callable $get) {
                         $rombelId = $get('rombel_id');
                         if (!$rombelId) return [];
@@ -55,12 +58,14 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                
                 Forms\Components\TextInput::make('rombels_subjects_id')
                     ->label('Rombel Subjects ID')
+                    ->required()
                     ->disabled()
                     ->dehydrated()
                     ->reactive()
                     ->default(fn($get) => $get('subject_id')),
                
                 Forms\Components\Select::make('schedull_id')
+                    ->required()
                     ->relationship('schedull', 'kode'),
                 Forms\Components\Select::make('teacher_id')
                     ->relationship('teacher', 'name'),

@@ -41,23 +41,29 @@ class SubjectsRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('RombelsSubjectsSchedullsTeachers.schedull.kode')
-                    ->html()     
-                    ->getStateUsing(function ($record) {
-                            return $record->RombelsSubjectsSchedullsTeachers
-                                ->pluck('schedull.kode')
-                                ->filter()
-                                ->implode('<br>') ?: 'Belum diatur';
-                        }),
-                Tables\Columns\TextColumn::make('RombelsSubjectsSchedullsTeachers.teacher.name')
-                    ->label('Pengajar')
-                    ->html()
-                    ->getStateUsing(function ($record) {
-                        return $record->RombelsSubjectsSchedullsTeachers
-                                ->pluck('teacher.name')
-                                ->filter()
-                                ->implode('<br>') ?: 'Belum diatur';
-                    }),
+                Tables\Columns\TextColumn::make('jadwal_dan_pengajar')
+                ->label('Jadwal & Pengajar')
+                ->html()
+                ->getStateUsing(function ($record) {
+                    $items = $record->RombelsSubjectsSchedullsTeachers->map(function ($item) {
+                        $jadwal = $item->schedull->kode ?? null;
+                        $pengajar = $item->teacher->name ?? null;
+
+                        if ($jadwal && $pengajar) {
+                            return "{$jadwal} <span style='color:#aaa;'>/</span> {$pengajar}";
+                        } elseif ($jadwal) {
+                            return "{$jadwal} / <span style='color:#f66;'>Pengajar Belum diatur</span>";
+                        } elseif ($pengajar) {
+                            return "<span style='color:#f66;'>Jadwal Belum diatur</span> / {$pengajar}";
+                        } else {
+                            return null;
+                        }
+                    })->filter();
+
+                    return $items->count()
+                        ? $items->implode('<br>')
+                        : 'Belum diatur';
+                }),
             ])
             ->filters([
                 //

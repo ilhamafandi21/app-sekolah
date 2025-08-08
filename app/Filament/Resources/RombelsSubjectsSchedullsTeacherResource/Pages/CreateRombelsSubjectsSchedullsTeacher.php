@@ -13,11 +13,12 @@ class CreateRombelsSubjectsSchedullsTeacher extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $kode =  $data['rombel_id']. $data['subject_id']. $data['rombels_subjects_id'];
+        $kode =  $data['rombel_id']. $data['subject_id']. $data['rombels_subjects_id']. $data['schedull_id'];
 
         $cekduplikat = \App\Models\RombelsSubjectsSchedullsTeacher::where('rombel_id', $data['rombel_id'])
                                     ->where('subject_id', $data['subject_id'])
                                     ->where('rombels_subjects_id', $data['rombels_subjects_id'])
+                                    ->where('schedull_id', $data['schedull_id'])
                                     ->exists();
 
         if($cekduplikat){

@@ -25,8 +25,6 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('kode')
-                    ->required(),
                 Forms\Components\Select::make('rombel_id')
                     ->relationship('rombel', 'kode')
                     ->reactive(),

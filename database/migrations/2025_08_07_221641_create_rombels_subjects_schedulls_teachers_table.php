@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('rombels_subjects_schedulls_teachers', function (Blueprint $table) {
             $table->id();
             $table->string('kode')->unique();
-            $table->foreignId('rombels_subjects_id')->nullable()->constrained('rombels_subjects', 'id')->nullOnDelete();
+            $table->foreignId('rombels_subjects_id')->constrained('rombels_subjects', 'id')->cascadeOnDelete();
             $table->foreignId('rombel_id')->nullable()->constrained('rombels', 'id')->nullOnDelete();
             $table->foreignId('subject_id')->nullable()->constrained('subjects', 'id')->nullOnDelete();
             $table->foreignId('schedull_id')->nullable()->constrained('schedulls', 'id')->nullOnDelete();

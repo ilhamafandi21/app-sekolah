@@ -49,7 +49,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                                 ->where('subject_id', $subjectId)
                                 ->first();
                             if ($pivot) {
-                               $set('rombels_subjects_id', [$pivot->id]);
+                               $set('rombels_subjects_id', "$pivot->id");
                             }
                         }
                         return [];

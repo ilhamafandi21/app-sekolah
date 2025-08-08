@@ -50,25 +50,9 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                 ->label('RombelsSubjects ID')
                 ->dehydrated() // biar dikirim ke server saat submit
                 ->reactive()
-                ->default(function ($get) {
-                        $rombelId = $get('rombel_id');
-                        $subjectId = $get('subject_id');
-
-                        if ($rombelId && $subjectId) {
-                            $pivot = \App\Models\RombelsSubjects::where('rombel_id', $rombelId)
-                                ->where('subject_id', $subjectId)
-                                ->first();
-
-                            if ($pivot) {
-                                // Misalnya kamu hanya ingin menampilkan guru saat ini
-                                return [
-                                    $pivot->id => $pivot->rombel->kode . ' - ' . $pivot->subject->name,
-                                ];
-                            }
-                        }
-
-                        return []; // default jika tidak ada rombel/subject atau guru tidak ditemukan
-                    }),
+                ->afterStateUpdated(function($get) {
+                    return $get('rombel_id');
+                }),
 
 
 

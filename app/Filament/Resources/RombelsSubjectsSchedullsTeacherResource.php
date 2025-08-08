@@ -33,35 +33,34 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                 Forms\Components\Select::make('subject_id')
                     ->options(function (callable $get) {
                         $rombelId = $get('rombel_id');
-
                         if (!$rombelId) return [];
-
-                        // Ambil semua subject dari relasi rombel
                         $rombel = Rombel::with('subjects')->find($rombelId);
-
                         return $rombel
                             ? $rombel->subjects->pluck('name', 'id')->toArray()
                             : [];
                     })
-                    ->reactive(),
+                    ->reactive()
+                    ->afterStateUpdated(function ($get, $set) {
+                        $rombelId = $get('rombel_id');
+                        $subjectId = $get('subject_id');
+
+                        if ($rombelId && $subjectId) {
+                            $pivot = \App\Models\RombelsSubjects::where('rombel_id', $rombelId)
+                                ->where('subject_id', $subjectId)
+                                ->first();
+                            if ($pivot) {
+                               $set('rombels_subjects_id', [$pivot->id]);
+                            }
+                        }
+                        return [];
+                    }),
                
-
-            Forms\Components\TextInput::make('rombels_subjects_id')
-                ->label('RombelsSubjects ID')
-                ->dehydrated() // biar dikirim ke server saat submit
-                ->reactive()
-                ->afterStateUpdated(function($get) {
-                    return $get('rombel_id');
-                }),
-
-
-
-
-
-
-
-
-
+                Forms\Components\TextInput::make('rombels_subjects_id')
+                    ->label('Rombel Subjects ID')
+                    ->disabled()
+                    ->dehydrated()
+                    ->reactive()
+                    ->default(fn($get) => $get('subject_id')),
                
                 Forms\Components\Select::make('schedull_id')
                     ->relationship('schedull', 'kode'),

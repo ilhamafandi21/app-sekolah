@@ -16,7 +16,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class RombelsSubjects extends Pivot
 {
+    
     use HasFactory;
+    protected $table = 'rombels_subjects';
 
     protected $fillable = [
         'rombel_id',

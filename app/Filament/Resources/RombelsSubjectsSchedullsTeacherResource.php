@@ -46,40 +46,29 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                     ->reactive(),
                
 
+            Forms\Components\Select::make('rombels_subjects_id')
+                ->label('RombelsSubjects ID')
+                ->dehydrated() // biar dikirim ke server saat submit
+                ->reactive()
+                ->options(function ($get) {
+                $rombelId = $get('rombel_id');
+                $subjectId = $get('subject_id');
 
+                if ($rombelId && $subjectId) {
+                    $pivot = \App\Models\RombelsSubjects::where('rombel_id', $rombelId)
+                        ->where('subject_id', $subjectId)
+                        ->first();
 
+                    if ($pivot && $pivot->teacher) {
+                        // Misalnya kamu hanya ingin menampilkan guru saat ini
+                        return [
+                            $pivot->teacher->id => $pivot->teacher->name,
+                        ];
+                    }
+                }
 
-
-
-
-Forms\Components\TextInput::make('rombels_subjects_id')
-    ->label('RombelsSubjects ID')
-    ->dehydrated() // biar dikirim ke server saat submit
-    ->reactive()
-    ->afterStateHydrated(function ($set, $get) {
-        $rombelId = $get('rombel_id');
-        $subjectId = $get('subject_id');
-
-        if ($rombelId && $subjectId) {
-            $pivot = \App\Models\RombelsSubjects::where('rombel_id', $rombelId)
-                ->where('subject_id', $subjectId)
-                ->first();
-
-            $set('rombels_subjects_id', $pivot?->id ?? null);
-        }
-    })
-    ->afterStateUpdated(function ($set, $get) {
-        $rombelId = $get('rombel_id');
-        $subjectId = $get('subject_id');
-
-        if ($rombelId && $subjectId) {
-            $pivot = \App\Models\RombelsSubjects::where('rombel_id', $rombelId)
-                ->where('subject_id', $subjectId)
-                ->first();
-
-            $set('rombels_subjects_id', $pivot?->id ?? null);
-        }
-    }),
+                return []; // default jika tidak ada rombel/subject atau guru tidak ditemukan
+            }),
 
 
 

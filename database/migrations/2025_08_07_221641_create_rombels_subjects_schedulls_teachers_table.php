@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('rombels_subjects_id')->constrained('rombels_subjects', 'id')->cascadeOnDelete();
             $table->foreignId('rombel_id')->nullable()->constrained('rombels', 'id')->nullOnDelete();
             $table->foreignId('subject_id')->nullable()->constrained('subjects', 'id')->nullOnDelete();
+            $table->foreignId('day_id')->nullable()->constrained('days', 'id')->nullOnDelete();
             $table->foreignId('schedull_id')->nullable()->constrained('schedulls', 'id')->nullOnDelete();
             $table->foreignId('teacher_id')->nullable()->constrained('teachers', 'id')->nullOnDelete();
             $table->timestamps();

@@ -20,6 +20,7 @@ class DayResource extends Resource
     protected static ?string $model = Day::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Penjadwalan';
 
     public static function getEloquentQuery(): Builder
     {

@@ -60,6 +60,11 @@ class DayResource extends Resource
                             ->implode('<br>');
                 }),
 
+                Tables\Columns\TextColumn::make('schedulls.rombelsSubjects.subject_id')
+                    ->label('Mapel')
+                    
+                ,
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

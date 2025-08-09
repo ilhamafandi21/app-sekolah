@@ -166,7 +166,7 @@ class RombelResource extends Resource
     {
         return [
             SubjectsRelationManager::class,
-            // RombelsSubjectsSchedullsTeachersRelationManager::class,
+            RombelsSubjectsSchedullsTeachersRelationManager::class,
         ];
     }
 

@@ -68,7 +68,6 @@ class RombelResource extends Resource
 
                                 Forms\Components\Select::make('jurusan_id')
                                     ->label('Jurusan')
-                                    ->required()
                                     ->disabled(fn (string $context, callable $get) =>
                                         $context === 'edit' || !$get('tingkat_id'))
                                     ->options(function (callable $get) {
@@ -78,7 +77,9 @@ class RombelResource extends Resource
                                             ->orderBy('nama_jurusan')
                                             ->pluck('nama_jurusan', 'id');
                                     })
+                                    ->preload()
                                     ->reactive()
+                                    ->required()
                                     ->dehydrated(),
 
                                 Forms\Components\TextInput::make('divisi')

@@ -9,6 +9,7 @@ use App\Models\Jurusan;
 use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\Semester;
+use App\Models\TahunAjaran;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,10 +21,12 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(2)->create();
         // Siswa::factory(200)->create();
-        // Jurusan::factory(84)->create();
+        Jurusan::factory(3)->create();
         // Subject::factory(50)->create();
         // Teacher::factory()->count(40)->create();
         // Semester::factory()->count(4)->create();
+
+        TahunAjaran::factory()->count(4)->create();
 
 
         User::factory()->create([

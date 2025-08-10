@@ -5,8 +5,10 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Rombel;
+use Filament\Forms\Get;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Illuminate\Validation\Rule;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\RombelResource\Pages;
@@ -64,6 +66,10 @@ class RombelResource extends Resource
                                         $context === 'edit' || !$get('tahun_ajaran_id'))
                                     ->preload()
                                     ->reactive()
+                                    ->rule(function (Get $get) {
+                                        $thnId = $get('tahun_ajaran_id');
+                                        return Rule::exists('tingkats', 'id')->where('tahun_ajaran_id', $thnId);
+                                    })
                                     ->dehydrated(),
 
                                 Forms\Components\Select::make('jurusan_id')
@@ -80,6 +86,10 @@ class RombelResource extends Resource
                                     ->preload()
                                     ->reactive()
                                     ->required()
+                                    ->rule(function (Get $get) {
+                                        $tingkatId = $get('tingkat_id');
+                                        return Rule::exists('jurusans', 'id')->where('tingkat_id', $tingkatId);
+                                    })
                                     ->dehydrated(),
 
                                 Forms\Components\TextInput::make('divisi')

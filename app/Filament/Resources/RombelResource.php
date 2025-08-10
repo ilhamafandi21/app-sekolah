@@ -60,8 +60,8 @@ class RombelResource extends Resource
                                         ->orderBy('nama_tingkat')
                                         ->pluck('nama_tingkat', 'id');
                                     })
-                                    ->disabled(fn (string $context, callable $get) =>
-                                    $context === 'edit' || !$get('tahun_ajaran_id'))
+                                    ->disabled(fn (string $context, callable $get) => 
+                                        $context === 'edit' || !$get('tahun_ajaran_id'))
                                     ->preload()
                                     ->reactive()
                                     ->dehydrated(),

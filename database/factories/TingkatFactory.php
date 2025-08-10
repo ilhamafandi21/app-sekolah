@@ -19,7 +19,7 @@ class TingkatFactory extends Factory
         
         return [
             'tahun_ajaran_id' => $this->faker->numberBetween(1, 4),   // random 1–4
-            'tingkat_id'      => $this->faker->numberBetween(10, 12),                  // sesuai migrasi
+            'nama_tingkat'      => $this->faker->numberBetween(10, 12),                  // sesuai migrasi
             'keterangan'      => $this->faker->optional()->paragraph(),
         ];
     }

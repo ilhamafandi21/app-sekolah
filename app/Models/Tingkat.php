@@ -4,11 +4,14 @@ namespace App\Models;
 
 use App\Models\TahunAjaran;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Tingkat extends Model
 {
+    use HasFactory;
+    
     protected $fillable = [
         'tahun_ajaran_id',
         'nama_tingkat',

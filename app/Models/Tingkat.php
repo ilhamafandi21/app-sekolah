@@ -13,7 +13,6 @@ class Tingkat extends Model
     use HasFactory;
     
     protected $fillable = [
-        'tahun_ajaran_id',
         'nama_tingkat',
         'keterangan',
     ];

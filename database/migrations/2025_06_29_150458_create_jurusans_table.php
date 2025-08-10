@@ -13,9 +13,6 @@ return new class extends Migration
     {
         Schema::create('jurusans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tahun_ajaran_id')->constrained('tahun_ajarans', 'id'); // Contoh: TKJ, RPL, IPA, IPS
-            $table->foreignId('tingkat_id')->constrained('tingkats', 'id'); // Contoh: TKJ, RPL, IPA, IPS
-            $table->string('kode')->unique();           // Nama lengkap jurusan
             $table->string('nama_jurusan');           // Nama lengkap jurusan
             $table->text('keterangan')->nullable(); // Opsional
             $table->timestamps();

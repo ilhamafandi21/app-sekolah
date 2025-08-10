@@ -15,9 +15,9 @@ class CreateRombel extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
       
-        $thn =  \App\Models\TahunAjaran::find($data['tahun_ajaran_id'])->thn_ajaran;
-        $tingkat = \App\Models\Tingkat::find($data['tingkat_id'])->nama_tingkat;
-        $jurusan = \App\Models\Jurusan::find($data['jurusan_id'])->nama_jurusan;
+        $thn =  \App\Models\TahunAjaran::find($data['tahun_ajaran_id'])->id;
+        $tingkat = \App\Models\Tingkat::find($data['tingkat_id'])->id;
+        $jurusan = \App\Models\Jurusan::find($data['jurusan_id'])->id;
         $div = $data['divisi'];
 
         $cekdata = \App\Models\Rombel::where('tahun_ajaran_id', $data['tahun_ajaran_id'])
@@ -37,7 +37,7 @@ class CreateRombel extends CreateRecord
             $this->halt();
 
         } else{
-            $kode = "{$thn}/{$tingkat}/{$jurusan}/{$div}";
+            $kode = "{$thn}{$tingkat}{$jurusan}{$div}";
             $data['kode'] = $kode;
         }
 

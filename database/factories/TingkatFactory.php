@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\TahunAjaran;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,9 +17,9 @@ class TingkatFactory extends Factory
      */
     public function definition(): array
     {
-        
+         $tahunAjaranId = TahunAjaran::query()->inRandomOrder()->firstOrFail()->id;
         return [
-            'tahun_ajaran_id' => $this->faker->numberBetween(1, 4),   // random 1–4
+            'tahun_ajaran_id' => $tahunAjaranId,   // random 1–4
             'nama_tingkat'      => $this->faker->numberBetween(10, 12),                  // sesuai migrasi
             'keterangan'      => $this->faker->optional()->paragraph(),
         ];

@@ -47,7 +47,6 @@ class RombelResource extends Resource
                                 Forms\Components\Select::make('tahun_ajaran_id')
                                     ->label('Tahun Ajaran')
                                     ->required()
-                                    ->reactive()
                                     ->relationship('tahun_ajaran', 'thn_ajaran')
                                     ->disabled(fn (string $context) => $context === 'edit')
                                     ->dehydrated(),
@@ -55,41 +54,15 @@ class RombelResource extends Resource
                                 Forms\Components\Select::make('tingkat_id')
                                     ->label('Tingkat')
                                     ->required()
-                                    ->options(function (callable $get) {
-                                        $tahunAjaranId = $get('tahun_ajaran_id');
-                                        if (!$tahunAjaranId) return [];
-                                        return \App\Models\Tingkat::where('tahun_ajaran_id', $tahunAjaranId)
-                                        ->orderBy('nama_tingkat')
-                                        ->pluck('nama_tingkat', 'id');
-                                    })
-                                    ->disabled(fn (string $context, callable $get) => 
-                                        $context === 'edit' || !$get('tahun_ajaran_id'))
-                                    ->preload()
-                                    ->reactive()
-                                    ->rule(function (Get $get) {
-                                        $thnId = $get('tahun_ajaran_id');
-                                        return Rule::exists('tingkats', 'id')->where('tahun_ajaran_id', $thnId);
-                                    })
+                                    ->relationship('tingkat', 'nama_tingkat')
+                                    ->disabled(fn (string $context) => $context === 'edit')
                                     ->dehydrated(),
 
                                 Forms\Components\Select::make('jurusan_id')
                                     ->label('Jurusan')
-                                    ->disabled(fn (string $context, callable $get) =>
-                                        $context === 'edit' || !$get('tingkat_id'))
-                                    ->options(function (callable $get) {
-                                        $tingkatId = $get('tingkat_id');
-                                        if (!$tingkatId) return [];
-                                        return \App\Models\Jurusan::where('tingkat_id', $tingkatId)
-                                            ->orderBy('nama_jurusan')
-                                            ->pluck('nama_jurusan', 'id');
-                                    })
-                                    ->preload()
-                                    ->reactive()
                                     ->required()
-                                    ->rule(function (Get $get) {
-                                        $tingkatId = $get('tingkat_id');
-                                        return Rule::exists('jurusans', 'id')->where('tingkat_id', $tingkatId);
-                                    })
+                                    ->relationship('jurusan', 'nama_jurusan')
+                                    ->disabled(fn (string $context) => $context === 'edit')
                                     ->dehydrated(),
 
                                 Forms\Components\TextInput::make('divisi')

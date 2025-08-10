@@ -28,7 +28,19 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
             ->schema([
                 Forms\Components\Select::make('rombel_id')
                     ->required()
-                    ->relationship('rombel', 'kode')
+                    ->relationship(
+                        name: 'rombel',
+                        titleAttribute: 'kode',
+                        modifyQueryUsing: fn (Builder $query) => $query
+                            ->with(['jurusan:id,nama_jurusan', 'tingkat:id,nama_tingkat'])
+                    )
+                    ->getOptionLabelFromRecordUsing(fn (Rombel $record) => sprintf(
+                        '%s || %d %s-%s',
+                        $record->kode,
+                        $record->tingkat->nama_tingkat,
+                        $record->jurusan->nama_jurusan,
+                        $record->divisi,
+                    ))
                     ->reactive(),
                 Forms\Components\Select::make('subject_id')
                     ->required()

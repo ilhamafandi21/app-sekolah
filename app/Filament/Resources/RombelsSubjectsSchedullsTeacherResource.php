@@ -83,9 +83,10 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                         name: 'schedull',
                         titleAttribute: 'kode',
                         modifyQueryUsing: fn (Builder $query) => $query
-                            ->with(['schedull:id,kode,start_at,end_at'])
+                            ->select(['id','kode','start_at','end_at']) // batasi kolom (wajib sertakan 'id')
+                            ->orderBy('start_at')
                     )
-                    ->getOptionLabelFromRecordUsing(function (RombelsSubjectsSchedullsTeacher $s) {
+                    ->getOptionLabelFromRecordUsing(function (Schedull $s) {
                         $start = $s->start_at ? substr($s->start_at, 0, 5) : '-';
                         $end   = $s->end_at   ? substr($s->end_at, 0, 5)   : '-';
                         return "{$s->kode} — {$start} s/d {$end}";

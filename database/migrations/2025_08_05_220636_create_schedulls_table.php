@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('schedulls', function (Blueprint $table) {
             $table->id();
             $table->string('kode')->unique();
-            $table->foreignId('day_id')->nullable()->constrained('days', 'id');
             $table->time('start_at')->nullable();
             $table->time('end_at')->nullable();
             $table->timestamps();

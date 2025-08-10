@@ -12,7 +12,6 @@ class Schedull extends Model
 {
     protected $fillable = [
         'kode',
-        'day_id',
         'start_at',
         'end_at',
      ];

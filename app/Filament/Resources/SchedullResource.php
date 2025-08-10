@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\DayResource\RelationManagers\SchedullsRelationManager;
 use App\Filament\Resources\SchedullResource\Pages;
 use App\Filament\Resources\SchedullResource\RelationManagers;
 use App\Models\Schedull;
@@ -21,23 +20,23 @@ class SchedullResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'Penjadwalan';
 
-
-    public static function getEloquentQuery(): Builder
-    {
-        return static::getModel()::with([
-            'day:id,nama_hari',
-        ]);
-    }
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Hidden::make('kode'),
-                Forms\Components\Select::make('day_id')
-                    ->relationship('day', 'nama_hari'),
-                Forms\Components\TimePicker::make('start_at'),
-                Forms\Components\TimePicker::make('end_at'),
+                Forms\Components\TextInput::make('kode')
+                    ->helperText('Contoh : JP-01 (jam pelajaran 1)')
+                    ->required()
+                    ->unique(ignoreRecord:true)
+                    ->rule('regex:/^JP-\d{2}$/')
+                    ->validationAttribute('kode')
+                    ->validationMessages([
+                        'regex' => 'Format kode harus JP- diikuti 2 digit angka, contoh: JP-01',
+                    ]),
+                Forms\Components\TimePicker::make('start_at')
+                    ->required(),
+                Forms\Components\TimePicker::make('end_at')
+                    ->required(),
             ]);
     }
 
@@ -47,9 +46,6 @@ class SchedullResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('kode')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('day.nama_hari')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('start_at'),
                 Tables\Columns\TextColumn::make('end_at'),
                 Tables\Columns\TextColumn::make('created_at')
@@ -77,7 +73,7 @@ class SchedullResource extends Resource
     public static function getRelations(): array
     {
         return [
-           //
+            //
         ];
     }
 

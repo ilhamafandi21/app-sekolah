@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Siswa;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Jurusan;
+use App\Models\Schedull;
 use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\Tingkat;
@@ -28,6 +29,7 @@ class DatabaseSeeder extends Seeder
         // Subject::factory(50)->create();
         // Teacher::factory()->count(40)->create();
         // Semester::factory()->count(4)->create();
+        Schedull::factory()->count(12)->create();
 
         
 

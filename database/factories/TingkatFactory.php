@@ -17,10 +17,11 @@ class TingkatFactory extends Factory
      */
     public function definition(): array
     {
-         $tahunAjaranId = TahunAjaran::query()->inRandomOrder()->firstOrFail()->id;
+        $tahunAjaranId = TahunAjaran::query()->inRandomOrder()->firstOrFail()->id;
+        
         return [
             'tahun_ajaran_id' => $tahunAjaranId,   // random 1–4
-            'nama_tingkat'      => $this->faker->numberBetween(10, 12),                  // sesuai migrasi
+            'nama_tingkat'    => $this->faker->unique()->numberBetween(10, 12),                // sesuai migrasi
             'keterangan'      => $this->faker->optional()->paragraph(),
         ];
     }

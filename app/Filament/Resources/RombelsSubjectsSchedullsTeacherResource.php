@@ -14,6 +14,7 @@ use App\Models\RombelsSubjectsSchedullsTeacher;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\RombelsSubjectsSchedullsTeacherResource\Pages;
 use App\Filament\Resources\RombelsSubjectsSchedullsTeacherResource\RelationManagers;
+use App\Models\Schedull;
 use Pest\Mutate\Options\IgnoreOption;
 
 class RombelsSubjectsSchedullsTeacherResource extends Resource
@@ -84,12 +85,11 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                         modifyQueryUsing: fn (Builder $query) => $query
                             ->with(['schedull:id,kode,start_at,end_at'])
                     )
-                    ->getOptionLabelFromRecordUsing(fn (Rombel $record) => sprintf(
-                        '%s || %d %s-%s',
-                        $record->kode,
-                        $record->schedull->start_at,
-                        $record->schedull->end_at,
-                    )),
+                    ->getOptionLabelFromRecordUsing(function (RombelsSubjectsSchedullsTeacher $s) {
+                        $start = $s->start_at ? substr($s->start_at, 0, 5) : '-';
+                        $end   = $s->end_at   ? substr($s->end_at, 0, 5)   : '-';
+                        return "{$s->kode} — {$start} s/d {$end}";
+                    }),
                 
                 Forms\Components\Select::make('day_id')
                     ->required()

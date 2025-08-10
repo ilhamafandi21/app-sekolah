@@ -78,7 +78,23 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                
                 Forms\Components\Select::make('schedull_id')
                     ->required()
-                    ->relationship('schedull', 'kode'),
+                    ->relationship(
+                        name: 'schedull',
+                        titleAttribute: 'kode',
+                        modifyQueryUsing: fn (Builder $query) => $query
+                            ->with(['schedull:id,kode,start_at,end_at'])
+                    )
+                    ->getOptionLabelFromRecordUsing(fn (Rombel $record) => sprintf(
+                        '%s || %d %s-%s',
+                        $record->kode,
+                        $record->schedull->start_at,
+                        $record->schedull->end_at,
+                    )),
+                
+                Forms\Components\Select::make('day_id')
+                    ->required()
+                    ->relationship('day', 'nama_hari'),    
+
                 Forms\Components\Select::make('teacher_id')
                     ->relationship('teacher', 'name'),
             ]);

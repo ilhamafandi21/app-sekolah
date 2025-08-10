@@ -2,14 +2,15 @@
 
 namespace Database\Seeders;
 
+use App\Models\Day;
 use App\Models\User;
-use App\Models\Siswa;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Siswa;
 use App\Models\Jurusan;
-use App\Models\Schedull;
 use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\Tingkat;
+use App\Models\Schedull;
 use App\Models\Semester;
 use App\Models\TahunAjaran;
 use Illuminate\Database\Seeder;
@@ -30,6 +31,7 @@ class DatabaseSeeder extends Seeder
         // Teacher::factory()->count(40)->create();
         // Semester::factory()->count(4)->create();
         Schedull::factory()->count(12)->create();
+        Day::factory()->count(7)->create();
 
         
 

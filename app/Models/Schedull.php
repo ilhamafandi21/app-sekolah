@@ -4,12 +4,16 @@ namespace App\Models;
 
 use App\Models\Day;
 use App\Models\RombelsSubjects;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Schedull extends Model
 {
+
+    use HasFactory;
+
     protected $fillable = [
         'kode',
         'start_at',

@@ -22,10 +22,10 @@ class DayResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'Penjadwalan';
 
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()->with('schedulls');
-    }
+    // public static function getEloquentQuery(): Builder
+    // {
+    //     return parent::getEloquentQuery()->with('schedulls');
+    // }
 
     public static function form(Form $form): Form
     {
@@ -52,19 +52,19 @@ class DayResource extends Resource
                     ->color('secondary')
                     ->searchable(),
                 
-                Tables\Columns\TextColumn::make('schedulls')
-                    ->label('Waktu')
-                    ->html() // ← INI PENTING!
-                    ->formatStateUsing(function ($record) {
-                        return $record->schedulls
-                            ->map(fn ($s) => "{$s->start_at} - {$s->end_at}")
-                            ->implode('<br>');
-                }),
+                // Tables\Columns\TextColumn::make('schedulls')
+                //     ->label('Waktu')
+                //     ->html() // ← INI PENTING!
+                //     ->formatStateUsing(function ($record) {
+                //         return $record->schedulls
+                //             ->map(fn ($s) => "{$s->start_at} - {$s->end_at}")
+                //             ->implode('<br>');
+                // }),
 
-                Tables\Columns\TextColumn::make('schedulls.rombelsSubjects.subject_id')
-                    ->label('Mapel')
+                // Tables\Columns\TextColumn::make('schedulls.rombelsSubjects.subject_id')
+                //     ->label('Mapel')
                     
-                ,
+                // ,
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -91,7 +91,7 @@ class DayResource extends Resource
     public static function getRelations(): array
     {
         return [
-            SchedullsRelationManager::class,
+            // SchedullsRelationManager::class,
         ];
     }
 

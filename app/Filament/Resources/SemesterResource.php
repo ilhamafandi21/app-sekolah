@@ -32,6 +32,7 @@ class SemesterResource extends Resource
                     ->dehydrateStateUsing(fn($state) => strtoupper($state))
                     ->required(),
                 Forms\Components\Toggle::make('status')
+                    ->default(true)
                     ->required(),
                 Forms\Components\TextInput::make('keterangan')
                     ->required()

@@ -29,9 +29,10 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('schedull.day.nama_hari'),
-                Tables\Columns\TextColumn::make('schedull.kode'),
+                Tables\Columns\TextColumn::make('day.nama_hari'),
                 Tables\Columns\TextColumn::make('subject.name'),
+                Tables\Columns\TextColumn::make('schedull.kode'),
+
             ])
             ->filters([
                 //

@@ -16,8 +16,19 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
 {
     protected static string $relationship = 'RombelsSubjectsSchedullsTeachers';
 
+
     public function form(Form $form): Form
    {
+
+        $compose = fn (Forms\Get $get) => sprintf(
+            'RB-%s.SJ-%s.RS-%s.JP-%s.DY-%s',
+            $get('rombel_id') ?: '0',
+            $get('subject_id') ?: '0',
+            $get('rombels_subjects_id') ?: '0',
+            $get('schedull_id') ?: '0',
+            $get('day_id') ?: '0',
+        );
+
         return $form
             ->schema([
                 Forms\Components\TextInput::make('rombel_id')
@@ -96,7 +107,17 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->mutateFormDataUsing(function(array $data){
+                        $kodeGabungan = $data['rombel_id'].
+                                        $data['subject_id'].
+                                        $data['rombels_subjects_id'].
+                                        $data['schedull_id'].
+                                        $data['day_id'];
+                        $data['kode'] = $kodeGabungan;
+
+                        dd($data);
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -8,6 +8,7 @@ use App\Models\Rombel;
 use App\Models\Schedull;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -20,20 +21,13 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
     public function form(Form $form): Form
    {
 
-        $compose = fn (Forms\Get $get) => sprintf(
-            'RB-%s.SJ-%s.RS-%s.JP-%s.DY-%s',
-            $get('rombel_id') ?: '0',
-            $get('subject_id') ?: '0',
-            $get('rombels_subjects_id') ?: '0',
-            $get('schedull_id') ?: '0',
-            $get('day_id') ?: '0',
-        );
-
         return $form
             ->schema([
                 Forms\Components\TextInput::make('rombel_id')
                     ->required()
                     ->default($this->getOwnerRecord()->id)
+                    ->disabled()
+                    ->dehydrated()
                     ->reactive(),
                 Forms\Components\Select::make('subject_id')
                     ->required()
@@ -114,6 +108,24 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
                                         $data['rombels_subjects_id'].
                                         $data['schedull_id'].
                                         $data['day_id'];
+
+                        $cekduplikat = \App\Models\RombelsSubjectsSchedullsTeacher::where('rombel_id', $data['rombel_id'])
+                                    ->where('subject_id', $data['subject_id'])
+                                    ->where('rombels_subjects_id', $data['rombels_subjects_id'])
+                                    ->where('schedull_id', $data['schedull_id'])
+                                    ->where('day_id', $data['day_id'])
+                                    ->exists();
+
+                        if($cekduplikat){
+                            Notification::make()
+                                ->title('Error')
+                                ->body('Data sudah ada')
+                                ->danger()
+                                ->send();
+
+                            
+                        }
+
                         $data['kode'] = $kodeGabungan;
 
                         dd($data);

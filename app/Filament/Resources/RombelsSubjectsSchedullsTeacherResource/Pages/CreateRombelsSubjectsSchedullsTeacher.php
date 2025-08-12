@@ -23,6 +23,7 @@ class CreateRombelsSubjectsSchedullsTeacher extends CreateRecord
                                     ->where('subject_id', $data['subject_id'])
                                     ->where('rombels_subjects_id', $data['rombels_subjects_id'])
                                     ->where('schedull_id', $data['schedull_id'])
+                                    ->where('day_id', $data['day_id'])
                                     ->exists();
 
         if($cekduplikat){

@@ -16,16 +16,5 @@ class Semester extends Model
         'name',
         'status',
         'keterangan',
-        'tahun_ajaran_id',
     ];
-
-    public function rombels(): HasMany
-    {
-        return $this->hasMany(Rombel::class);
-    }
-
-     public function tahun_ajaran(): BelongsTo
-    {
-        return $this->belongsTo(TahunAjaran::class);
-    }
 }

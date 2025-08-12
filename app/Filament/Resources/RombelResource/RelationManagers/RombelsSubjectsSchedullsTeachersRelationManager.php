@@ -19,13 +19,6 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
     protected static string $relationship = 'rombelsSubjectsSchedullsTeachers';
 
 
-    protected static function getEloquentQuery(): Builder
-    {
-         return parent::getEloquentQuery()
-            ->with(['day:id,nama_hari',])
-            ->orderBy('created_at', 'desc');
-    }
-
     public function form(Form $form): Form
    {
 
@@ -98,13 +91,18 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-          
-            ->groups([
-                Tables\Grouping\Group::make('day.nama_hari')
+            ->modifyQueryUsing(fn(Builder $q)=>
+                $q->with([
+                    'day:id,nama_hari',
+                ])
+            )
+             ->groups([
+                Tables\Grouping\Group::make('day_id')
                     ->label('Hari')
-                    ->collapsible(),     // bisa expand/collapse
+                    ->getTitleFromRecordUsing(fn ($record) => $record->day->nama_hari ?? '—')
+                    ->collapsible(),
             ])
-            ->defaultGroup('day.nama_hari')
+            ->defaultGroup('day_id')
             ->columns([
                
                 Tables\Columns\TextColumn::make('subject.name'),

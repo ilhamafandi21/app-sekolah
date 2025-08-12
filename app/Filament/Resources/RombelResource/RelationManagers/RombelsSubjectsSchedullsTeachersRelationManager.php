@@ -9,15 +9,22 @@ use App\Models\Schedull;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Notifications\Notification;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
+use Illuminate\Database\Eloquent\Builder;
 
 class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
 {
     protected static string $relationship = 'RombelsSubjectsSchedullsTeachers';
 
+
+    protected static function getEloquentQuery(): Builder
+    {
+         return parent::getEloquentQuery()
+            ->with(['day:id,nama_hari',])
+            ->orderBy('created_at', 'desc');
+    }
 
     public function form(Form $form): Form
    {
@@ -91,14 +98,7 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $q) =>
-                $q->with([
-                    'day:id,nama_hari',
-                    
-                ])
-                ->orderBy('day_id')              // urut per hari
-                ->orderBy('schedull.start_at')   // jam naik dalam hari
-            )
+          
             ->groups([
                 Tables\Grouping\Group::make('day.nama_hari')
                     ->label('Hari')
@@ -106,6 +106,7 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
             ])
             ->defaultGroup('day.nama_hari')
             ->columns([
+               
                 Tables\Columns\TextColumn::make('subject.name'),
                 Tables\Columns\TextColumn::make('schedull.kode'),
                 Tables\Columns\TextColumn::make('teacher.name'),

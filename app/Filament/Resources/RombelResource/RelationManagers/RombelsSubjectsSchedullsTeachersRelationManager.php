@@ -20,21 +20,9 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
    {
         return $form
             ->schema([
-                Forms\Components\Select::make('rombel_id')
+                Forms\Components\TextInput::make('rombel_id')
                     ->required()
-                    ->relationship(
-                        name: 'rombel',
-                        titleAttribute: 'kode',
-                        modifyQueryUsing: fn (Builder $query) => $query
-                            ->with(['jurusan:id,nama_jurusan', 'tingkat:id,nama_tingkat'])
-                    )
-                    ->getOptionLabelFromRecordUsing(fn (Rombel $record) => sprintf(
-                        '%s || %d %s-%s',
-                        $record->kode,
-                        $record->tingkat->nama_tingkat,
-                        $record->jurusan->nama_jurusan,
-                        $record->divisi,
-                    ))
+                    ->default($this->getOwnerRecord()->id)
                     ->reactive(),
                 Forms\Components\Select::make('subject_id')
                     ->required()

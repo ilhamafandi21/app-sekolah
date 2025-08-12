@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Validation\Rules\Unique;
 
 class SemesterResource extends Resource
 {
@@ -24,6 +25,10 @@ class SemesterResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->unique(ignoreRecord:true)
+                    ->validationMessages([
+                        "unique" => "Semester sudah ada!",
+                    ])
                     ->required(),
                 Forms\Components\Toggle::make('status')
                     ->required(),

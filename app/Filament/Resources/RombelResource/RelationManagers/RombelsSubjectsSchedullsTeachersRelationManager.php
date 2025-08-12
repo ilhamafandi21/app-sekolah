@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
 
@@ -123,12 +124,14 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
                                 ->danger()
                                 ->send();
 
-                            
+                            throw ValidationException::withMessages([
+                                'kode' => 'Data duplikat tidak dapat disimpan.',
+                            ]);
                         }
 
                         $data['kode'] = $kodeGabungan;
 
-                        dd($data);
+                        return $data;
                     }),
             ])
             ->actions([

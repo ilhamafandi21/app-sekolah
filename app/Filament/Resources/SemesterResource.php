@@ -29,6 +29,7 @@ class SemesterResource extends Resource
                     ->validationMessages([
                         "unique" => "Semester sudah ada!",
                     ])
+                    ->dehydrateStateUsing(fn($state) => strtoupper($state))
                     ->required(),
                 Forms\Components\Toggle::make('status')
                     ->required(),

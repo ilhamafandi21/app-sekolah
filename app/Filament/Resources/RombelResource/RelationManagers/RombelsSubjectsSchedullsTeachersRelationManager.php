@@ -91,20 +91,17 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn(Builder $q)=>
-                $q->with([
-                    'day:id,nama_hari',
-                ])
-            )
              ->groups([
                 Tables\Grouping\Group::make('day_id')
                     ->label('Hari')
                     ->getTitleFromRecordUsing(fn ($record) => $record->day->nama_hari ?? '—')
                     ->collapsible(),
+                    
             ])
             ->defaultGroup('day_id')
             ->columns([
                
+                Tables\Columns\TextColumn::make('day.nama_hari'),
                 Tables\Columns\TextColumn::make('subject.name'),
                 Tables\Columns\TextColumn::make('schedull.kode'),
                 Tables\Columns\TextColumn::make('teacher.name'),

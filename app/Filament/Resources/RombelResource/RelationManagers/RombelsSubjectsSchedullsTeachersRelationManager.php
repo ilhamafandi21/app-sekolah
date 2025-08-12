@@ -91,11 +91,24 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('name')
+            ->modifyQueryUsing(fn (Builder $q) =>
+                $q->with([
+                    'day:id,nama_hari',
+                    
+                ])
+                ->orderBy('day_id')              // urut per hari
+                ->orderBy('schedull.start_at')   // jam naik dalam hari
+            )
+            ->groups([
+                Tables\Grouping\Group::make('day.nama_hari')
+                    ->label('Hari')
+                    ->collapsible(),     // bisa expand/collapse
+            ])
+            ->defaultGroup('day.nama_hari')
             ->columns([
-                Tables\Columns\TextColumn::make('day.nama_hari'),
                 Tables\Columns\TextColumn::make('subject.name'),
                 Tables\Columns\TextColumn::make('schedull.kode'),
+                Tables\Columns\TextColumn::make('teacher.name'),
 
             ])
             ->filters([

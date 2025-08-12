@@ -100,12 +100,11 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
         return $table
           
             ->groups([
-                Tables\Grouping\Group::make('day_id')
+                Tables\Grouping\Group::make('day.nama_hari')
                     ->label('Hari')
-                    ->getTitleFromRecordUsing(fn ($r) => $r->day->nama_hari ?? '—')
-                    ->collapsible(),
+                    ->collapsible(),     // bisa expand/collapse
             ])
-            ->defaultGroup('day_id')
+            ->defaultGroup('day.nama_hari')
             ->columns([
                
                 Tables\Columns\TextColumn::make('subject.name'),

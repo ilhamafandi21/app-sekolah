@@ -33,7 +33,9 @@ class SemesterResource extends Resource
                     ->required(),
                 Forms\Components\Toggle::make('status')
                     ->required(),
-                Forms\Components\TextInput::make('keterangan'),
+                Forms\Components\TextInput::make('keterangan')
+                    ->required()
+                    ->default('-'),
             ]);
     }
 

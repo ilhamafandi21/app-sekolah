@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
 {
-    protected static string $relationship = 'RombelsSubjectsSchedullsTeachers';
+    protected static string $relationship = 'rombelsSubjectsSchedullsTeachers';
 
 
     protected static function getEloquentQuery(): Builder

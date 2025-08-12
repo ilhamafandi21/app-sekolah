@@ -50,7 +50,7 @@ class Subject extends Model
         return $this->hasMany(Kkm::class);
     }
 
-     public function RombelsSubjectsSchedullsTeachers(): HasMany
+     public function rombelsSubjectsSchedullsTeachers(): HasMany
     {
         return $this->hasMany(RombelsSubjectsSchedullsTeacher::class);
     }

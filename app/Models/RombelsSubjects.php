@@ -47,7 +47,7 @@ class RombelsSubjects extends Pivot
         return $this->belongsTo(Schedull::class);
     }
 
-    public function RombelsSubjectsSchedullsTeachers(): HasMany
+    public function rombelsSubjectsSchedullsTeachers(): HasMany
     {
         return $this->hasMany(RombelsSubjectsSchedullsTeacher::class);
     }

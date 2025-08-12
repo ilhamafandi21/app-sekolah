@@ -89,7 +89,7 @@ class Rombel extends Model
         return $this->hasMany(RombelsSiswa::class);
     }
 
-    public function RombelsSubjectsSchedullsTeachers(): HasMany
+    public function rombelsSubjectsSchedullsTeachers(): HasMany
     {
         return $this->hasMany(RombelsSubjectsSchedullsTeacher::class);
     }

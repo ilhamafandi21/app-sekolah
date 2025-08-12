@@ -17,7 +17,7 @@ class Day extends Model
         'nama_hari',
     ];
 
-    public function RombelsSubjectsSchedullsTeachers(): HasMany
+    public function rombelsSubjectsSchedullsTeachers(): HasMany
     {
         return $this->hasMany(RombelsSubjectsSchedullsTeacher::class, 'day_id');
     }

@@ -18,9 +18,20 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
 {
     protected static string $relationship = 'rombelsSubjectsSchedullsTeachers';
 
+    public static function getEloquentQuery(): Builder
+    {
+       return static::getModel()::with([
+            'day:id,nama_hari',
+            'subject:id,name',
+            'schedull:id,name',
+            'teacher:id,name',
+            
+        ]);
+    }
+
 
     public function form(Form $form): Form
-   {
+    {
 
         return $form
             ->schema([

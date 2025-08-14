@@ -19,9 +19,8 @@ class SemesterFactory extends Factory
     {
         return [
             'name' => $this->faker->randomElement(['Ganjil', 'Genap']),
-            'status' => $this->faker->boolean(),
+            'status' => $this->faker->boolean(false),
             'keterangan' => $this->faker->sentence(),
-            'tahun_ajaran_id' => TahunAjaran::factory(), // ← otomatis buat TahunAjaran
         ];
     }
 }

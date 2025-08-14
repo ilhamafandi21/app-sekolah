@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
         Jurusan::factory()->count(3)->create();
         Subject::factory(11)->create();
         // Teacher::factory()->count(40)->create();
-        // Semester::factory()->count(4)->create();
+        Semester::factory()->count(2)->create();
         Schedull::factory()->count(12)->create();
         Day::factory()->count(7)->create();
 

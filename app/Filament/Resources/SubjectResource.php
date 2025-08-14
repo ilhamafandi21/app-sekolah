@@ -42,6 +42,12 @@ class SubjectResource extends Resource
                     ->dehydrateStateUsing(fn ($state) => strtoupper($state))
                     ->required(),
 
+                 Forms\Components\TextInput::make('nilai_kkm')
+                    ->label('Nilai KKM')
+                    ->numeric()
+                    ->default(0)
+                    ->nullable(),
+
 
                 Forms\Components\TextInput::make('kode')
                     ->unique(table: Subject::class, column: 'kode', ignoreRecord: true)
@@ -67,7 +73,13 @@ class SubjectResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->limit(15)
                     ->searchable(),
+                Tables\Columns\TextColumn::make('nilai_kkm')
+                    ->limit(15)
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('jurusans.nama')
+                    ->limit(15)
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('deskripsi')
                     ->limit(15)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')

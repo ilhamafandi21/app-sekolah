@@ -21,15 +21,10 @@ class JurusanFactory extends Factory
 
         $item = $this->faker->unique()->randomElement($kodeList);
 
-        $tahunAjaranId = TahunAjaran::query()->inRandomOrder()->firstOrFail()->id;
-        $tingkatId      = Tingkat::query()->inRandomOrder()->firstOrFail()->id;
-
         return [
-            'tahun_ajaran_id' => $tahunAjaranId,
-            'tingkat_id'      => $tingkatId,
             'kode'            => $item['kode'],
             'nama_jurusan'    => $item['name'],
-            'keterangan'      => $this->faker->optional()->paragraph(),
+            'keterangan'      => '-'
         ];
     }
 }

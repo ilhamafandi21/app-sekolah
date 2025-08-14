@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
             $table->string('kode')->unique(); // Kode mata pelajaran, misalnya ING101
-            $table->string('name');           // Nama mata pelajaran, misalnya Bahasa Inggris
+            $table->string('name');          // Nama mata pelajaran, misalnya Bahasa Inggris
+            $table->string('nilai_kkm')->nullable();          // Nama mata pelajaran, misalnya Bahasa Inggris
             $table->text('deskripsi')->nullable(); // Deskripsi opsional
             $table->timestamps();
             $table->softDeletes();

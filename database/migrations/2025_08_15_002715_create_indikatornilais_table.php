@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('indikatornilais', function (Blueprint $table) {
             $table->id();
             $table->string('kode')->unique();
-            $table->string('nama_indikator')->unique();
+            $table->string('nama_indikator');
             $table->string('keterangan')->nullable();
             $table->timestamps();
         });

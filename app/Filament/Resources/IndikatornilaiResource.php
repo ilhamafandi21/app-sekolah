@@ -29,7 +29,7 @@ class IndikatornilaiResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('kode')
-                    ->default(GenerateIndikator::indikator())
+                    ->default(fn (): string => GenerateIndikator::indikator())
                     ->unique(ignoreRecord:true)
                     ->required(),
                 Forms\Components\TextInput::make('nama_indikator')

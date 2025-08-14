@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         // User::factory(2)->create();
         // Siswa::factory(200)->create();
         // TahunAjaran::factory()->count(1)->create();
-        // Tingkat::factory()->count(3)->create();
+        Tingkat::factory()->count(3)->create();
         // Jurusan::factory()->count(3)->create();
         // Subject::factory(50)->create();
         // Teacher::factory()->count(40)->create();

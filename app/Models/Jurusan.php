@@ -16,6 +16,7 @@ class Jurusan extends Model
     protected $table = 'jurusans';
 
     protected $fillable = [
+        'kode',
         'nama_jurusan',
         'keterangan',
     ];

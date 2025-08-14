@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('jurusans', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_jurusan');           // Nama lengkap jurusan
+            $table->string('kode')->unique();           // Nama lengkap jurusan
+            $table->string('nama_jurusan')->unique();           // Nama lengkap jurusan
             $table->text('keterangan')->nullable(); // Opsional
             $table->timestamps();
         });

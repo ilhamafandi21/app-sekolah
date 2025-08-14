@@ -18,6 +18,7 @@ class Subject extends Model
     protected $fillable = [
         'kode',
         'name',
+        'nilai_kkm',
         'deskripsi',
     ];
     
@@ -44,12 +45,7 @@ class Subject extends Model
     {
         return $this->hasMany(RombelsSubjects::class);
     }
-
-    public function kkms(): HasMany
-    {
-        return $this->hasMany(Kkm::class);
-    }
-
+    
      public function rombelsSubjectsSchedullsTeachers(): HasMany
     {
         return $this->hasMany(RombelsSubjectsSchedullsTeacher::class);

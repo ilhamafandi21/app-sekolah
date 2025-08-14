@@ -19,7 +19,7 @@ class TingkatFactory extends Factory
     {   
         return [
             'nama_tingkat' => $this->faker->unique()->randomElement([10, 11, 12]),
-            'keterangan'   => $this->faker->optional()->paragraph(),
+            'keterangan'   => '-',
         ];
     }
 }

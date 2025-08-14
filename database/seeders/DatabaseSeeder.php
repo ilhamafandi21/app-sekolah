@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
         // TahunAjaran::factory()->count(1)->create();
         Tingkat::factory()->count(3)->create();
         // Jurusan::factory()->count(3)->create();
-        // Subject::factory(50)->create();
+        Subject::factory(11)->create();
         // Teacher::factory()->count(40)->create();
         // Semester::factory()->count(4)->create();
         Schedull::factory()->count(12)->create();

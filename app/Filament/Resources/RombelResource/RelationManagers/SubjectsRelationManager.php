@@ -41,29 +41,29 @@ class SubjectsRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('jadwal_dan_pengajar')
-                ->label('Jadwal & Pengajar')
-                ->html()
-                ->getStateUsing(function ($record) {
-                    $items = $record->RombelsSubjectsSchedullsTeachers->map(function ($item) {
-                        $jadwal = $item->schedull->kode ?? null;
-                        $pengajar = $item->teacher->name ?? null;
+                // Tables\Columns\TextColumn::make('jadwal_dan_pengajar')
+                // ->label('Jadwal & Pengajar')
+                // ->html()
+                // ->getStateUsing(function ($record) {
+                //     $items = $record->RombelsSubjectsSchedullsTeachers->map(function ($item) {
+                //         $jadwal = $item->schedull->kode ?? null;
+                //         $pengajar = $item->teacher->name ?? null;
 
-                        if ($jadwal && $pengajar) {
-                            return "{$jadwal} <span style='color:#aaa;'>/</span> {$pengajar}";
-                        } elseif ($jadwal) {
-                            return "{$jadwal} / <span style='color:#f66;'>Pengajar Belum diatur</span>";
-                        } elseif ($pengajar) {
-                            return "<span style='color:#f66;'>Jadwal Belum diatur</span> / {$pengajar}";
-                        } else {
-                            return null;
-                        }
-                    })->filter();
+                //         if ($jadwal && $pengajar) {
+                //             return "{$jadwal} <span style='color:#aaa;'>/</span> {$pengajar}";
+                //         } elseif ($jadwal) {
+                //             return "{$jadwal} / <span style='color:#f66;'>Pengajar Belum diatur</span>";
+                //         } elseif ($pengajar) {
+                //             return "<span style='color:#f66;'>Jadwal Belum diatur</span> / {$pengajar}";
+                //         } else {
+                //             return null;
+                //         }
+                //     })->filter();
 
-                    return $items->count()
-                        ? $items->implode('<br>')
-                        : 'Belum diatur';
-                }),
+                //     return $items->count()
+                //         ? $items->implode('<br>')
+                //         : 'Belum diatur';
+                // }),
             ])
             ->filters([
                 //
@@ -77,58 +77,58 @@ class SubjectsRelationManager extends RelationManager
             ->actions([
                 Tables\Actions\DetachAction::make()
                     ->icon('heroicon-o-trash'),
-                Tables\Actions\Action::make('tambahJadwal')
-                    ->label('Atur Jadwal')
-                    ->form([
-                        Forms\Components\Select::make('schedull_id')
-                            ->options(\App\Models\Schedull::pluck('kode', 'id'))
-                            ->multiple()
-                            ->searchable() 
-                    ])
-                    ->action(function(array $data, $record){
-                        $record->rombelsSubject->update([
-                            'schedull_id' => $data['schedull_id'],
+                // Tables\Actions\Action::make('tambahJadwal')
+                //     ->label('Atur Jadwal')
+                //     ->form([
+                //         Forms\Components\Select::make('schedull_id')
+                //             ->options(\App\Models\Schedull::pluck('kode', 'id'))
+                //             ->multiple()
+                //             ->searchable() 
+                //     ])
+                //     ->action(function(array $data, $record){
+                //         $record->rombelsSubject->update([
+                //             'schedull_id' => $data['schedull_id'],
                     
-                        \Filament\Notifications\Notification::make()
-                            ->title('Berhasil')
-                            ->body(
-                                is_null($data['schedull_id'])
-                                    ? 'Jadwal berhasil diatur untuk mata pelajaran.'
-                                    : 'Jadwal telah ditambahkan/diedit untuk mata pelajaran.'
-                            )
-                            ->success()
-                            ->send()
-                        ]);
-                    }),
-                Tables\Actions\Action::make('tambahTeacher')
-                    ->color(fn ($record) => $record->teacher_id ? 'danger' : 'primary')
-                    ->label(fn ($record) => $record->teacher_id ? 'Edit/Kosongkan Teacher' : 'Tambah Teacher')
-                    ->form([
-                         Forms\Components\Select::make('teacher_id')
-                            ->options(\App\Models\Teacher::pluck('name', 'id'))
-                            ->searchable()      
-                    ])
-                    ->action(function(array $data, $record){
+                //         \Filament\Notifications\Notification::make()
+                //             ->title('Berhasil')
+                //             ->body(
+                //                 is_null($data['schedull_id'])
+                //                     ? 'Jadwal berhasil diatur untuk mata pelajaran.'
+                //                     : 'Jadwal telah ditambahkan/diedit untuk mata pelajaran.'
+                //             )
+                //             ->success()
+                //             ->send()
+                //         ]);
+                //     }),
+                // Tables\Actions\Action::make('tambahTeacher')
+                //     ->color(fn ($record) => $record->teacher_id ? 'danger' : 'primary')
+                //     ->label(fn ($record) => $record->teacher_id ? 'Edit/Kosongkan Teacher' : 'Tambah Teacher')
+                //     ->form([
+                //          Forms\Components\Select::make('teacher_id')
+                //             ->options(\App\Models\Teacher::pluck('name', 'id'))
+                //             ->searchable()      
+                //     ])
+                //     ->action(function(array $data, $record){
 
-                        // dd($record->pivot_teacher_id);
+                //         // dd($record->pivot_teacher_id);
 
-                        $record->rombelsSubject->update([
-                            'teacher_id' => $data['teacher_id'],
-                        ]);
+                //         $record->rombelsSubject->update([
+                //             'teacher_id' => $data['teacher_id'],
+                //         ]);
 
-                        \Filament\Notifications\Notification::make()
-                            ->title('Berhasil')
-                            ->body(
-                                is_null($data['teacher_id'])
-                                    ? 'Guru telah dikosongkan dari mata pelajaran.'
-                                    : 'Guru telah ditambahkan/diedit untuk mata pelajaran.'
-                            )
-                            ->success()
-                            ->send();
-                    })
-                    ->icon('heroicon-o-plus')
-                    ->modalHeading(fn ($record) => $record->teacher_id ? 'Edit/Kosongkan Teacher' : 'Tambah teacher')
-                    ->requiresConfirmation(),
+                //         \Filament\Notifications\Notification::make()
+                //             ->title('Berhasil')
+                //             ->body(
+                //                 is_null($data['teacher_id'])
+                //                     ? 'Guru telah dikosongkan dari mata pelajaran.'
+                //                     : 'Guru telah ditambahkan/diedit untuk mata pelajaran.'
+                //             )
+                //             ->success()
+                //             ->send();
+                //     })
+                //     ->icon('heroicon-o-plus')
+                //     ->modalHeading(fn ($record) => $record->teacher_id ? 'Edit/Kosongkan Teacher' : 'Tambah teacher')
+                //     ->requiresConfirmation(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

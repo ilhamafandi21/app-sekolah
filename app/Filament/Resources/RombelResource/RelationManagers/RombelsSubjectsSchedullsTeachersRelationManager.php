@@ -8,25 +8,48 @@ use App\Models\Rombel;
 use App\Models\Schedull;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\DB;
 use Filament\Notifications\Notification;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
-use Illuminate\Database\Eloquent\Builder;
 
 class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
 {
     protected static string $relationship = 'rombelsSubjectsSchedullsTeachers';
+    protected static ?string $title = 'Atur Jadwal';
 
-    public static function getEloquentQuery(): Builder
+    // public function mount(): void
+    // {
+    //     DB::enableQueryLog();
+
+    //     $records = $this->getTableQuery()->get(); // atau getTableQuery() yang sudah kamu tulis
+    //     dd(DB::getQueryLog());
+    // }
+
+    protected function getTableQuery(): Builder
     {
-       return static::getModel()::with([
-            'day:id,nama_hari',
-            'subject:id,name',
-            'schedull:id,name',
-            'teacher:id,name',
-            
-        ]);
+        $owner = $this->getOwnerRecord(); // Rombel
+        if (! $owner) {
+            // kalau ini terpanggil, kamu membuka RM dari halaman yang bukan View/Edit Rombel
+            throw new \RuntimeException('Owner record null. Buka RelationManager dari halaman View/Edit Rombel.');
+        }
+
+        // kunci di relasi owner, lalu eager-load yang dipakai kolom
+        return $owner->rombelsSubjectsSchedullsTeachers()
+            ->getQuery()
+            ->with([
+                'day:id,nama_hari',
+                'subject:id,name',
+                'schedull:id,kode,start_at,end_at',
+                'teacher:id,name',
+            ])
+            ->orderBy('day_id')
+            ->orderBy(
+                \App\Models\Schedull::select('start_at')
+                    ->whereColumn('schedulls.id', 'rombels_subjects_schedulls_teachers.schedull_id')
+            );
     }
 
 
@@ -102,27 +125,45 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-             ->groups([
+
+            // 2) Eager load SEMUA relasi yang dipakai kolom
+
+            ->groups([
                 Tables\Grouping\Group::make('day_id')
                     ->label('Hari')
                     ->getTitleFromRecordUsing(fn ($record) => $record->day->nama_hari ?? '—')
                     ->collapsible(),
-                    
             ])
             ->defaultGroup('day_id')
             ->columns([
-               
-                Tables\Columns\TextColumn::make('day.nama_hari'),
+                Tables\Columns\TextColumn::make('')
+                    ->description(fn($record)=> $record->day->nama_hari)
+                    ->default('--->'),
                 Tables\Columns\TextColumn::make('subject.name'),
-                Tables\Columns\TextColumn::make('schedull.kode'),
-                Tables\Columns\TextColumn::make('teacher.name'),
+                Tables\Columns\TextColumn::make('schedull.kode')
+                    ->label('Jadwal')
+                    ->getStateUsing(function ($record) {
+                        $kode  = $record->schedull->kode ?? '-';
+                        $start = $record->schedull->start_at ? substr($record->schedull->start_at, 0, 5) : '-';
+                        $end   = $record->schedull->end_at   ? substr($record->schedull->end_at, 0, 5)   : '-';
 
+                        return "{$kode} — {$start} s/d {$end}";
+                    }),
+                Tables\Columns\TextColumn::make('teacher.name')
+                    ->badge()
+                    ->html()
+                    ->getStateUsing(function ($record) {
+                        $teacher  = $record->teacher->name ?? "<span style='color:#f66;'>Belum ditetapkan</span>";
+                        return "{$teacher}";
+                    }),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
+                    ->label('Buat Jadwal')
+                    ->color('info')
                     ->mutateFormDataUsing(function(array $data){
                         $kodeGabungan = $data['rombel_id'].
                                         $data['subject_id'].

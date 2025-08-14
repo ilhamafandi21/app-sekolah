@@ -27,7 +27,7 @@ class RombelResource extends Resource
        return static::getModel()::with([
             'tahun_ajaran:id,thn_ajaran',
             'tingkat:id,nama_tingkat',
-            'jurusan:id,nama_jurusan',
+            'jurusan:id,nama_jurusan,kode',
         ]);
     }
 
@@ -106,7 +106,7 @@ class RombelResource extends Resource
                     ->label('Info Kelas')
                     ->getStateUsing(function ($record) {
                         return ($record->tingkat?->nama_tingkat ?? '-') . ' ' .
-                                ($record->jurusan?->nama_jurusan ?? '-') . '-' .
+                                ($record->jurusan?->kode ?? '-') . '-' .
                                 ($record->divisi ?? '-');
                     })
                     ->wrap()

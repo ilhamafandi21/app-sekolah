@@ -32,9 +32,9 @@ class SiswasRelationManager extends RelationManager
                     ->multiple()
                     ->preloadRecordSelect()
                     ->recordTitle(function (Siswa $record): string {
-                        dd($record->rombels->id);
-                        $idSiswa = $record->id;
-                        $rombel = $record->rombels->id ?? 'Rombel belum diatur';
+                        // dd($record->rombels->pluck('kode'));
+                        $idSiswa = $record->name;
+                        $rombel = $record->rombels?->pluck('kode') ?? 'Rombel belum diatur';
                         return "{$idSiswa} — {$rombel}";
                     }),
                    

@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\RombelResource\Pages;
 use App\Filament\Resources\RombelResource\RelationManagers\SubjectsRelationManager;
 use App\Filament\Resources\RombelResource\RelationManagers\RombelsSubjectsSchedullsTeachersRelationManager;
+use App\Filament\Resources\RombelResource\RelationManagers\SiswasRelationManager;
 
 class RombelResource extends Resource
 {
@@ -151,6 +152,7 @@ class RombelResource extends Resource
         return [
             SubjectsRelationManager::class,
             RombelsSubjectsSchedullsTeachersRelationManager::class,
+            SiswasRelationManager::class,
         ];
     }
 

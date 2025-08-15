@@ -22,6 +22,11 @@ class Subject extends Model
         'deskripsi',
     ];
     
+
+    public function rombelsPenilaian(): HasMany
+    {
+        return $this->hasMany(rombelsPenilaian::class);
+    }
     public function teachers(): BelongsToMany
     {
         return $this->belongsToMany(Teacher::class, 'teachers_subjects')->withTimestamps();
@@ -39,6 +44,12 @@ class Subject extends Model
             ->withPivot(['schedull_id', 'teacher_id'])
             ->as('rombelsSubject')
             ->withTimestamps();
+    }
+
+    public function indikatornilais(): BelongsToMany
+    {
+        return $this->belongsToMany(Indikatornilai::class, 'subjects_indikatornilais', 'subject_id', 'indikatornilai_id')
+                ->withTimestamps();
     }
 
     public function rombelsSubjects(): HasMany

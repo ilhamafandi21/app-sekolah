@@ -17,4 +17,10 @@ class Semester extends Model
         'status',
         'keterangan',
     ];
+
+    
+    public function rombelsPenilaian(): HasMany
+    {
+        return $this->hasMany(rombelsPenilaian::class);
+    }
 }

@@ -28,6 +28,11 @@ class Teacher extends Model
         'user_id',
     ];
 
+    public function rombelsPenilaian(): HasMany
+    {
+        return $this->hasMany(rombelsPenilaian::class);
+    }
+    
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

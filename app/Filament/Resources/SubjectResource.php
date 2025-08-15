@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\SubjectResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\SubjectResource\RelationManagers;
+use App\Filament\Resources\SubjectResource\RelationManagers\IndikatornilaisRelationManager;
 use App\Traits\GenerateSubjectsKode;
 
 class SubjectResource extends Resource
@@ -116,7 +117,7 @@ class SubjectResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            IndikatornilaisRelationManager::class,
         ];
     }
 

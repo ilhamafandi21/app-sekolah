@@ -19,7 +19,7 @@ class SiswasRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('name')
+            // ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
             ])
@@ -32,23 +32,18 @@ class SiswasRelationManager extends RelationManager
                     ->preloadRecordSelect()
                     ->recordSelectOptionsQuery(function (Builder $query) {
                         return $query
-                            ->with('rombel:id,kode')
-                            // 👇 kwalifikasikan kolom agar tidak ambiguous
+                            ->with('rombels:id,kode')
                             ->select([
-                                'siswas.id',        // atau 'siswas.id as id'
-                                'siswas.name',
-                                'siswas.rombel_id',
-                            ])
-                            ->distinct(); // optional: menjaga hasil unik saat ada join otomatis
+                                'siswas.name'
+                            ]);
                     }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DetachAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DetachBulkAction::make(),
                 ]),
             ]);
     }

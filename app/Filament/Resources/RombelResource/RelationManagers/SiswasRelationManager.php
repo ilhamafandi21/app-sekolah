@@ -14,15 +14,7 @@ class SiswasRelationManager extends RelationManager
 {
     protected static string $relationship = 'siswas';
 
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-            ]);
-    }
+
 
     public function table(Table $table): Table
     {
@@ -37,7 +29,18 @@ class SiswasRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\AttachAction::make()
                     ->multiple()
-                    ->preloadRecordSelect(),
+                    ->preloadRecordSelect()
+                    ->recordSelectOptionsQuery(function (Builder $query) {
+                        return $query
+                            ->with('rombel:id,kode')
+                            // 👇 kwalifikasikan kolom agar tidak ambiguous
+                            ->select([
+                                'siswas.id',        // atau 'siswas.id as id'
+                                'siswas.name',
+                                'siswas.rombel_id',
+                            ])
+                            ->distinct(); // optional: menjaga hasil unik saat ada join otomatis
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -3,12 +3,13 @@
 namespace App\Filament\Resources\RombelResource\RelationManagers;
 
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use App\Models\Siswa;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Resources\RelationManagers\RelationManager;
 
 class SiswasRelationManager extends RelationManager
 {
@@ -30,15 +31,13 @@ class SiswasRelationManager extends RelationManager
                 Tables\Actions\AttachAction::make()
                     ->multiple()
                     ->preloadRecordSelect()
-                    ->recordSelectOptionsQuery(function (Builder $query) {
-                        $query
-                            ->with('rombels:id,kode')
-                            ->select([
-                                'id'
-                            ]);
-
-                            dd($query);
+                    ->recordTitle(function (Siswa $record): string {
+                        dd($record->rombels->id);
+                        $idSiswa = $record->id;
+                        $rombel = $record->rombels->id ?? 'Rombel belum diatur';
+                        return "{$idSiswa} — {$rombel}";
                     }),
+                   
             ])
             ->actions([
                 Tables\Actions\DetachAction::make(),

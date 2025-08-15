@@ -31,11 +31,38 @@ class SiswasRelationManager extends RelationManager
                 Tables\Actions\AttachAction::make()
                     ->multiple()
                     ->preloadRecordSelect()
+                    ->recordSelectOptionsQuery(function (Builder $query) {
+                        return $query
+                            ->with([
+                                // rombels dan relasi yang dibutuhkan untuk label
+                                'rombels:id,tingkat_id,jurusan_id,divisi',
+                                'rombels.tingkat:id,nama_tingkat',
+                                'rombels.jurusan:id,kode,nama_jurusan',
+                            ])
+                            ->select(['siswas.id','siswas.name']) // kwalifikasi kolom biar tidak ambiguous
+                            ->distinct();
+                    })
                     ->recordTitle(function (Siswa $record): string {
-                        // dd($record->rombels->pluck('kode'));
-                        $idSiswa = $record->name;
-                        $rombel = $record->rombels?->pluck('kode') ?? 'Rombel belum diatur';
-                        return "{$idSiswa} — {$rombel}";
+                        // v1: sesuai permintaan — gabungan ID/field mentah
+                        $labelRombel = $record->rombels->isNotEmpty()
+                            ? $record->rombels
+                                ->map(fn ($r) => "{$r->tingkat->nama_tingkat}-{$r->jurusan->kode}-" . ($r->divisi ?? '-'))
+                                ->implode(', ')
+                            : 'Rombel belum diatur';
+
+                        // --- Jika ingin versi "cantik", pakai ini sebagai ganti v1:
+                        // $labelRombel = $record->rombels->isNotEmpty()
+                        //     ? $record->rombels
+                        //         ->map(function ($r) {
+                        //             $tingkat = $r->tingkat->nama_tingkat ?? $r->tingkat_id;
+                        //             $jurusan = $r->jurusan->kode ?? $r->jurusan_id;
+                        //             $divisi  = $r->divisi ?? '-';
+                        //             return "{$tingkat}-{$jurusan}-{$divisi}";
+                        //         })
+                        //         ->implode(', ')
+                        //     : 'Rombel belum diatur';
+
+                        return "{$record->name} — {$labelRombel}";
                     }),
                    
             ])

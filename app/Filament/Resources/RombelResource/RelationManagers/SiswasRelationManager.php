@@ -19,7 +19,7 @@ class SiswasRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            // ->recordTitleAttribute('name')
+            ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
             ])
@@ -31,11 +31,13 @@ class SiswasRelationManager extends RelationManager
                     ->multiple()
                     ->preloadRecordSelect()
                     ->recordSelectOptionsQuery(function (Builder $query) {
-                        return $query
+                        $query
                             ->with('rombels:id,kode')
                             ->select([
-                                'siswas.name'
+                                'id'
                             ]);
+
+                            dd($query);
                     }),
             ])
             ->actions([

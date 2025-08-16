@@ -9,4 +9,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateRombelsSubjects extends CreateRecord
 {
     protected static string $resource = RombelsSubjectsResource::class;
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        
+    }
 }

@@ -78,15 +78,18 @@ class RombelsSubjectsResource extends Resource
             ->defaultGroup('rombel_id')
             ->columns([
                 Tables\Columns\TextColumn::make('rombel.kode')
-                     ->formatStateUsing(fn ($state, $record) =>
-                        ($state ?? '-')
-                        . ' - ' . ($record->rombel?->tingkat?->nama_tingkat ?? '-')
-                        . ' ' . ($record->rombel?->jurusan?->kode ?? '-')
-                        . '-' . ($record->rombel?->divisi ?? '-')
-                    )
-                    ->sortable()
-                    ->extraCellAttributes(['class' => 'ps-8'])
-                    ->extraHeaderAttributes(['class' => 'ps-8']),
+                    ->html() // <<< penting, agar HTML di bawah dirender
+                    ->formatStateUsing(function ($state, $record) {
+                        $text = ($state ?? '-')
+                            . ' - ' . ($record->rombel?->tingkat?->nama_tingkat ?? '-')
+                            . ' ' . ($record->rombel?->jurusan?->kode ?? '-')
+                            . '-' . ($record->rombel?->divisi ?? '-');
+
+                        // geser ke kanan 2.5rem
+                        return '<div style="padding-left: 11.5rem;">' . e($text) . '</div>';
+                    })
+                    // supaya sorting tidak ikut <div> HTML
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('subject.name')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

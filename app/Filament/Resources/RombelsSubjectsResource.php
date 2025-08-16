@@ -57,14 +57,41 @@ class RombelsSubjectsResource extends Resource
             ->modifyQueryUsing(function(Builder $query){
                 $query
                     ->with([
-                        'rombel:id,kode',
+                        'rombel:id,kode,tingkat_id,jurusan_id,divisi',
                         'subject:id,name',
+                        'rombel.tingkat:id,nama_tingkat',
+                        'rombel.jurusan:id,kode',
                     ])
                     ->select('id', 'rombel_id', 'subject_id')
                     ->distinct();
             })
+            ->groups([
+                Tables\Grouping\Group::make('rombel_id')
+                    ->label('Rombel')
+                    ->getTitleFromRecordUsing(fn ($record) => 
+                                $record->rombel->kode
+                                . ' - ' . ($record->rombel?->tingkat?->nama_tingkat ?? '-')
+                                . ' ' . ($record->rombel?->jurusan?->kode ?? '-')
+                                . '-' . ($record->rombel?->divisi ?? '-')?? '—')
+                    ->collapsible(),
+            ])
+            ->defaultGroup('day_id')
             ->columns([
+                Tables\Columns\TextColumn::make('null1')
+                    ->label('')
+                    ->disabled()
+                    ->columnSpan(2),
+                Tables\Columns\TextColumn::make('null2')
+                    ->label('')
+                    ->disabled()
+                    ->columnSpan(2),
                 Tables\Columns\TextColumn::make('rombel.kode')
+                     ->formatStateUsing(fn ($state, $record) =>
+                        ($state ?? '-')
+                        . ' - ' . ($record->rombel?->tingkat?->nama_tingkat ?? '-')
+                        . ' ' . ($record->rombel?->jurusan?->kode ?? '-')
+                        . '-' . ($record->rombel?->divisi ?? '-')
+                    )
                     ->sortable(),
                 Tables\Columns\TextColumn::make('subject.name')
                     ->sortable(),

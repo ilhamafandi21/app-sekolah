@@ -2,17 +2,18 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Forms;
+use Filament\Tables;
+use App\Models\Rombel;
+use Filament\Forms\Form;
+use Filament\Tables\Table;
+use App\Models\RombelsSubjects;
+use Filament\Resources\Resource;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\RombelsSubjectsResource\Pages;
 use App\Filament\Resources\RombelsSubjectsResource\RelationManagers;
 use App\Filament\Resources\RombelsSubjectsResource\RelationManagers\RombelsSubjectsTeachersRelationManager;
-use App\Models\RombelsSubjects;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class RombelsSubjectsResource extends Resource
 {
@@ -25,6 +26,8 @@ class RombelsSubjectsResource extends Resource
         return static::getModel()::with([
             'rombel:id,kode',
             'subject:id,name',
+            'jurusan:id, nama_jurusan',
+            'tingkat:id, nama_tingkat',
         ]);
     }
 
@@ -33,8 +36,13 @@ class RombelsSubjectsResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('rombel_id')
-                    ->relationship('rombel', 'kode')
-                    ->required(),
+                    ->relationship(name: 'rombel', titleAttribute: 'kode')
+            ->getOptionLabelFromRecordUsing(function (Rombel $record) {
+                return "{$record->kode} | T{$record->tingkat->nama_tingkat} - J{$record->jurusan->nama_jurusan} - D{$record->divisi}";
+            })
+            ->searchable()
+            ->preload()
+            ->required(),
                 Forms\Components\Select::make('subject_id')
                     ->relationship('subject', 'name')
                     ->required(),

@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\RombelsSubjectsResource\Pages;
 use App\Filament\Resources\RombelsSubjectsResource\RelationManagers;
 use App\Filament\Resources\RombelsSubjectsResource\RelationManagers\RombelsSubjectsTeachersRelationManager;
+use App\Models\Tingkat;
 
 class RombelsSubjectsResource extends Resource
 {
@@ -24,10 +25,10 @@ class RombelsSubjectsResource extends Resource
    public static function getEloquentQuery(): Builder
     {
         return static::getModel()::with([
-            'rombel:id,kode',
+            'rombel:id,kode,tingkat_id,jurusan_id,divisi',
             'subject:id,name',
-            'jurusan:id, nama_jurusan',
-            'tingkat:id, nama_tingkat',
+            'rombel.tingkat:id,nama_tingkat',
+            'rombel.jurusan:id,nama_jurusan'
         ]);
     }
 
@@ -36,10 +37,11 @@ class RombelsSubjectsResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('rombel_id')
-                    ->relationship(name: 'rombel', titleAttribute: 'kode')
-            ->getOptionLabelFromRecordUsing(function (Rombel $record) {
-                return "{$record->kode} | T{$record->tingkat->nama_tingkat} - J{$record->jurusan->nama_jurusan} - D{$record->divisi}";
-            })
+                    ->relationship(name: 'rombel', 
+                                titleAttribute: 'kode')
+                    ->getOptionLabelFromRecordUsing(function (Rombel $record) {
+                         return "{$record->kode} | T{$record->tingkat->nama_tingkat} - J{$record->jurusan->nama_jurusan} - D{$record->divisi}";
+                    })
             ->searchable()
             ->preload()
             ->required(),

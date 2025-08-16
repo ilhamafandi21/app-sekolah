@@ -20,14 +20,21 @@ class RombelsSubjectsResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+   public static function getEloquentQuery(): Builder
+    {
+        return static::getModel()::with([
+            'rombel:id,kode',
+            'subject:id,name',
+        ]);
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('rombel_id')
-                    ->relationship('rombel', 'name')
+                    ->relationship('rombel', 'kode')
                     ->required(),
-                Forms\Components\TextInput::make('semester_id'),
                 Forms\Components\Select::make('subject_id')
                     ->relationship('subject', 'name')
                     ->required(),
@@ -37,8 +44,17 @@ class RombelsSubjectsResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function(Builder $query){
+                $query
+                    ->with([
+                        'rombel:id,kode',
+                        'subject:id,name',
+                    ])
+                    ->select('rombel_id','rombel_id')
+                    ->distinct();
+            })
             ->columns([
-                Tables\Columns\TextColumn::make('rombel.name')
+                Tables\Columns\TextColumn::make('rombel.kode')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('semester_id')

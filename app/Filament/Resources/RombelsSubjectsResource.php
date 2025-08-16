@@ -50,17 +50,13 @@ class RombelsSubjectsResource extends Resource
                         'rombel:id,kode',
                         'subject:id,name',
                     ])
-                    ->select('rombel_id','rombel_id')
+                    ->select('id', 'rombel_id', 'subject_id')
                     ->distinct();
             })
             ->columns([
                 Tables\Columns\TextColumn::make('rombel.kode')
-                    ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('semester_id')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('subject.name')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

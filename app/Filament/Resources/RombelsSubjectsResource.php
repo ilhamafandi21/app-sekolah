@@ -72,19 +72,11 @@ class RombelsSubjectsResource extends Resource
                                 $record->rombel->kode
                                 . ' - ' . ($record->rombel?->tingkat?->nama_tingkat ?? '-')
                                 . ' ' . ($record->rombel?->jurusan?->kode ?? '-')
-                                . '-' . ($record->rombel?->divisi ?? '-')?? '—')
+                                . '-' . ($record->rombel?->divisi ?? '-')?? '-')
                     ->collapsible(),
             ])
-            ->defaultGroup('day_id')
+            ->defaultGroup('rombel_id')
             ->columns([
-                Tables\Columns\TextColumn::make('null1')
-                    ->label('')
-                    ->disabled()
-                    ->columnSpan(2),
-                Tables\Columns\TextColumn::make('null2')
-                    ->label('')
-                    ->disabled()
-                    ->columnSpan(2),
                 Tables\Columns\TextColumn::make('rombel.kode')
                      ->formatStateUsing(fn ($state, $record) =>
                         ($state ?? '-')
@@ -92,7 +84,9 @@ class RombelsSubjectsResource extends Resource
                         . ' ' . ($record->rombel?->jurusan?->kode ?? '-')
                         . '-' . ($record->rombel?->divisi ?? '-')
                     )
-                    ->sortable(),
+                    ->sortable()
+                    ->extraCellAttributes(['class' => 'ps-8'])
+                    ->extraHeaderAttributes(['class' => 'ps-8']),
                 Tables\Columns\TextColumn::make('subject.name')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

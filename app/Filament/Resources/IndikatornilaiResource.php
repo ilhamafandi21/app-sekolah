@@ -19,7 +19,7 @@ class IndikatornilaiResource extends Resource
 {
     protected static ?string $model = Indikatornilai::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-magnifying-glass-plus';
     protected static ?string $navigationLabel = 'Indikator penilaian';
 
     use GenerateIndikator;

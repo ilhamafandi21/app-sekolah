@@ -33,15 +33,26 @@ class RombelsPenilaianResource extends Resource
                         name: 'rombel',
                         titleAttribute: 'kode',
                         // pastikan kolom yg dibutuhkan ikut di-select
-                        modifyQueryUsing: fn (Builder $q) => $q->select('id','kode','tingkat_id','jurusan_id','divisi')
+                        modifyQueryUsing: function(Builder $query){
+                           return $query
+                                ->with([
+                                    'tingkat:id, nama_tingkat',
+                                    'jurusan:id, nama_jurusan'
+                                ])
+                                ->select('id', 'kode', 'tingkat_id', 'jurusan_id', 'divisi');
+                        } 
                     )
                     ->getOptionLabelFromRecordUsing(function (Rombel $r) {
-                        return "{$r->kode} | T{$r->tingkat_id} - J{$r->jurusan_id} - D{$r->divisi}";
+                        $t = $r->tingkat?->nama_tingkat ?? $r->tingkat_id;
+                        $j = $r->jurusan?->nama_jurusan ?? $r->jurusan_id;
+                        $d = is_object($r->divisi) ? ($r->divisi->nama ?? '-') : ($r->divisi ?? '-');
+
+                        return "{$r->kode} | T{$t} - J{$j} - D{$d}";
                     })
                     ->searchable()
                     ->preload()
                     ->reactive()
-                    ->afterStateUpdated(fn (Set $set) => $set('siswa_id', null))
+                    ->afterStateUpdated(fn (\Filament\Forms\Set $set) => $set('siswa_id', null))
                     ->required(),
 
                 Forms\Components\Select::make('siswa_id')

@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
+use Filament\Forms\Get;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\RombelsSiswa;
@@ -33,13 +34,14 @@ class RombelsPenilaianResource extends Resource
 
                 Forms\Components\Select::make('siswa_id')
                     ->label('Siswa')
-                    ->options(function (array $data): array {
-                        $rombelId = $data['rombel_id'] ?? null;
-                        if (!$rombelId) return [];
+                    ->options(function (Get $get): array {
+                        $rombelId = $get('rombel_id');
+                        if (blank($rombelId)) return [];
 
-                        return RombelsSiswa::where('rombel_id', $rombelId)
-                            ->distinct()
+                        return RombelsSiswa::query()
+                            ->where('rombel_id', $rombelId)
                             ->orderBy('siswa_id')
+                            ->distinct()
                             ->pluck('siswa_id', 'siswa_id') // [value => label] keduanya ID
                             ->toArray();
                     })

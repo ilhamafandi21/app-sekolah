@@ -27,8 +27,6 @@ class RombelsSubjectsResource extends Resource
         return static::getModel()::with([
             'rombel:id,kode,tingkat_id,jurusan_id,divisi',
             'subject:id,name',
-            'rombel.tingkat:id,nama_tingkat',
-            'rombel.jurusan:id,nama_jurusan'
         ]);
     }
 
@@ -38,9 +36,18 @@ class RombelsSubjectsResource extends Resource
             ->schema([
                 Forms\Components\Select::make('rombel_id')
                     ->relationship(name: 'rombel', 
-                                titleAttribute: 'kode')
+                                titleAttribute: 'kode',
+                                modifyQueryUsing: function($query){
+                                    return $query
+                                            ->with([
+                                                'tingkat:id,nama_tingkat',
+                                                'jurusan:id,nama_jurusan,kode'
+                                            ])
+                                            ->select('id','tingkat_id','jurusan_id', 'kode','divisi');
+                                })
                     ->getOptionLabelFromRecordUsing(function (Rombel $record) {
-                         return "{$record->kode} | T{$record->tingkat->nama_tingkat} - J{$record->jurusan->nama_jurusan} - D{$record->divisi}";
+                         return "{$record->kode} | 
+                                {$record->tingkat->nama_tingkat} {$record->jurusan->kode}-{$record->divisi}";
                     })
             ->searchable()
             ->preload()

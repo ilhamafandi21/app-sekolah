@@ -4,7 +4,9 @@ namespace App\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
+use App\Models\Rombel;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\RombelsSiswa;
@@ -26,10 +28,20 @@ class RombelsPenilaianResource extends Resource
         return $form
             ->schema([
                Forms\Components\Select::make('rombel_id')
-                    ->label('Rombel')
-                    ->relationship('rombel', 'kode')   // tampilkan kode rombel (bukan id)
-                    ->reactive()                           // atau ->reactive() pada versi lama
-                    ->afterStateUpdated(fn ($set) => $set('siswa_id', null))
+                    ->label('Pilih Rombel')
+                    ->relationship(
+                        name: 'rombel',
+                        titleAttribute: 'kode',
+                        // pastikan kolom yg dibutuhkan ikut di-select
+                        modifyQueryUsing: fn (Builder $q) => $q->select('id','kode','tingkat_id','jurusan_id','divisi')
+                    )
+                    ->getOptionLabelFromRecordUsing(function (Rombel $r) {
+                        return "{$r->kode} | T{$r->tingkat_id} - J{$r->jurusan_id} - D{$r->divisi}";
+                    })
+                    ->searchable()
+                    ->preload()
+                    ->reactive()
+                    ->afterStateUpdated(fn (Set $set) => $set('siswa_id', null))
                     ->required(),
 
                 Forms\Components\Select::make('siswa_id')

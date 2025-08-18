@@ -32,7 +32,12 @@ class RombelsPenilaianResource extends Resource
 
                 Forms\Components\Select::make('siswa_id')
                     ->label('Siswa')
-                    ->options(fn($data)=>\App\Models\RombelsSiswa::where('rombel_id', $data['rombel_id']))
+                    ->options(function($data){
+                      \App\Models\RombelsSiswa::where('rombel_id', $data['rombel_id'])
+                        return [
+                            
+                      ];
+                    })
                     ->disabled(fn ($get) => blank($get('rombel_id')))
                     ->searchable()
                     ->preload()                   // jangan preload sebelum rombel dipilih

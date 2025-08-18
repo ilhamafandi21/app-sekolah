@@ -32,19 +32,7 @@ class RombelsPenilaianResource extends Resource
 
                 Forms\Components\Select::make('siswa_id')
                     ->label('Siswa')
-                    ->relationship(
-                        name: 'siswa',
-                        titleAttribute: 'name',
-                        modifyQueryUsing: fn (Builder $query, $get) =>
-                            $query
-                            ->with([
-                                'rombelsSiswas:id, rombel_id, siswa_id'
-                            ])
-                            ->when($get('rombel_id'), fn ($q) =>
-                                $q->where('rombel_id', $get('rombel_id'))
-                                
-                            )
-                    )
+                    ->options(fn($data)=>\App\Models\RombelsSiswa::where('rombel_id', $data['rombel_id']))
                     ->disabled(fn ($get) => blank($get('rombel_id')))
                     ->searchable()
                     ->preload()                   // jangan preload sebelum rombel dipilih

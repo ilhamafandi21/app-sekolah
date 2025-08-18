@@ -17,7 +17,7 @@ class RombelsSiswa extends Model
 
     public function siswa(): BelongsTo
     {
-        return $this->belongsTo(RombelsSiswa::class);
+        return $this->belongsTo(Siswa::class);
     }
 
     public function rombel(): BelongsTo

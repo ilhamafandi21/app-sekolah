@@ -27,7 +27,7 @@ class RombelsPenilaianResource extends Resource
             ->schema([
                Forms\Components\Select::make('rombel_id')
                     ->label('Rombel')
-                    ->relationship('rombel', 'id')   // tampilkan kode rombel (bukan id)
+                    ->relationship('rombel', 'kode')   // tampilkan kode rombel (bukan id)
                     ->reactive()                           // atau ->reactive() pada versi lama
                     ->afterStateUpdated(fn ($set) => $set('siswa_id', null))
                     ->required(),
@@ -39,10 +39,14 @@ class RombelsPenilaianResource extends Resource
                         if (blank($rombelId)) return [];
 
                         return RombelsSiswa::query()
+                            ->with('siswa:id,name')               // eager load relasi siswa
                             ->where('rombel_id', $rombelId)
-                            ->orderBy('siswa_id')
-                            ->distinct()
-                            ->pluck('siswa_id', 'siswa_id') // [value => label] keduanya ID
+                            ->get()
+                            ->unique('siswa_id')                  // pastikan distinct per siswa
+                            ->sortBy(fn ($rs) => $rs->siswa?->name)
+                            ->mapWithKeys(fn ($rs) => [
+                                $rs->siswa_id => $rs->siswa?->name ?? "ID {$rs->siswa_id}"
+                            ])
                             ->toArray();
                     })
                     ->disabled(fn ($get) => blank($get('rombel_id')))

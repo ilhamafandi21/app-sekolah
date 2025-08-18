@@ -2,16 +2,17 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\RombelsPenilaianResource\Pages;
-use App\Filament\Resources\RombelsPenilaianResource\RelationManagers;
-use App\Models\RombelsPenilaian;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Forms\Set;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Models\RombelsPenilaian;
+use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\RombelsPenilaianResource\Pages;
+use App\Filament\Resources\RombelsPenilaianResource\RelationManagers;
 
 class RombelsPenilaianResource extends Resource
 {
@@ -23,12 +24,24 @@ class RombelsPenilaianResource extends Resource
     {
         return $form
             ->schema([
-               Forms\Components\Select::make('rombel_id')
-                    ->label('Rombel')
-                    ->relationship('rombel', 'kode')   // tampilkan kode rombel (bukan id)
-                    ->reactive()                           // atau ->reactive() pada versi lama
-                    ->afterStateUpdated(fn ($set) => $set('siswa_id', null))
-                    ->required(),
+               Select::make('rombel_id')
+    ->label('Rombel')
+    ->relationship(
+        name: 'rombel',
+        titleAttribute: 'kode',
+        modifyQueryUsing: fn (Builder $q) =>
+            $q->whereExists(function ($sub) {
+                $sub->from('rombel_siswa as rs')           // <-- pivot table
+                    ->selectRaw('1')
+                    ->whereColumn('rs.rombel_id', 'rombels.id');
+            })
+    )
+    ->live()
+    ->afterStateUpdated(fn (Set $set) => $set('siswa_id', null))
+    ->searchable()
+    ->preload()
+    ->required(),
+
 
                 Forms\Components\Select::make('siswa_id')
                     ->label('Siswa')

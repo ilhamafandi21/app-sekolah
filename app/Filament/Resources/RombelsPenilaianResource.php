@@ -2,16 +2,18 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\RombelsPenilaianResource\Pages;
-use App\Filament\Resources\RombelsPenilaianResource\RelationManagers;
-use App\Models\RombelsPenilaian;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Forms\Get;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Models\RombelsSiswa;
+use App\Models\RombelsPenilaian;
+use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\RombelsPenilaianResource\Pages;
+use App\Filament\Resources\RombelsPenilaianResource\RelationManagers;
 
 class RombelsPenilaianResource extends Resource
 {
@@ -32,12 +34,23 @@ class RombelsPenilaianResource extends Resource
 
                 Forms\Components\Select::make('siswa_id')
                     ->label('Siswa')
-                    ->options(function($data){
-                      \App\Models\RombelsSiswa::where('rombel_id', $data['rombel_id'])
-                        return [
-                            
-                      ];
-                    })
+                    ->options(function (Get $get) {
+        $rombelId = $get('rombel_id');
+        if (blank($rombelId)) return [];
+
+        // Cara 1 — join pivot -> siswas (paling efisien)
+                return RombelsSiswa::query()
+                    ->where('rombel_id', $rombelId)
+                    ->join('siswas as s', 's.id', '=', 'rombels_siswas.siswa_id') // ganti nama tabel pivot jika beda
+                    ->orderBy('s.name')                                          // sesuaikan 'name' -> 'nama' kalau perlu
+                    ->distinct()
+                    ->pluck('s.name', 'rombels_siswas.siswa_id')
+                    ->toArray();
+
+                // Cara 2 — in query (alternatif):
+                // $ids = RombelsSiswa::where('rombel_id', $rombelId)->pluck('siswa_id')->unique();
+                // return Siswa::whereIn('id', $ids)->orderBy('name')->pluck('name', 'id')->toArray();
+            })
                     ->disabled(fn ($get) => blank($get('rombel_id')))
                     ->searchable()
                     ->preload()                   // jangan preload sebelum rombel dipilih

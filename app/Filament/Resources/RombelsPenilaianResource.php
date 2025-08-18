@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
-use Filament\Forms\Get;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\RombelsSiswa;
@@ -34,23 +33,16 @@ class RombelsPenilaianResource extends Resource
 
                 Forms\Components\Select::make('siswa_id')
                     ->label('Siswa')
-                    ->options(function (Get $get) {
-        $rombelId = $get('rombel_id');
-        if (blank($rombelId)) return [];
+                    ->options(function (array $data): array {
+                        $rombelId = $data['rombel_id'] ?? null;
+                        if (!$rombelId) return [];
 
-        // Cara 1 — join pivot -> siswas (paling efisien)
-                return RombelsSiswa::query()
-                    ->where('rombel_id', $rombelId)
-                    ->join('siswas as s', 's.id', '=', 'rombels_siswas.siswa_id') // ganti nama tabel pivot jika beda
-                    ->orderBy('s.name')                                          // sesuaikan 'name' -> 'nama' kalau perlu
-                    ->distinct()
-                    ->pluck('s.name', 'rombels_siswas.siswa_id')
-                    ->toArray();
-
-                // Cara 2 — in query (alternatif):
-                // $ids = RombelsSiswa::where('rombel_id', $rombelId)->pluck('siswa_id')->unique();
-                // return Siswa::whereIn('id', $ids)->orderBy('name')->pluck('name', 'id')->toArray();
-            })
+                        return RombelsSiswa::where('rombel_id', $rombelId)
+                            ->distinct()
+                            ->orderBy('siswa_id')
+                            ->pluck('siswa_id', 'siswa_id') // [value => label] keduanya ID
+                            ->toArray();
+                    })
                     ->disabled(fn ($get) => blank($get('rombel_id')))
                     ->searchable()
                     ->preload()                   // jangan preload sebelum rombel dipilih

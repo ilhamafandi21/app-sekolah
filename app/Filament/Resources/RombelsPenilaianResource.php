@@ -23,17 +23,6 @@ class RombelsPenilaianResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-
-    public static function getEloquentQuery(): Builder
-    {
-        return static::getModel()::with([
-            'rombel:id,kode,tingkat_id,jurusan_id,divisi',
-            'subject:id,name',
-            'rombel.tingkat:id,nama_tingkat',
-            'rombel.jurusan:id,nama_jurusan'
-        ]);
-    }
-
     public static function form(Form $form): Form
     {
         return $form
@@ -43,9 +32,19 @@ class RombelsPenilaianResource extends Resource
                     ->relationship(
                         name: 'rombel',
                         titleAttribute: 'kode',
+                        // pastikan kolom yg dibutuhkan ikut di-select
+                        modifyQueryUsing: function(Builder $query){
+                           return $query
+                                ->with([
+                                    'tingkat:id,nama_tingkat',
+                                    'jurusan:id,nama_jurusan,kode'
+                                ])
+                                ->select('id', 'kode', 'tingkat_id', 'jurusan_id', 'divisi');
+                        } 
                     )
-                     ->getOptionLabelFromRecordUsing(function (Rombel $record) {
-                         return "{$record->kode} | T{$record->tingkat->nama_tingkat} - J{$record->jurusan->nama_jurusan} - D{$record->divisi}";
+                     ->getOptionLabelFromRecordUsing(function ($record) {
+                         return "{$record->kode} | 
+                                {$record->tingkat->nama_tingkat} {$record->jurusan->kode}-{$record->divisi}";
                     })
                     ->searchable()
                     ->preload()

@@ -23,11 +23,26 @@ class RombelsPenilaianResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('rombel_id')
-                    ->relationship('rombel', 'id')
+               Forms\Components\Select::make('rombel_id')
+                    ->label('Rombel')
+                    ->relationship('rombel', 'kode')   // tampilkan kode rombel (bukan id)
+                    ->live()                           // atau ->reactive() pada versi lama
+                    ->afterStateUpdated(fn ($set) => $set('siswa_id', null))
                     ->required(),
+
                 Forms\Components\Select::make('siswa_id')
-                    ->relationship('siswa', 'name')
+                    ->label('Siswa')
+                    ->relationship(
+                        name: 'siswa',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (Builder $query, $get) =>
+                            $query->when($get('rombel_id'), fn ($q) =>
+                                $q->where('rombel_id', $get('rombel_id'))
+                            )
+                    )
+                    ->disabled(fn ($get) => blank($get('rombel_id')))
+                    ->searchable()
+                    ->preload(false)                   // jangan preload sebelum rombel dipilih
                     ->required(),
                 Forms\Components\Select::make('subject_id')
                     ->relationship('subject', 'name'),

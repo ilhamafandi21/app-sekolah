@@ -39,13 +39,14 @@ class RombelsPenilaianResource extends Resource
                                 ->with([
                                     'tingkat:id,nama_tingkat',
                                     'jurusan:id,nama_jurusan,kode'
-                                    ])
-                                ->select('id','kode','tingkat_id','jurusan_id','divisi');
+                                ])
+                                ->select('id', 'kode', 'tingkat_id', 'jurusan_id', 'divisi');
                         } 
                     )
-                     ->getOptionLabelFromRecordUsing(fn (\App\Models\Rombel $r) =>
-                        "{$r->kode} | {$r->tingkat?->nama_tingkat} {$r->jurusan?->kode}-{$r->divisi}"
-                    )
+                     ->getOptionLabelFromRecordUsing(function ($record) {
+                         return "{$record->kode} | 
+                                {$record->tingkat->nama_tingkat} {$record->jurusan->kode}-{$record->divisi}";
+                    })
                     ->searchable()
                     ->preload()
                     ->reactive()
@@ -111,10 +112,7 @@ class RombelsPenilaianResource extends Resource
                 Forms\Components\Select::make('indikatornilai_id')
                     ->relationship('indikatornilai', 'id'),
 
-
-
-
-
+                    
                 Forms\Components\Select::make('teacher_id')
                     ->relationship('teacher', 'name'),
                 Forms\Components\Select::make('semester_id')
@@ -162,7 +160,7 @@ class RombelsPenilaianResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -5,16 +5,19 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Rombel;
+use App\Models\Tingkat;
+use Filament\Forms\Get;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\RombelsSubjects;
 use Filament\Resources\Resource;
+use Pest\Mutate\Options\IgnoreOption;
+use Illuminate\Validation\Rules\Unique;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\RombelsSubjectsResource\Pages;
 use App\Filament\Resources\RombelsSubjectsResource\RelationManagers;
 use App\Filament\Resources\RombelsSubjectsResource\RelationManagers\RombelsSubjectsTeachersRelationManager;
-use App\Models\Tingkat;
 
 class RombelsSubjectsResource extends Resource
 {
@@ -49,11 +52,23 @@ class RombelsSubjectsResource extends Resource
                          return "{$record->kode} | 
                                 {$record->tingkat->nama_tingkat} {$record->jurusan->kode}-{$record->divisi}";
                     })
-            ->searchable()
-            ->preload()
-            ->required(),
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+
+                // Forms\Components\Select::make('subject_id')
+                //     ->relationship('subject', 'name')
+                //     ->unique(ignoreRecord:true)
+                //     ->required(),
+
                 Forms\Components\Select::make('subject_id')
+                    ->label('Subject')
                     ->relationship('subject', 'name')
+                    ->unique(
+                        modifyRuleUsing: fn (Unique $rule, Get $get) =>
+                            $rule->where('rombel_id', $get('rombel_id')), // kombinasi rombel + subject
+                        ignoreRecord: true, // ABAIKAN record saat edit
+                    )
                     ->required(),
             ]);
     }
@@ -112,7 +127,7 @@ class RombelsSubjectsResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

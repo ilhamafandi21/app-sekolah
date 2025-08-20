@@ -74,8 +74,40 @@ class RombelsPenilaianResource extends Resource
                     ->preload()                   // jangan preload sebelum rombel dipilih
                     ->required(),
 
+
+
                 Forms\Components\Select::make('subject_id')
-                    ->relationship('subject', 'name'),
+                    ->label('Subject')
+                    ->options(function (Get $get): array {
+                        $rombelId = $get('rombel_id');
+                        if (blank($rombelId)) return [];
+
+                        return RombelsSiswa::query()
+                            ->with('subject:id,name')               // eager load relasi siswa
+                            ->where('rombel_id', $rombelId)
+                            ->get()
+                            ->unique('siswa_id')                  // pastikan distinct per siswa
+                            ->sortBy(fn ($rs) => $rs->subject?->name)
+                            ->mapWithKeys(fn ($rs) => [
+                                $rs->subject_id => $rs->subject?->name ?? "ID {$rs->subject_id}"
+                            ])
+                            ->toArray();
+                    })
+                    ->disabled(fn ($get) => blank($get('rombel_id')))
+                    ->searchable()
+                    ->preload()                   // jangan preload sebelum rombel dipilih
+                    ->required(),
+
+
+
+
+
+
+
+
+
+
+
                 Forms\Components\Select::make('indikatornilai_id')
                     ->relationship('indikatornilai', 'id'),
                 Forms\Components\Select::make('teacher_id')

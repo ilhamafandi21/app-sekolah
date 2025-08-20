@@ -23,9 +23,6 @@ class Subject extends Model
     ];
     
 
-    public function subjectsindikatornilais(): HasMany { return $this->hasMany(SubjectsIndikatornilai::class); }
-
-
     public function rombelsPenilaian(): HasMany
     {
         return $this->hasMany(rombelsPenilaian::class);
@@ -53,6 +50,11 @@ class Subject extends Model
     {
         return $this->belongsToMany(Indikatornilai::class, 'subjects_indikatornilais', 'subject_id', 'indikatornilai_id')
                 ->withTimestamps();
+    }
+
+    public function subjectsindikatornilais(): HasMany
+    {
+        return $this->hasMany(Indikatornilai::class);
     }
 
     public function rombelsSubjects(): HasMany

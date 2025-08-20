@@ -116,7 +116,7 @@ class RombelsPenilaianResource extends Resource
                             ->unique('indikatornilai_id')                  // pastikan distinct per siswa
                             ->sortBy(fn ($rs) => $rs->indikatornilai?->nama_indikator)
                             ->mapWithKeys(fn ($rs) => [
-                                $rs->subject_id => $rs->indikatornilai?->nama_indikator ?? null
+                                $rs->indikatornilai_id => $rs->indikatornilai?->nama_indikator ?? null
                             ])
                             ->toArray();
                     })

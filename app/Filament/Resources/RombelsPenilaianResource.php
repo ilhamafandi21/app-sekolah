@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\RombelsPenilaianResource\Pages;
 use App\Filament\Resources\RombelsPenilaianResource\RelationManagers;
+use App\Models\RombelsSubjects;
 
 class RombelsPenilaianResource extends Resource
 {
@@ -82,11 +83,11 @@ class RombelsPenilaianResource extends Resource
                         $rombelId = $get('rombel_id');
                         if (blank($rombelId)) return [];
 
-                        return RombelsSiswa::query()
+                        return RombelsSubjects::query()
                             ->with('subject:id,name')               // eager load relasi siswa
                             ->where('rombel_id', $rombelId)
                             ->get()
-                            ->unique('siswa_id')                  // pastikan distinct per siswa
+                            ->unique('subject_id')                  // pastikan distinct per siswa
                             ->sortBy(fn ($rs) => $rs->subject?->name)
                             ->mapWithKeys(fn ($rs) => [
                                 $rs->subject_id => $rs->subject?->name ?? "ID {$rs->subject_id}"

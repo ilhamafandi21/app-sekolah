@@ -23,6 +23,9 @@ class Subject extends Model
     ];
     
 
+    public function subjectsindikatornilais(): HasMany { return $this->hasMany(SubjectsIndikatornilai::class); }
+
+
     public function rombelsPenilaian(): HasMany
     {
         return $this->hasMany(rombelsPenilaian::class);

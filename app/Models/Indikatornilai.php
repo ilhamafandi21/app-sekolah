@@ -17,6 +17,12 @@ class Indikatornilai extends Model
         'keterangan',
     ];
 
+
+    public function subjectsindikatornilai(): HasMany
+    {
+        return $this->hasMany(SubjectsIndikatornilai::class);
+    }
+
     
     public function rombelsPenilaian(): HasMany
     {

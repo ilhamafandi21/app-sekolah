@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\RombelsPenilaianResource\Pages;
 use App\Filament\Resources\RombelsPenilaianResource\RelationManagers;
 use App\Models\RombelsSubjects;
+use App\Models\SubjectsIndikatornilai;
 
 class RombelsPenilaianResource extends Resource
 {
@@ -96,21 +97,34 @@ class RombelsPenilaianResource extends Resource
                     })
                     ->disabled(fn ($get) => blank($get('rombel_id')))
                     ->searchable()
+                    ->reactive()
                     ->preload()                   // jangan preload sebelum rombel dipilih
                     ->required(),
 
 
 
-
-
-
-
-
-
-
-
                 Forms\Components\Select::make('indikatornilai_id')
-                    ->relationship('indikatornilai', 'id'),
+                    ->relationship('indikatornilai', 'id')
+                    ->options(function (Get $get): array {
+                        $subjectId = $get('subject_id');
+                        if (blank($subjectId)) return [];
+
+                        return SubjectsIndikatornilai::query()
+                            ->with('subject:id,nama_indikator')               // eager load relasi siswa
+                            ->where('subject_id', $subjectId)
+                            ->get()
+                            ->unique('subject_id')                  // pastikan distinct per siswa
+                            ->sortBy(fn ($rs) => $rs->indikatornilai?->nama_indikator)
+                            ->mapWithKeys(fn ($rs) => [
+                                $rs->subject_id => $rs->indikatornilai?->nama_indikator ?? null
+                            ])
+                            ->toArray();
+                    })
+                    ->disabled(fn ($get) => blank($get('subject_id')))
+                    ->searchable()
+                    ->reactive()
+                    ->preload()                   // jangan preload sebelum rombel dipilih
+                    ->required(),
 
                     
                 Forms\Components\Select::make('teacher_id')

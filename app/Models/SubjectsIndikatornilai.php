@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SubjectsIndikatornilai extends Model
 {
@@ -12,4 +13,7 @@ class SubjectsIndikatornilai extends Model
         'nilai',
         'teacher_id',
     ];
+
+    public function subject(): BelongsTo { return $this->belongsTo(Subject::class); }
+    public function indikatornilai(): BelongsTo { return $this->belongsTo(Indikatornilai::class); }
 }

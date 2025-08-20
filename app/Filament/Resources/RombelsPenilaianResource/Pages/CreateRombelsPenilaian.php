@@ -14,7 +14,7 @@ class CreateRombelsPenilaian extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        dd($data);
+        // dd($data);
          // --- KOMBINASI UMUM TANPA teacher_id (paling sering dipakai) ---
         $exists = static::getModel()::query()
             ->where('rombel_id',         $data['rombel_id'] ?? null)

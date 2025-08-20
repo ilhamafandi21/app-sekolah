@@ -109,12 +109,16 @@ class RombelsPenilaianResource extends Resource
                         $subjectId = $get('subject_id');
                         if (blank($subjectId)) return [];
 
-                       return SubjectsIndikatornilai::where('subject_id', $subjectId)
-                                ->get()
-                                ->mapWithKeys(fn ($rs) => [
-                                    $rs->subject_id => $rs->indikatornilai?->nama_indikator ?? "ID {$rs->subject_id}"
-                                ])
-                                ->toArray();
+                        return SubjectsIndikatornilai::query()
+                            ->with('subject:id,nama_indikator')               // eager load relasi siswa
+                            ->where('subject_id', $subjectId)
+                            ->get(['id','subject_id','indikatornilai_id'])
+                            ->unique('indikatornilai_id')                  // pastikan distinct per siswa
+                            ->sortBy(fn ($rs) => $rs->indikatornilai?->nama_indikator)
+                            ->mapWithKeys(fn ($rs) => [
+                                $rs->subject_id => $rs->indikatornilai?->nama_indikator ?? null
+                            ])
+                            ->toArray();
                     })
                     ->disabled(fn ($get) => blank($get('subject_id')))
                     ->searchable()

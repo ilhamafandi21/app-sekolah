@@ -23,6 +23,20 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+
+    public static function getEloquentQuery(): Builder
+    {
+        return static::getModel()::with([
+            'rombel:id,kode',
+            'rombel.jurusan:id,nama_jurusan',
+            'rombel.tingkat:id,nama_tingkat',
+            'subject:id,name',
+            'schedull:id,kode,start_at,end_at',
+            'day:id,nama_hari',
+            'teacher:id,name',
+        ]);
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -44,6 +58,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                     ))
                     ->reactive(),
                 Forms\Components\Select::make('subject_id')
+                    ->label('Pilih Mapel')
                     ->required()
                     ->options(function (callable $get) {
                         $rombelId = $get('rombel_id');
@@ -70,7 +85,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                     }),
                
                 Forms\Components\TextInput::make('rombels_subjects_id')
-                    ->label('Rombel Subjects ID')
+                    ->label('RSID')
                     ->required()
                     ->disabled()
                     ->dehydrated()
@@ -78,6 +93,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                     ->default(fn($get) => $get('subject_id')),
                
                 Forms\Components\Select::make('schedull_id')
+                    ->label('Pilih Jam Pelajaran')
                     ->required()
                     ->relationship(
                         name: 'schedull',
@@ -93,11 +109,25 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                     }),
                 
                 Forms\Components\Select::make('day_id')
-                    ->required()
-                    ->relationship('day', 'nama_hari'),    
+                    ->label('Pilih Jadwal Hari')
+                    ->relationship(
+                        name: 'day',
+                        titleAttribute: 'nama_hari',
+                        modifyQueryUsing: fn (Builder $query) => $query
+                            ->select(['id','nama_hari']) // batasi kolom (wajib sertakan 'id')
+                            ->orderBy('nama_hari')
+                    )
+                    ->required(),  
 
                 Forms\Components\Select::make('teacher_id')
-                    ->relationship('teacher', 'name'),
+                    ->label('Pengampu')
+                    ->relationship(
+                        name: 'teacher',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (Builder $query) => $query
+                            ->select(['id','name']) // batasi kolom (wajib sertakan 'id')
+                            ->orderBy('name')
+                    ),
             ]);
     }
 

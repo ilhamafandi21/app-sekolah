@@ -24,18 +24,18 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
 
-    // public static function getEloquentQuery(): Builder
-    // {
-    //     return static::getModel()::with([
-    //         'rombel:id,kode',
-    //         'rombel.jurusan:id,nama_jurusan,kode',
-    //         'rombel.tingkat:id,nama_tingkat',
-    //         'subject:id,name',
-    //         'schedull:id,kode,start_at,end_at',
-    //         'day:id,nama_hari',
-    //         'teacher:id,name',
-    //     ]);
-    // }
+    public static function getEloquentQuery(): Builder
+    {
+        return static::getModel()::with([
+            'rombel:id,kode,divisi,tingkat_id,jurusan_id',
+            'rombel.jurusan:id,nama_jurusan,kode',
+            'rombel.tingkat:id,nama_tingkat',
+            'subject:id,name',
+            'schedull:id,kode,start_at,end_at',
+            'day:id,nama_hari',
+            'teacher:id,name',
+        ]);
+    }
 
     public static function form(Form $form): Form
     {
@@ -50,11 +50,11 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                             ->with(['jurusan:id,kode', 'tingkat:id,nama_tingkat'])
                     )
                     ->getOptionLabelFromRecordUsing(fn (Rombel $record) => sprintf(
-                        '%s || %d %s-%s',
-                        $record->kode,
-                        $record->tingkat->nama_tingkat,
-                        $record->jurusan->kode,
-                        $record->divisi,
+                        '%s || %s %s-%s',
+                            $record->kode,
+                            $record->tingkat?->nama_tingkat ?? '-',
+                            $record->jurusan?->kode ?? '-',
+                            $record->divisi ?? '-',
                     ))
                     ->reactive(),
                 Forms\Components\Select::make('subject_id')
@@ -63,10 +63,10 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                     ->options(function (callable $get) {
                         $rombelId = $get('rombel_id');
                         if (!$rombelId) return [];
-                        $rombel = Rombel::with('subjects')->find($rombelId);
-                        return $rombel
-                            ? $rombel->subjects->pluck('name', 'id')->toArray()
-                            : [];
+                        return \App\Models\Subject::whereHas('rombels', fn ($q) => $q->whereKey($rombelId))
+                            ->orderBy('name')
+                            ->pluck('name','id')
+                            ->toArray();
                     })
                     ->reactive()
                     ->afterStateUpdated(function ($get, $set) {
@@ -136,7 +136,8 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
         return $table
             ->query(
                 static::getModel()::query()
-                    ->with(['rombel.tingkat:id,nama_tingkat,divisi', 
+                    ->with(['rombel:id,kode,divisi,tingkat_id,jurusan_id',
+                            'rombel.tingkat:id,nama_tingkat', 
                             'rombel.jurusan:id,kode',
                             'subject:id,name',
                             'teacher:id,name',

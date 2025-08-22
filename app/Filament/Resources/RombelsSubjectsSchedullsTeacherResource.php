@@ -47,7 +47,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                         name: 'rombel',
                         titleAttribute: 'kode',
                         modifyQueryUsing: fn (Builder $query) => $query
-                            ->with(['jurusan:id,nama_jurusan', 'tingkat:id,nama_tingkat'])
+                            ->with(['jurusan:id,kode', 'tingkat:id,nama_tingkat'])
                     )
                     ->getOptionLabelFromRecordUsing(fn (Rombel $record) => sprintf(
                         '%s || %d %s-%s',
@@ -141,6 +141,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                             'subject:id,name',
                             'teacher:id,name',
                             'schedull:id,kode,start_at,end_at',
+                            'day:id,nama_hari',
                             
                             ]) // eager load relasi
             )
@@ -162,6 +163,13 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('subject.name')
                     ->numeric()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('day.id')
+                    ->label('Hari')
+                    ->formatStateUsing(function($record){
+                        return $record->day->nama_hari;
+                    })
                     ->sortable(),
                 Tables\Columns\TextColumn::make('schedull.id')
                     ->formatStateUsing(function($record){

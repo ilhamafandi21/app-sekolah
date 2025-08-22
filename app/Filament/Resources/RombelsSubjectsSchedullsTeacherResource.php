@@ -110,14 +110,16 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                             'rombel.jurusan:id,kode',
                             'subject:id,name',
                             'teacher:id,name',
-                            'schedull:id,name',
+                            'schedull:id,kode,start_at,end_at',
                             
                             ]) // eager load relasi
             )
             ->columns([
                 Tables\Columns\TextColumn::make('kode')
+                    ->label("RSSTID")
                     ->searchable(),
                 Tables\Columns\TextColumn::make('rombels_subjects_id')
+                    ->label("RSID")
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('rombel.id')
@@ -132,7 +134,11 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('schedull.id')
-                    ->numeric()
+                    ->formatStateUsing(function($record){
+                        return $record->schedull->kode
+                            .' '.$record->schedull->start_at
+                            .' - '.$record->schedull->end_at;
+                    })
                     ->sortable(),
                 Tables\Columns\TextColumn::make('teacher.name')
                     ->numeric()

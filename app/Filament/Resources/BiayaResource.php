@@ -18,6 +18,7 @@ class BiayaResource extends Resource
     protected static ?string $model = Biaya::class;
     
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
+    protected static ?string $navigationLabel = 'Biaya';
 
     public static function form(Form $form): Form
     {
@@ -28,10 +29,11 @@ class BiayaResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('nominal')
                     ->label('Nominal')
+                    ->prefix('Rp.')
                     ->numeric(),
                 Forms\Components\Toggle::make('status')
                     ->label('Status')
-                    ->required(),
+                    ->default(true),
                 Forms\Components\Textarea::make('keterangan')
                     ->label('Keterangan')
                     ->default('-'),

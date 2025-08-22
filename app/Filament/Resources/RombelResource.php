@@ -12,6 +12,7 @@ use Illuminate\Validation\Rule;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\RombelResource\Pages;
+use App\Filament\Resources\RombelResource\RelationManagers\BiayasRelationManager;
 use App\Filament\Resources\RombelResource\RelationManagers\SubjectsRelationManager;
 use App\Filament\Resources\RombelResource\RelationManagers\RombelsSubjectsSchedullsTeachersRelationManager;
 use App\Filament\Resources\RombelResource\RelationManagers\SiswasRelationManager;
@@ -153,6 +154,7 @@ class RombelResource extends Resource
             SubjectsRelationManager::class,
             RombelsSubjectsSchedullsTeachersRelationManager::class,
             SiswasRelationManager::class,
+            BiayasRelationManager::class,
         ];
     }
 

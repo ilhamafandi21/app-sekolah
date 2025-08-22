@@ -52,9 +52,9 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                     ->getOptionLabelFromRecordUsing(fn (Rombel $record) => sprintf(
                         '%s || %s %s-%s',
                             $record->kode,
-                            $record->tingkat?->nama_tingkat ?? '-',
-                            $record->jurusan?->kode ?? '-',
-                            $record->divisi ?? '-',
+                            $record->tingkat?->nama_tingkat ?? 'null',
+                            $record->jurusan?->kode ?? 'null',
+                            $record->divisi ?? 'null',
                     ))
                     ->reactive(),
                 Forms\Components\Select::make('subject_id')

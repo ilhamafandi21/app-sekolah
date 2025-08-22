@@ -104,6 +104,16 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(
+                static::getModel()::query()
+                    ->with(['rombel.tingkat:id,nama_tingkat,divisi', 
+                            'rombel.jurusan:id,kode',
+                            'subject:id,name',
+                            'teacher:id,name',
+                            'schedull:id,name',
+                            
+                            ]) // eager load relasi
+            )
             ->columns([
                 Tables\Columns\TextColumn::make('kode')
                     ->searchable(),
@@ -111,7 +121,12 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('rombel.id')
-                    ->numeric()
+                    ->formatStateUsing(function($record){
+                        return $record->rombel->kode
+                            .' '.$record->rombel->tingkat->nama_tingkat
+                            .' '.$record->rombel->jurusan->kode
+                            .'-'.$record->rombel->divisi;
+                    })
                     ->sortable(),
                 Tables\Columns\TextColumn::make('subject.name')
                     ->numeric()

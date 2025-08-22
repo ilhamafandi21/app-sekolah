@@ -24,18 +24,18 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
 
-    public static function getEloquentQuery(): Builder
-    {
-        return static::getModel()::with([
-            'rombel:id,kode',
-            'rombel.jurusan:id,nama_jurusan',
-            'rombel.tingkat:id,nama_tingkat',
-            'subject:id,name',
-            'schedull:id,kode,start_at,end_at',
-            'day:id,nama_hari',
-            'teacher:id,name',
-        ]);
-    }
+    // public static function getEloquentQuery(): Builder
+    // {
+    //     return static::getModel()::with([
+    //         'rombel:id,kode',
+    //         'rombel.jurusan:id,nama_jurusan,kode',
+    //         'rombel.tingkat:id,nama_tingkat',
+    //         'subject:id,name',
+    //         'schedull:id,kode,start_at,end_at',
+    //         'day:id,nama_hari',
+    //         'teacher:id,name',
+    //     ]);
+    // }
 
     public static function form(Form $form): Form
     {
@@ -53,7 +53,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                         '%s || %d %s-%s',
                         $record->kode,
                         $record->tingkat->nama_tingkat,
-                        $record->jurusan->nama_jurusan,
+                        $record->jurusan->kode,
                         $record->divisi,
                     ))
                     ->reactive(),

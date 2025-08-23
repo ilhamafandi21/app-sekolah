@@ -9,6 +9,8 @@ use Filament\Resources\Pages\ListRecords;
 class ListJurusans extends ListRecords
 {
     protected static string $resource = JurusanResource::class;
+    protected static ?string $title = 'Jurusan';
+
 
     protected function getHeaderActions(): array
     {

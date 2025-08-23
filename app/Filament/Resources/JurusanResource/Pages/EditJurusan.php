@@ -9,11 +9,20 @@ use Filament\Resources\Pages\EditRecord;
 class EditJurusan extends EditRecord
 {
     protected static string $resource = JurusanResource::class;
+    protected static ?string $title = 'Edit Jurusan';
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+                ->label('Hapus')
+                ->button()
+                ->color('danger')
+                ->requiresConfirmation()
+                ->modalHeading('Hapus Data')
+                ->modalDescription('Apakah anda yakin ingin menghapus data ini?')
+                ->modalCancelActionLabel('Batal')
+                ->modalSubmitActionLabel('Hapus'),
         ];
     }
 

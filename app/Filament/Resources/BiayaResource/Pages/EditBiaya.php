@@ -18,7 +18,9 @@ class EditBiaya extends EditRecord
             Actions\DeleteAction::make()
                 ->label('Hapus')
                 ->requiresConfirmation()
-                ->modalHeading('Hapus Biaya'),
+                ->modalHeading('Hapus Biaya')
+                ->modalDescription('Apakah Anda yakin ingin menghapus biaya ini? Tindakan ini tidak dapat dibatalkan.')
+                ->modalSubmitActionLabel('Ya, Hapus Biaya'),
         ];
     }
 }

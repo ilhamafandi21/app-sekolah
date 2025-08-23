@@ -9,4 +9,5 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateBiaya extends CreateRecord
 {
     protected static string $resource = BiayaResource::class;
+    protected static ?string $title = 'Daftar Biaya';
 }

@@ -9,6 +9,8 @@ use Filament\Resources\Pages\EditRecord;
 class EditBiaya extends EditRecord
 {
     protected static string $resource = BiayaResource::class;
+    protected static ?string $title = 'Edit Biaya';
+
 
     protected function getHeaderActions(): array
     {

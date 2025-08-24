@@ -50,15 +50,27 @@ class TransactionResource extends Resource
                     ->reactive()
                     ->required(),
 
-                Forms\Components\TextInput::make('biaya_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('biaya_id')
+                    ->options(function ($get) {
+                        $rombelId = $get('rombel_id');
+                        return \App\Models\RombelBiaya::where('rombel_id', $rombelId)
+                            ->with('biaya')
+                            ->get()
+                            ->pluck('biaya.name', 'biaya.id');
+                    })
+                    ->preload()
+                    ->required(),
                 
 
                 Forms\Components\Select::make('siswa_id')
-                    ->options(function () {
-                        return \App\Models\Siswa::all()->pluck('name', 'id');
+                    ->options(function ($get) {
+                        $rombelId = $get('rombel_id');
+                        return \App\Models\RombelsSiswa::where('rombel_id', $rombelId)
+                            ->with('siswa')
+                            ->get()
+                            ->pluck('siswa.name', 'siswa.id');
                     })
+                    ->preload()
                     ->required(),
                 
                 Forms\Components\TextInput::make('tingkat_id')

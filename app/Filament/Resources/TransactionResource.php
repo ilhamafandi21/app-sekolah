@@ -155,7 +155,7 @@ class TransactionResource extends Resource
                         ->orWhere('divisi', 'like', "%{$term}%");
                     }),
                 Tables\Columns\TextColumn::make('nominal')
-                    ->numeric()
+                    ->money('IDR', true, locale: 'id_ID')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('keterangan')
                     ->limit(10)

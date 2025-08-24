@@ -48,6 +48,7 @@ class TransactionResource extends Resource
                     ->required()
                     ->numeric(),
                 Forms\Components\TextInput::make('keterangan')
+                    ->default('Pembayaran Biaya Pendidikan')
                     ->required(),
             ]);
     }

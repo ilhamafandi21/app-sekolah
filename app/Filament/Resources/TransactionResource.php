@@ -32,43 +32,22 @@ class TransactionResource extends Resource
                     ->relationship(
                         name: 'rombel',
                         titleAttribute: 'kode',
-                        modifyQueryUsing: fn (Builder $q) => $q
+                        modifyQueryUsing: fn (Builder $query) => $query
                             ->select(['id','kode','tingkat_id','jurusan_id','divisi'])
                             ->with([
                                 'tingkat:id,nama_tingkat',   // ← ambil nama_tingkat
-                                'jurusan:id,nama_jurusan',   // (opsional) kalau mau tampilkan kode jurusan
+                                'jurusan:id,kode',   // (opsional) kalau mau tampilkan kode jurusan
                             ])
                             ->orderBy('kode')
                     )
-                    ->getOptionLabelFromRecordUsing(function (Rombel $r) {
-                        return sprintf(
-                            '%s || %s %s-%s',
-                            $r->kode,
-                            $r->tingkat?->nama_tingkat ?? '-',   // ← pakai relasi
-                            $r->jurusan?->nama_jurusan ?? '-',           // atau ganti ke nama_jurusan kalau perlu
-                            $r->divisi ?? '-',
-                        );
+                    ->getOptionLabelFromRecordUsing(function ($record) {
+                        return "{$record->kode} | 
+                                {$record->tingkat->nama_tingkat} {$record->jurusan->kode}-{$record->divisi}";
                     })
+                    
                     ->searchable()
-                    ->getSearchResultsUsing(function (string $term) {
-                        return \App\Models\Rombel::query()
-                            ->with(['tingkat:id,nama_tingkat','jurusan:id,kode'])
-                            ->where('kode', 'like', "%{$term}%")
-                            ->orWhereHas('tingkat', fn ($q) => $q->where('nama_tingkat', 'like', "%{$term}%"))
-                            ->orWhereHas('jurusan', fn ($q) => $q->where('kode', 'like', "%{$term}%"))
-                            ->limit(50)
-                            ->get()
-                            ->mapWithKeys(fn ($r) => [
-                                $r->id => sprintf('%s || %s %s-%s',
-                                    $r->kode,
-                                    $r->tingkat?->nama_tingkat ?? '-',
-                                    $r->jurusan?->kode ?? '-',
-                                    $r->divisi ?? '-',
-                                ),
-                            ])
-                            ->toArray();
-                    })
                     ->preload()
+                    ->reactive()
                     ->required(),
 
                 Forms\Components\TextInput::make('biaya_id')

@@ -2,16 +2,17 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\TransactionResource\Pages;
-use App\Filament\Resources\TransactionResource\RelationManagers;
-use App\Models\Transaction;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Rombel;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Models\Transaction;
+use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\TransactionResource\Pages;
+use App\Filament\Resources\TransactionResource\RelationManagers;
 
 class TransactionResource extends Resource
 {
@@ -27,9 +28,49 @@ class TransactionResource extends Resource
                     ->required(),
 
 
-                Forms\Components\TextInput::make('rombel_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('rombel_id')
+                    ->relationship(
+                        name: 'rombel',
+                        titleAttribute: 'kode',
+                        modifyQueryUsing: fn (Builder $q) => $q
+                            ->select(['id','kode','tingkat_id','jurusan_id','divisi'])
+                            ->with([
+                                'tingkat:id,nama_tingkat',   // ← ambil nama_tingkat
+                                'jurusan:id,nama_jurusan',   // (opsional) kalau mau tampilkan kode jurusan
+                            ])
+                            ->orderBy('kode')
+                    )
+                    ->getOptionLabelFromRecordUsing(function (Rombel $r) {
+                        return sprintf(
+                            '%s || %s %s-%s',
+                            $r->kode,
+                            $r->tingkat?->nama_tingkat ?? '-',   // ← pakai relasi
+                            $r->jurusan?->nama_jurusan ?? '-',           // atau ganti ke nama_jurusan kalau perlu
+                            $r->divisi ?? '-',
+                        );
+                    })
+                    ->searchable()
+                    ->getSearchResultsUsing(function (string $term) {
+                        return \App\Models\Rombel::query()
+                            ->with(['tingkat:id,nama_tingkat','jurusan:id,kode'])
+                            ->where('kode', 'like', "%{$term}%")
+                            ->orWhereHas('tingkat', fn ($q) => $q->where('nama_tingkat', 'like', "%{$term}%"))
+                            ->orWhereHas('jurusan', fn ($q) => $q->where('kode', 'like', "%{$term}%"))
+                            ->limit(50)
+                            ->get()
+                            ->mapWithKeys(fn ($r) => [
+                                $r->id => sprintf('%s || %s %s-%s',
+                                    $r->kode,
+                                    $r->tingkat?->nama_tingkat ?? '-',
+                                    $r->jurusan?->kode ?? '-',
+                                    $r->divisi ?? '-',
+                                ),
+                            ])
+                            ->toArray();
+                    })
+                    ->preload()
+                    ->required(),
+
                 Forms\Components\TextInput::make('biaya_id')
                     ->required()
                     ->numeric(),

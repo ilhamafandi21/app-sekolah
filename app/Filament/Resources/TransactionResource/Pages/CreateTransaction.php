@@ -20,8 +20,7 @@ class CreateTransaction extends CreateRecord
             $data['jurusan_id'] .
             $data['divisi'] . 
             date('YmdHis');
-
-        dd($data);
+            
         return $data;
     }
 }

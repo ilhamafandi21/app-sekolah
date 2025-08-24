@@ -44,11 +44,29 @@ class TransactionResource extends Resource
                         return "{$record->kode} | 
                                 {$record->tingkat->nama_tingkat} {$record->jurusan->kode}-{$record->divisi}";
                     })
-                    ->afterStateUpdated(function ($set) {
+                    ->afterStateUpdated(function ($set, $state) {
                         // setiap ganti rombel, kosongkan siswa_id
+
+                            $set('tingkat_id', null);
+                            $set('jurusan_id', null);
+                            $set('divisi', null);
+
+                        if (!$state) return;
+
+                        $rombel = \App\Models\Rombel::query()
+                            ->select(['id','tingkat_id', 'jurusan_id', 'divisi'])
+                            ->with([
+                                'tingkat:id,nama_tingkat',
+                                'jurusan:id,kode',
+                            ])
+                            ->find($state);
+
                         return [
                             $set('siswa_id', null), 
                             $set('biaya_id', null),
+                            $set('tingkat_id', $rombel?->tingkat?->nama_tingkat),
+                            $set('jurusan_id', $rombel?->jurusan?->kode),
+                            $set('divisi', $rombel?->divisi)
                         ];
                     })
                     ->searchable()
@@ -83,8 +101,7 @@ class TransactionResource extends Resource
                     ->required()
                     ->numeric(),
                 Forms\Components\TextInput::make('jurusan_id')
-                    ->required()
-                    ->numeric(),
+                    ->required(),
                 Forms\Components\TextInput::make('divisi')
                     ->required(),
                 Forms\Components\TextInput::make('nominal')

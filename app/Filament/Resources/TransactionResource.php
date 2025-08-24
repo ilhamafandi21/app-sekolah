@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TransactionResource\Pages;
 use App\Filament\Resources\TransactionResource\RelationManagers;
+use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class TransactionResource extends Resource
 {
@@ -125,22 +126,28 @@ class TransactionResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(Static::getModel()::query()
+                ->with(['siswa:id,name',
+                        'biaya:id,name',
+                        'tingnkat:id,nama_tingkat',
+                        'jurusan:id,kode'
+                        ]))
             ->columns([
                 Tables\Columns\TextColumn::make('kode')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('siswa_id')
+                Tables\Columns\TextColumn::make('siswa.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('biaya_id')
+                Tables\Columns\TextColumn::make('biaya.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('rombel_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('tingkat_id')
+                Tables\Columns\TextColumn::make('tingnkat.nama_tingkat')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('jurusan_id')
+                Tables\Columns\TextColumn::make('jurusan.kode')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('divisi')

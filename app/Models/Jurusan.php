@@ -22,6 +22,11 @@ class Jurusan extends Model
     ];
 
 
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
     public function tahun_ajaran(): BelongsTo
     {
         return $this->belongsTo(TahunAjaran::class);

@@ -34,6 +34,11 @@ class Siswa extends Model
         'user_id',
     ];
 
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
     public function rombelsPenilaian(): HasMany
     {
         return $this->hasMany(rombelsPenilaian::class);

@@ -19,6 +19,11 @@ class Biaya extends Model
         'keterangan',
     ];
 
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
     public function rombels(): BelongsToMany
     {
         return $this->belongsToMany(Rombel::class, 'rombel_biayas');

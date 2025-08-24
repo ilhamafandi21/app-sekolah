@@ -24,9 +24,7 @@ class TransactionResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('kode')
-                    ->required(),
-
+              
 
                 Forms\Components\Select::make('rombel_id')
                     ->relationship(
@@ -64,8 +62,8 @@ class TransactionResource extends Resource
                         return [
                             $set('siswa_id', null), 
                             $set('biaya_id', null),
-                            $set('tingkat_id', $rombel?->tingkat?->nama_tingkat),
-                            $set('jurusan_id', $rombel?->jurusan?->kode),
+                            $set('tingkat_id', $rombel?->tingkat?->id),
+                            $set('jurusan_id', $rombel?->jurusan?->id),
                             $set('divisi', $rombel?->divisi)
                         ];
                     })
@@ -106,13 +104,15 @@ class TransactionResource extends Resource
                     ->preload()
                     ->required(),
                 
-                Forms\Components\TextInput::make('tingkat_id')
+                Forms\Components\Hidden::make('tingkat_id')
                     ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('jurusan_id')
-                    ->required(),
-                Forms\Components\TextInput::make('divisi')
-                    ->required(),
+                    ->dehydrated(true),
+                Forms\Components\Hidden::make('jurusan_id')
+                    ->required()
+                    ->dehydrated(true),
+                Forms\Components\Hidden::make('divisi')
+                    ->required()
+                    ->dehydrated(true),
                 Forms\Components\TextInput::make('nominal')
                     ->required()
                     ->numeric(),

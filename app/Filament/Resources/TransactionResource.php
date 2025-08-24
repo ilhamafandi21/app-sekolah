@@ -78,10 +78,19 @@ class TransactionResource extends Resource
                     ->options(function ($get) {
                         $rombelId = $get('rombel_id');
                         return \App\Models\RombelBiaya::where('rombel_id', $rombelId)
-                            ->with('biaya')
+                            ->with(['biaya:id,name,nominal'])        // batasi kolom
                             ->get()
-                            ->pluck('biaya.name', 'biaya.id');
+                            ->mapWithKeys(fn ($row) => [
+                                $row->biaya->id => sprintf(
+                                    '%s — Rp %s',
+                                    $row->biaya->name,
+                                    number_format((int) $row->biaya->nominal, 0, ',', '.')
+                                ),
+                            ])
+                            ->toArray();
                     })
+
+                    
                     ->preload()
                     ->required(),
                 

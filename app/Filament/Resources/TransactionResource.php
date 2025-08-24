@@ -44,7 +44,13 @@ class TransactionResource extends Resource
                         return "{$record->kode} | 
                                 {$record->tingkat->nama_tingkat} {$record->jurusan->kode}-{$record->divisi}";
                     })
-                    
+                    ->afterStateUpdated(function ($set) {
+                        // setiap ganti rombel, kosongkan siswa_id
+                        return [
+                            $set('siswa_id', null), 
+                            $set('biaya_id', null),
+                        ];
+                    })
                     ->searchable()
                     ->preload()
                     ->reactive()
@@ -66,7 +72,7 @@ class TransactionResource extends Resource
                     ->options(function ($get) {
                         $rombelId = $get('rombel_id');
                         return \App\Models\RombelsSiswa::where('rombel_id', $rombelId)
-                            ->with('siswa')
+                            ->with('siswa:id,name')
                             ->get()
                             ->pluck('siswa.name', 'siswa.id');
                     })

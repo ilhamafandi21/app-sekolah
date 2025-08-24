@@ -25,9 +25,11 @@ class TransactionResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('kode')
                     ->required(),
-                Forms\Components\TextInput::make('siswa_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('siswa_id')
+                    ->options(function () {
+                        return \App\Models\Siswa::all()->pluck('name', 'id');
+                    })
+                    ->required(),
                 Forms\Components\TextInput::make('biaya_id')
                     ->required()
                     ->numeric(),

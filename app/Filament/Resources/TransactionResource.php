@@ -129,7 +129,7 @@ class TransactionResource extends Resource
             ->query(Static::getModel()::query()
                 ->with(['siswa:id,name',
                         'biaya:id,name',
-                        'tingnkat:id,nama_tingkat',
+                        'tingkat:id,nama_tingkat',
                         'jurusan:id,kode'
                         ]))
             ->columns([
@@ -141,21 +141,24 @@ class TransactionResource extends Resource
                 Tables\Columns\TextColumn::make('biaya.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('rombel_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('tingnkat.nama_tingkat')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('jurusan.kode')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('divisi')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('ringkasan_rombel')
+                    ->label('Rombel')
+                    ->state(function ($record) {
+                        $tingkat = $record->tingkat?->nama_tingkat ?? '-';
+                        $jurusan = $record->jurusan?->kode ?? '-';
+                        $divisi  = $record->divisi ?? '-';
+                        return "{$tingkat} {$jurusan}-{$divisi}";
+                    })
+                    ->searchable(query: function (Builder $q, string $term) {
+                        $q->whereHas('tingkat', fn ($x) => $x->where('nama_tingkat', 'like', "%{$term}%"))
+                        ->orWhereHas('jurusan', fn ($x) => $x->where('kode', 'like', "%{$term}%"))
+                        ->orWhere('divisi', 'like', "%{$term}%");
+                    }),
                 Tables\Columns\TextColumn::make('nominal')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('keterangan')
+                    ->limit(10)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

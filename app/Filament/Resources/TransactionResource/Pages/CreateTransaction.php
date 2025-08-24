@@ -12,8 +12,7 @@ class CreateTransaction extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['kode'] = 'TRX' . 
-            $data['rombel_id'] .
+        $data['kode'] = $data['rombel_id'] .
             $data['biaya_id'] .
             $data['siswa_id'] .
             $data['tingkat_id'] .

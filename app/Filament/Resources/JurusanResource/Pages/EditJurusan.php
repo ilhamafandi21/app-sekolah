@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\JurusanResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\JurusanResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -14,7 +15,7 @@ class EditJurusan extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()
+            DeleteAction::make()
                 ->label('Hapus')
                 ->button()
                 ->color('danger')

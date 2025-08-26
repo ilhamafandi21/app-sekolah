@@ -2,11 +2,31 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Grid;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\RestoreAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
+use App\Filament\Resources\TeacherResource\Pages\ListTeachers;
+use App\Filament\Resources\TeacherResource\Pages\CreateTeacher;
+use App\Filament\Resources\TeacherResource\Pages\EditTeacher;
 use App\Filament\Resources\TeacherResource\RelationManagers\SubjectsRelationManager;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Teacher;
-use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use App\Filament\Resources\TeacherResource\Pages;
@@ -19,19 +39,19 @@ class TeacherResource extends Resource
 {
     protected static ?string $model = Teacher::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
-    protected static ?string $navigationGroup = 'Akademik';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-group';
+    protected static string | \UnitEnum | null $navigationGroup = 'Akademik';
     protected static ?string $navigationLabel = 'Guru';
     protected static ?int $navigationSort = -10;
 
 
-        public static function form(Form $form): Form
+        public static function form(Schema $schema): Schema
         {
-            return $form->schema([
-                    Forms\Components\Section::make([
-                        Forms\Components\Fieldset::make('Data Pribadi')->schema([
-                            Forms\Components\Grid::make()->schema([
-                                 Forms\Components\TextInput::make('nip')
+            return $schema->components([
+                    Section::make([
+                        Fieldset::make('Data Pribadi')->schema([
+                            Grid::make()->schema([
+                                 TextInput::make('nip')
                                     ->label('NIP')
                                     ->default(fn () => Teacher::generateNip())
                                     ->placeholder('Masukkan NIP guru...')
@@ -45,26 +65,26 @@ class TeacherResource extends Resource
                                     ->helperText('NIP harus unik dan tidak boleh kosong.')
                                     ->columnSpanFull()
                                     ->required(),
-                                Forms\Components\TextInput::make('name')
+                                TextInput::make('name')
                                     ->label('Nama Lengkap')
                                     ->placeholder('Masukkan nama lengkap guru...')
                                     ->required(),
-                                Forms\Components\DatePicker::make('tgl_lahir')
+                                DatePicker::make('tgl_lahir')
                                     ->label('Tanggal Lahir')
                                     ->native()
                                     ->required(),
-                                Forms\Components\TextInput::make('kota_lahir')
+                                TextInput::make('kota_lahir')
                                     ->label('Tempat Lahir')
                                     ->required(),
-                                Forms\Components\TextInput::make('pendidikan')
+                                TextInput::make('pendidikan')
                                     ->label('Pendidikan Terakhir')
                                     ->required(),
                             ]),
-                            Forms\Components\Textarea::make('alamat')
+                            Textarea::make('alamat')
                                 ->label('Alamat')
                                 ->placeholder('Alamat lengkap...')
                                 ->required(),
-                            Forms\Components\FileUpload::make('foto')
+                            FileUpload::make('foto')
                                 ->label('Foto Profil')
                                 ->image()
                                 ->directory('img_teacher')
@@ -74,14 +94,14 @@ class TeacherResource extends Resource
                         ])
                     ]),
 
-                    Forms\Components\Section::make([
-                        Forms\Components\Fieldset::make('Akun Pengguna')->schema([
-                            Forms\Components\Grid::make()->schema([
-                                Forms\Components\TextInput::make('user.email')
+                    Section::make([
+                        Fieldset::make('Akun Pengguna')->schema([
+                            Grid::make()->schema([
+                                TextInput::make('user.email')
                                     ->label('Email')
                                     ->email()
                                     ->required(),
-                                Forms\Components\TextInput::make('user.password')
+                                TextInput::make('user.password')
                                     ->password()
                                     ->label('Password')
                                     ->default('password')
@@ -92,9 +112,9 @@ class TeacherResource extends Resource
                         ]),
                     ])->visible(fn (string $operation) => $operation !== 'edit'),
 
-                    Forms\Components\Section::make([
-                        Forms\Components\Fieldset::make('Pengajaran')->schema([
-                            Forms\Components\Select::make('subject')
+                    Section::make([
+                        Fieldset::make('Pengajaran')->schema([
+                            Select::make('subject')
                                 ->label('Mata Pelajaran')
                                 ->relationship('subjects', 'name')
                                 ->multiple()
@@ -114,47 +134,47 @@ class TeacherResource extends Resource
             return $table
                 ->defaultSort('name', 'asc')
                 ->columns([
-                     Tables\Columns\TextColumn::make('nip')
+                     TextColumn::make('nip')
                         ->label('NIP')
                         ->sortable()
                         ->searchable(),
-                    Tables\Columns\ImageColumn::make('foto')
+                    ImageColumn::make('foto')
                         ->label('Foto')
                         ->height(48)
                         ->width(48),
-                    Tables\Columns\TextColumn::make('name')
+                    TextColumn::make('name')
                         ->label('Nama')
                         ->weight('bold')
                         ->searchable(),
-                    Tables\Columns\TextColumn::make('user.email')
+                    TextColumn::make('user.email')
                         ->label('Email')
                         ->icon('heroicon-o-at-symbol')
                         ->searchable(),
-                    Tables\Columns\TextColumn::make('tgl_lahir')
+                    TextColumn::make('tgl_lahir')
                         ->label('Tgl Lahir')
                         ->date()
                         ->sortable(),
-                    Tables\Columns\TextColumn::make('kota_lahir')
+                    TextColumn::make('kota_lahir')
                         ->label('Kota Lahir')
                         ->searchable(),
-                    Tables\Columns\TextColumn::make('pendidikan')
+                    TextColumn::make('pendidikan')
                         ->label('Pendidikan')
                         ->badge()
                         ->color('primary')
                         ->searchable(),
-                    Tables\Columns\TextColumn::make('subjects.name')
+                    TextColumn::make('subjects.name')
                         ->label('Mapel')
                         ->separator(',')
                         ->limit(3),
-                    Tables\Columns\TextColumn::make('alamat')
+                    TextColumn::make('alamat')
                         ->label('Alamat')
                         ->limit(15)
                         ->searchable(),
-                    Tables\Columns\TextColumn::make('created_at')
+                    TextColumn::make('created_at')
                         ->dateTime()
                         ->sortable()
                         ->toggleable(isToggledHiddenByDefault: true),
-                    Tables\Columns\TextColumn::make('updated_at')
+                    TextColumn::make('updated_at')
                         ->dateTime()
                         ->sortable()
                         ->toggleable(isToggledHiddenByDefault: true),
@@ -163,16 +183,16 @@ class TeacherResource extends Resource
                     // Tambah filter aktif/nonaktif kalau ada
                     // TrashedFilter::make(),
                 ])
-                ->actions([
-                        Tables\Actions\DeleteAction::make(),
-                        Tables\Actions\ForceDeleteAction::make(),
-                        Tables\Actions\RestoreAction::make(),
+                ->recordActions([
+                        DeleteAction::make(),
+                        ForceDeleteAction::make(),
+                        RestoreAction::make(),
                 ])
-                ->bulkActions([
-                    Tables\Actions\BulkActionGroup::make([
-                        Tables\Actions\DeleteBulkAction::make(),
-                        Tables\Actions\ForceDeleteBulkAction::make(),
-                        Tables\Actions\RestoreBulkAction::make(),
+                ->toolbarActions([
+                    BulkActionGroup::make([
+                        DeleteBulkAction::make(),
+                        ForceDeleteBulkAction::make(),
+                        RestoreBulkAction::make(),
                     ]),
                 ]);
         }
@@ -199,9 +219,9 @@ class TeacherResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTeachers::route('/'),
-            'create' => Pages\CreateTeacher::route('/create'),
-            'edit' => Pages\EditTeacher::route('/{record}/edit'),
+            'index' => ListTeachers::route('/'),
+            'create' => CreateTeacher::route('/create'),
+            'edit' => EditTeacher::route('/{record}/edit'),
         ];
     }
 }

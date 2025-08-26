@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\SiswaResource\Pages;
 
+use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use Filament\Actions;
 use Spatie\Permission\Models\Role;
@@ -32,7 +33,7 @@ class CreateSiswa extends CreateRecord
         }
     }
 
-    protected function handleRecordCreation(array $data): \Illuminate\Database\Eloquent\Model
+    protected function handleRecordCreation(array $data): Model
     {
 
         // $nis = GenerateNis::generateNis();

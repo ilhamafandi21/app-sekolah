@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\RombelResource\Pages;
 
+use Filament\Actions\DeleteAction;
+use App\Models\Rombel;
 use Filament\Actions;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
@@ -22,7 +24,7 @@ class EditRombel extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()
+            DeleteAction::make()
         ];
     }
 
@@ -40,7 +42,7 @@ class EditRombel extends EditRecord
         //     return $data;
         // }
 
-        $cekdata = \App\Models\Rombel::where('tahun_ajaran_id', $data['tahun_ajaran_id'])
+        $cekdata = Rombel::where('tahun_ajaran_id', $data['tahun_ajaran_id'])
                                     ->where('tingkat_id', $data['tingkat_id'])
                                     ->where('jurusan_id', $data['jurusan_id'])
                                     ->where('divisi', $data['divisi'])

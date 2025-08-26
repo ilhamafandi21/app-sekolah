@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\BiayaResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\BiayaResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -15,7 +16,7 @@ class EditBiaya extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()
+            DeleteAction::make()
                 ->label('Hapus')
                 ->requiresConfirmation()
                 ->modalHeading('Hapus Biaya')

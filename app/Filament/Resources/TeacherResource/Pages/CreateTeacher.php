@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\TeacherResource\Pages;
 
+use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use Filament\Actions;
 use Spatie\Permission\Models\Role;
@@ -28,7 +29,7 @@ class CreateTeacher extends CreateRecord
     }
 
 
-    protected function handleRecordCreation(array $data): \Illuminate\Database\Eloquent\Model
+    protected function handleRecordCreation(array $data): Model
     {
         // 1. Buat user baru dulu
         // dd($data['name'];

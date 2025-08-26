@@ -2,8 +2,11 @@
 
 namespace App\Filament\Resources\UserResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -14,11 +17,11 @@ class SiswaRelationManager extends RelationManager
 {
     protected static string $relationship = 'Siswa';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -29,23 +32,23 @@ class SiswaRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('tempat_lahir')
+                TextColumn::make('name'),
+                TextColumn::make('tempat_lahir')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('tanggal_lahir')
+                TextColumn::make('tanggal_lahir')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('agama')
+                TextColumn::make('agama')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('jenis_kelamin')
+                TextColumn::make('jenis_kelamin')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('asal_sekolah')
+                TextColumn::make('asal_sekolah')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('tahun_lulus')
+                TextColumn::make('tahun_lulus')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('documents.files')
+                ImageColumn::make('documents.files')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->searchable(),
             ])
             ->filters([
@@ -54,11 +57,11 @@ class SiswaRelationManager extends RelationManager
             ->headerActions([
                 // Tables\Actions\CreateAction::make(),
             ])
-            ->actions([
+            ->recordActions([
                 // Tables\Actions\EditAction::make(),
                 // Tables\Actions\DeleteAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 // Tables\Actions\BulkActionGroup::make([
                 //     Tables\Actions\DeleteBulkAction::make(),
                 // ]),

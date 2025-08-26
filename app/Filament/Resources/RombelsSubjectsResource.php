@@ -2,12 +2,21 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Tables\Grouping\Group;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\RombelsSubjectsResource\Pages\ListRombelsSubjects;
+use App\Filament\Resources\RombelsSubjectsResource\Pages\CreateRombelsSubjects;
+use App\Filament\Resources\RombelsSubjectsResource\Pages\EditRombelsSubjects;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Rombel;
 use App\Models\Tingkat;
-use Filament\Forms\Get;
-use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\RombelsSubjects;
 use Filament\Resources\Resource;
@@ -23,7 +32,7 @@ class RombelsSubjectsResource extends Resource
 {
     protected static ?string $model = RombelsSubjects::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
    public static function getEloquentQuery(): Builder
     {
@@ -33,11 +42,11 @@ class RombelsSubjectsResource extends Resource
         ]);
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('rombel_id')
+        return $schema
+            ->components([
+                Select::make('rombel_id')
                     ->relationship(name: 'rombel', 
                                 titleAttribute: 'kode',
                                 modifyQueryUsing: function($query){
@@ -61,7 +70,7 @@ class RombelsSubjectsResource extends Resource
                 //     ->unique(ignoreRecord:true)
                 //     ->required(),
 
-                Forms\Components\Select::make('subject_id')
+                Select::make('subject_id')
                     ->label('Subject')
                     ->relationship('subject', 'name')
                     ->unique(
@@ -88,7 +97,7 @@ class RombelsSubjectsResource extends Resource
                     ->distinct();
             })
             ->groups([
-                Tables\Grouping\Group::make('rombel_id')
+                Group::make('rombel_id')
                     ->label('Rombel')
                     ->getTitleFromRecordUsing(fn ($record) => 
                                 $record->rombel->kode
@@ -99,7 +108,7 @@ class RombelsSubjectsResource extends Resource
             ])
             ->defaultGroup('rombel_id')
             ->columns([
-                Tables\Columns\TextColumn::make('rombel.kode')
+                TextColumn::make('rombel.kode')
                     ->html() // <<< penting, agar HTML di bawah dirender
                     ->formatStateUsing(function ($state, $record) {
                         $text = ($state ?? '-')
@@ -112,13 +121,13 @@ class RombelsSubjectsResource extends Resource
                     })
                     // supaya sorting tidak ikut <div> HTML
                     ->sortable(),
-                Tables\Columns\TextColumn::make('subject.name')
+                TextColumn::make('subject.name')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -126,12 +135,12 @@ class RombelsSubjectsResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -146,9 +155,9 @@ class RombelsSubjectsResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRombelsSubjects::route('/'),
-            'create' => Pages\CreateRombelsSubjects::route('/create'),
-            'edit' => Pages\EditRombelsSubjects::route('/{record}/edit'),
+            'index' => ListRombelsSubjects::route('/'),
+            'create' => CreateRombelsSubjects::route('/create'),
+            'edit' => EditRombelsSubjects::route('/{record}/edit'),
         ];
     }
 }

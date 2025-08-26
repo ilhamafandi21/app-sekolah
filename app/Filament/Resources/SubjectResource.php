@@ -2,10 +2,24 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\RestoreAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
+use App\Filament\Resources\SubjectResource\Pages\ListSubjects;
+use App\Filament\Resources\SubjectResource\Pages\CreateSubject;
+use App\Filament\Resources\SubjectResource\Pages\EditSubject;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Subject;
-use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,21 +33,21 @@ class SubjectResource extends Resource
 {
     protected static ?string $model = Subject::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-book-open';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-book-open';
 
     protected static ?string $navigationLabel = 'Mata Pelajaran';
     
-    protected static ?string $navigationGroup = 'Akademik';
+    protected static string | \UnitEnum | null $navigationGroup = 'Akademik';
     protected static ?int $navigationSort = -8;
 
     use GenerateSubjectsKode;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
        
-            ->schema([
-                Forms\Components\TextInput::make('name')
+            ->components([
+                TextInput::make('name')
                     ->label('Nama Mata Pelajaran')
                     ->unique(table: Subject::class, column: 'name', ignoreRecord: true)
                     ->validationMessages([
@@ -43,14 +57,14 @@ class SubjectResource extends Resource
                     ->dehydrateStateUsing(fn ($state) => strtoupper($state))
                     ->required(),
 
-                 Forms\Components\TextInput::make('nilai_kkm')
+                 TextInput::make('nilai_kkm')
                     ->label('Nilai KKM')
                     ->numeric()
                     ->default(0)
                     ->nullable(),
 
 
-                Forms\Components\TextInput::make('kode')
+                TextInput::make('kode')
                     ->unique(table: Subject::class, column: 'kode', ignoreRecord: true)
                     ->readOnly()
                     ->default(GenerateSubjectsKode::kode_subject())
@@ -58,7 +72,7 @@ class SubjectResource extends Resource
                         'unique' => 'Kode sudah maksimal, tidak bisa tambah baru lagi.',
                         'required' => 'Kode wajib diisi.',
                     ]),
-                Forms\Components\Textarea::make('deskripsi')
+                Textarea::make('deskripsi')
                     ->default('-')
                     ->columnSpanFull(),
             ]);
@@ -69,29 +83,29 @@ class SubjectResource extends Resource
         return $table
          ->defaultSort('kode', 'desc')
             ->columns([
-                Tables\Columns\TextColumn::make('kode')
+                TextColumn::make('kode')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->limit(15)
                     ->searchable(),
-                Tables\Columns\TextColumn::make('nilai_kkm')
+                TextColumn::make('nilai_kkm')
                     ->limit(15)
                     ->searchable(),
-                Tables\Columns\TextColumn::make('jurusans.nama')
+                TextColumn::make('jurusans.nama')
                     ->limit(15)
                     ->searchable(),
-                Tables\Columns\TextColumn::make('deskripsi')
+                TextColumn::make('deskripsi')
                     ->limit(15)
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -99,17 +113,17 @@ class SubjectResource extends Resource
             ->filters([
                //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ForceDeleteAction::make(),
-                Tables\Actions\RestoreAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
+                ForceDeleteAction::make(),
+                RestoreAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -134,9 +148,9 @@ class SubjectResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSubjects::route('/'),
-            'create' => Pages\CreateSubject::route('/create'),
-            'edit' => Pages\EditSubject::route('/{record}/edit'),
+            'index' => ListSubjects::route('/'),
+            'create' => CreateSubject::route('/create'),
+            'edit' => EditSubject::route('/{record}/edit'),
         ];
     }
 }

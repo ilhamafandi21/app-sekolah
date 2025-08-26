@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\UserResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use Filament\Actions;
 use App\Filament\Resources\UserResource;
 use Filament\Notifications\Notification;
@@ -14,7 +15,7 @@ class EditUser extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
              
         ];
     }

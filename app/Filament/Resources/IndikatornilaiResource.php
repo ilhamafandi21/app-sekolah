@@ -2,12 +2,20 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\IndikatornilaiResource\Pages\ListIndikatornilais;
+use App\Filament\Resources\IndikatornilaiResource\Pages\CreateIndikatornilai;
+use App\Filament\Resources\IndikatornilaiResource\Pages\EditIndikatornilai;
 use App\Filament\Resources\IndikatornilaiResource\Pages;
 use App\Filament\Resources\IndikatornilaiResource\RelationManagers;
 use App\Models\Indikatornilai;
 use App\Traits\GenerateIndikator;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -19,22 +27,22 @@ class IndikatornilaiResource extends Resource
 {
     protected static ?string $model = Indikatornilai::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-magnifying-glass-plus';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-magnifying-glass-plus';
     protected static ?string $navigationLabel = 'Indikator penilaian';
 
     use GenerateIndikator;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('kode')
+        return $schema
+            ->components([
+                TextInput::make('kode')
                     ->default(fn (): string => GenerateIndikator::indikator())
                     ->unique(ignoreRecord:true)
                     ->required(),
-                Forms\Components\TextInput::make('nama_indikator')
+                TextInput::make('nama_indikator')
                     ->required(),
-                Forms\Components\TextInput::make('keterangan')
+                TextInput::make('keterangan')
                     ->default('-'),
             ]);
     }
@@ -43,17 +51,17 @@ class IndikatornilaiResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('kode')
+                TextColumn::make('kode')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('nama_indikator')
+                TextColumn::make('nama_indikator')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('keterangan')
+                TextColumn::make('keterangan')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -61,12 +69,12 @@ class IndikatornilaiResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -81,9 +89,9 @@ class IndikatornilaiResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListIndikatornilais::route('/'),
-            'create' => Pages\CreateIndikatornilai::route('/create'),
-            'edit' => Pages\EditIndikatornilai::route('/{record}/edit'),
+            'index' => ListIndikatornilais::route('/'),
+            'create' => CreateIndikatornilai::route('/create'),
+            'edit' => EditIndikatornilai::route('/{record}/edit'),
         ];
     }
 }

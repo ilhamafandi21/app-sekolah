@@ -2,10 +2,20 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Select;
+use App\Models\Subject;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\RombelsSubjectsSchedullsTeacherResource\Pages\ListRombelsSubjectsSchedullsTeachers;
+use App\Filament\Resources\RombelsSubjectsSchedullsTeacherResource\Pages\CreateRombelsSubjectsSchedullsTeacher;
+use App\Filament\Resources\RombelsSubjectsSchedullsTeacherResource\Pages\EditRombelsSubjectsSchedullsTeacher;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Rombel;
-use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\RombelsSubjects;
 use Filament\Resources\Resource;
@@ -21,7 +31,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
 {
     protected static ?string $model = RombelsSubjectsSchedullsTeacher::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
 
     public static function getEloquentQuery(): Builder
@@ -37,11 +47,11 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
         ]);
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('rombel_id')
+        return $schema
+            ->components([
+                Select::make('rombel_id')
                     ->required()
                     ->relationship(
                         name: 'rombel',
@@ -57,13 +67,13 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                             $record->divisi ?? 'null',
                     ))
                     ->reactive(),
-                Forms\Components\Select::make('subject_id')
+                Select::make('subject_id')
                     ->label('Pilih Mapel')
                     ->required()
                     ->options(function (callable $get) {
                         $rombelId = $get('rombel_id');
                         if (!$rombelId) return [];
-                        return \App\Models\Subject::whereHas('rombels', fn ($q) => $q->whereKey($rombelId))
+                        return Subject::whereHas('rombels', fn ($q) => $q->whereKey($rombelId))
                             ->orderBy('name')
                             ->pluck('name','id')
                             ->toArray();
@@ -74,7 +84,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                         $subjectId = $get('subject_id');
 
                         if ($rombelId && $subjectId) {
-                            $pivot = \App\Models\RombelsSubjects::where('rombel_id', $rombelId)
+                            $pivot = RombelsSubjects::where('rombel_id', $rombelId)
                                 ->where('subject_id', $subjectId)
                                 ->first();
                             if ($pivot) {
@@ -84,7 +94,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                         return [];
                     }),
                
-                Forms\Components\TextInput::make('rombels_subjects_id')
+                TextInput::make('rombels_subjects_id')
                     ->label('RSID')
                     ->required()
                     ->disabled()
@@ -92,7 +102,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                     ->reactive()
                     ->default(fn($get) => $get('subject_id')),
                
-                Forms\Components\Select::make('schedull_id')
+                Select::make('schedull_id')
                     ->label('Pilih Jam Pelajaran')
                     ->required()
                     ->relationship(
@@ -108,7 +118,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                         return "{$s->kode} — {$start} s/d {$end}";
                     }),
                 
-                Forms\Components\Select::make('day_id')
+                Select::make('day_id')
                     ->label('Pilih Jadwal Hari')
                     ->relationship(
                         name: 'day',
@@ -119,7 +129,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                     )
                     ->required(),  
 
-                Forms\Components\Select::make('teacher_id')
+                Select::make('teacher_id')
                     ->label('Pengampu')
                     ->relationship(
                         name: 'teacher',
@@ -147,14 +157,14 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                             ]) // eager load relasi
             )
             ->columns([
-                Tables\Columns\TextColumn::make('kode')
+                TextColumn::make('kode')
                     ->label("RSSTID")
                     ->searchable(),
-                Tables\Columns\TextColumn::make('rombels_subjects_id')
+                TextColumn::make('rombels_subjects_id')
                     ->label("RSID")
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('rombel.id')
+                TextColumn::make('rombel.id')
                     ->formatStateUsing(function($record){
                         return $record->rombel->kode
                             .' '.$record->rombel->tingkat->nama_tingkat
@@ -162,31 +172,31 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                             .'-'.$record->rombel->divisi;
                     })
                     ->sortable(),
-                Tables\Columns\TextColumn::make('subject.name')
+                TextColumn::make('subject.name')
                     ->numeric()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('day.id')
+                TextColumn::make('day.id')
                     ->label('Hari')
                     ->formatStateUsing(function($record){
                         return $record->day->nama_hari;
                     })
                     ->sortable(),
-                Tables\Columns\TextColumn::make('schedull.id')
+                TextColumn::make('schedull.id')
                     ->formatStateUsing(function($record){
                         return $record->schedull->kode
                             .' '.$record->schedull->start_at
                             .' - '.$record->schedull->end_at;
                     })
                     ->sortable(),
-                Tables\Columns\TextColumn::make('teacher.name')
+                TextColumn::make('teacher.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -194,12 +204,12 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -214,9 +224,9 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRombelsSubjectsSchedullsTeachers::route('/'),
-            'create' => Pages\CreateRombelsSubjectsSchedullsTeacher::route('/create'),
-            'edit' => Pages\EditRombelsSubjectsSchedullsTeacher::route('/{record}/edit'),
+            'index' => ListRombelsSubjectsSchedullsTeachers::route('/'),
+            'create' => CreateRombelsSubjectsSchedullsTeacher::route('/create'),
+            'edit' => EditRombelsSubjectsSchedullsTeacher::route('/{record}/edit'),
         ];
     }
 }

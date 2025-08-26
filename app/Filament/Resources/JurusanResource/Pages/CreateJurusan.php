@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\JurusanResource\Pages;
 
+use App\Models\Jurusan;
 use App\Filament\Resources\JurusanResource;
 use Filament\Actions;
 use Filament\Notifications\Notification;
@@ -16,7 +17,7 @@ class CreateJurusan extends CreateRecord
     {
         $data['nama_jurusan'] = strtoupper($data['nama_jurusan']);
 
-            if(\App\Models\Jurusan::where('nama_jurusan', $data['nama_jurusan'])->exists()){
+            if(Jurusan::where('nama_jurusan', $data['nama_jurusan'])->exists()){
                 Notification::make()
                     ->title('Error')
                     ->body('Data sudah ada!')

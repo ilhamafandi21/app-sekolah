@@ -2,10 +2,18 @@
 
 namespace App\Filament\Resources\DayResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\TimePicker;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\CreateAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Schedull;
-use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Support\Carbon;
 use Filament\Notifications\Notification;
@@ -18,13 +26,13 @@ class SchedullsRelationManager extends RelationManager
 {
     protected static string $relationship = 'schedulls';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Hidden::make('kode'),  
-                Forms\Components\TimePicker::make('start_at'),
-                Forms\Components\TimePicker::make('end_at'),
+        return $schema
+            ->components([
+                Hidden::make('kode'),  
+                TimePicker::make('start_at'),
+                TimePicker::make('end_at'),
             ]);
     }
 
@@ -33,16 +41,16 @@ class SchedullsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('kode'),
-                Tables\Columns\TextColumn::make('start_at'),
-                Tables\Columns\TextColumn::make('end_at'),
+                TextColumn::make('kode'),
+                TextColumn::make('start_at'),
+                TextColumn::make('end_at'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
-                    ->mutateFormDataUsing(function (Array $data){
+                CreateAction::make()
+                    ->mutateDataUsing(function (Array $data){
                         $hari = $this->getOwnerRecord()->nama_hari;
                         $startAt =  Carbon::parse($data['start_at'])->format('H:i');
                         $endAt =  Carbon::parse($data['end_at'])->format('H:i');
@@ -73,13 +81,13 @@ class SchedullsRelationManager extends RelationManager
                         return $data;
                     }),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

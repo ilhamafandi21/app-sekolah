@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\TahunAjaranResource\Pages;
 
+use Filament\Actions\CreateAction;
 use App\Filament\Resources\TahunAjaranResource;
 use Filament\Actions;
 use Filament\Actions\ActionGroup;
@@ -16,7 +17,7 @@ class ListTahunAjarans extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-                Actions\CreateAction::make(),
+                CreateAction::make(),
         ];
     }
 }

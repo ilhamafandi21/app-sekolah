@@ -2,10 +2,18 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\DayResource\Pages\ListDays;
+use App\Filament\Resources\DayResource\Pages\CreateDay;
+use App\Filament\Resources\DayResource\Pages\EditDay;
 use App\Models\Day;
 use Filament\Forms;
 use Filament\Tables;
-use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,19 +27,19 @@ class DayResource extends Resource
 {
     protected static ?string $model = Day::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'Penjadwalan';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \UnitEnum | null $navigationGroup = 'Penjadwalan';
 
     // public static function getEloquentQuery(): Builder
     // {
     //     return parent::getEloquentQuery()->with('schedulls');
     // }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('nama_hari')
+        return $schema
+            ->components([
+                TextInput::make('nama_hari')
                     ->dehydrated()
                     ->mutateDehydratedStateUsing(fn($state)=>strtoupper($state))
                     ->disabled( fn(string $context) => $context === 'edit')
@@ -47,7 +55,7 @@ class DayResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama_hari')
+                TextColumn::make('nama_hari')
                     ->badge()
                     ->color('secondary')
                     ->searchable(),
@@ -66,11 +74,11 @@ class DayResource extends Resource
                     
                 // ,
 
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -78,12 +86,12 @@ class DayResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -98,9 +106,9 @@ class DayResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDays::route('/'),
-            'create' => Pages\CreateDay::route('/create'),
-            'edit' => Pages\EditDay::route('/{record}/edit'),
+            'index' => ListDays::route('/'),
+            'create' => CreateDay::route('/create'),
+            'edit' => EditDay::route('/{record}/edit'),
         ];
     }
 }

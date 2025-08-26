@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\RombelsSubjectsSchedullsTeacherResource\Pages;
 
+use App\Models\RombelsSubjectsSchedullsTeacher;
 use App\Filament\Resources\RombelsSubjectsSchedullsTeacherResource;
 use Filament\Actions;
 use Filament\Notifications\Notification;
@@ -31,7 +32,7 @@ class CreateRombelsSubjectsSchedullsTeacher extends CreateRecord
                 $data['schedull_id'].
                 $data['day_id'];
 
-        $cekduplikat = \App\Models\RombelsSubjectsSchedullsTeacher::where('rombel_id', $data['rombel_id'])
+        $cekduplikat = RombelsSubjectsSchedullsTeacher::where('rombel_id', $data['rombel_id'])
                                     ->where('schedull_id', $data['schedull_id'])
                                     ->where('day_id', $data['day_id'])
                                     ->exists();

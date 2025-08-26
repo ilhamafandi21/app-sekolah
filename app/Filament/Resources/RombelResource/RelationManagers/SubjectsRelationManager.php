@@ -2,9 +2,15 @@
 
 namespace App\Filament\Resources\RombelResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\AttachAction;
+use Filament\Actions\DetachAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DetachBulkAction;
 use Filament\Forms;
 use Filament\Tables;
-use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -25,11 +31,11 @@ class SubjectsRelationManager extends RelationManager
         ]);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('id')
+        return $schema
+            ->components([
+                TextInput::make('id')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -40,7 +46,7 @@ class SubjectsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
+                TextColumn::make('name'),
                 // Tables\Columns\TextColumn::make('jadwal_dan_pengajar')
                 // ->label('Jadwal & Pengajar')
                 // ->html()
@@ -69,13 +75,13 @@ class SubjectsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make()
+                AttachAction::make()
                     ->multiple()
                     ->preloadRecordSelect(),
                     
             ])
-            ->actions([
-                Tables\Actions\DetachAction::make()
+            ->recordActions([
+                DetachAction::make()
                     ->icon('heroicon-o-trash'),
                 // Tables\Actions\Action::make('tambahJadwal')
                 //     ->label('Atur Jadwal')
@@ -130,9 +136,9 @@ class SubjectsRelationManager extends RelationManager
                 //     ->modalHeading(fn ($record) => $record->teacher_id ? 'Edit/Kosongkan Teacher' : 'Tambah teacher')
                 //     ->requiresConfirmation(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DetachBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DetachBulkAction::make(),
                 ]),
             ]);
     }

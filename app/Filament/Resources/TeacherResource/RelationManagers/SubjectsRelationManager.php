@@ -2,6 +2,11 @@
 
 namespace App\Filament\Resources\TeacherResource\RelationManagers;
 
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\AttachAction;
+use Filament\Actions\DetachAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DetachBulkAction;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -30,12 +35,12 @@ class SubjectsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('kode')
+                TextColumn::make('kode')
                     ->label('Kode')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('teachers.name')
+                TextColumn::make('name'),
+                TextColumn::make('teachers.name')
                     ->label('Guru Pengajar')
                     ->sortable()
                     ->bulleted()
@@ -45,17 +50,17 @@ class SubjectsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make()
+                AttachAction::make()
                     ->label('Tambah Mata Pelajaran')
                     ->multiple()
                     ->preloadRecordSelect(true),
             ])
-            ->actions([
-                Tables\Actions\DetachAction::make(),
+            ->recordActions([
+                DetachAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DetachBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DetachBulkAction::make(),
                 ]),
             ]);
     }

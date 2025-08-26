@@ -26,9 +26,9 @@ class RombelsSubjectsSchedullsTeacher extends Model
         return $this->belongsTo(Rombel::class, 'rombel_id');
     }
     
-    public function day(): BelongsTo      { return $this->belongsTo(\App\Models\Day::class, 'day_id'); }
-public function subject(): BelongsTo  { return $this->belongsTo(\App\Models\Subject::class, 'subject_id'); }
-public function schedull(): BelongsTo { return $this->belongsTo(\App\Models\Schedull::class, 'schedull_id'); }
-public function teacher(): BelongsTo  { return $this->belongsTo(\App\Models\Teacher::class, 'teacher_id'); }
+    public function day(): BelongsTo      { return $this->belongsTo(Day::class, 'day_id'); }
+public function subject(): BelongsTo  { return $this->belongsTo(Subject::class, 'subject_id'); }
+public function schedull(): BelongsTo { return $this->belongsTo(Schedull::class, 'schedull_id'); }
+public function teacher(): BelongsTo  { return $this->belongsTo(Teacher::class, 'teacher_id'); }
 
 }

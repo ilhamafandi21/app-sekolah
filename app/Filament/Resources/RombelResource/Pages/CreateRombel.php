@@ -2,6 +2,10 @@
 
 namespace App\Filament\Resources\RombelResource\Pages;
 
+use App\Models\TahunAjaran;
+use App\Models\Tingkat;
+use App\Models\Jurusan;
+use App\Models\Rombel;
 use Filament\Actions;
 use App\Filament\Resources\RombelResource;
 use Filament\Notifications\Notification;
@@ -15,12 +19,12 @@ class CreateRombel extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
       
-        $thn =  \App\Models\TahunAjaran::find($data['tahun_ajaran_id'])->id;
-        $tingkat = \App\Models\Tingkat::find($data['tingkat_id'])->id;
-        $jurusan = \App\Models\Jurusan::find($data['jurusan_id'])->id;
+        $thn =  TahunAjaran::find($data['tahun_ajaran_id'])->id;
+        $tingkat = Tingkat::find($data['tingkat_id'])->id;
+        $jurusan = Jurusan::find($data['jurusan_id'])->id;
         $div = $data['divisi'];
 
-        $cekdata = \App\Models\Rombel::where('tahun_ajaran_id', $data['tahun_ajaran_id'])
+        $cekdata = Rombel::where('tahun_ajaran_id', $data['tahun_ajaran_id'])
                                     ->where('tingkat_id', $data['tingkat_id'])
                                     ->where('jurusan_id', $data['jurusan_id'])
                                     ->where('divisi', $div)

@@ -2,10 +2,22 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
-use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Spatie\Permission\Models\Role;
@@ -20,30 +32,30 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = 'Manajemen Akses';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \UnitEnum | null $navigationGroup = 'Manajemen Akses';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema([
-            Forms\Components\TextInput::make('name')
+        return $schema->components([
+            TextInput::make('name')
                 ->label('Nama Lengkap')
                 ->required(),
 
-            Forms\Components\TextInput::make('email')
+            TextInput::make('email')
                 ->label('Email')
                 ->email()
                 ->required(),
 
-            Forms\Components\Select::make('role')
+            Select::make('role')
                 ->label('Role')
                 ->options(Role::pluck('name', 'name'))
                 ->visible(fn (string $context) => $context === 'create'),
 
-            Forms\Components\DateTimePicker::make('email_verified_at')
+            DateTimePicker::make('email_verified_at')
                 ->label('Email Verified At'),
 
-            Forms\Components\TextInput::make('password')
+            TextInput::make('password')
                 ->label('Password')
                 ->password()
                 ->required()
@@ -57,7 +69,7 @@ class UserResource extends Resource
      */
     public static function getEloquentQuery(): Builder
     {
-        /** @var \Illuminate\Database\Eloquent\Builder $query */
+        /** @var Builder $query */
         $query = static::getModel()::query();
 
         return $query->with('roles');
@@ -73,41 +85,41 @@ class UserResource extends Resource
             ->defaultPaginationPageOption(5)
             ->paginationPageOptions([5, 10,])
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Nama')
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('email')
+                TextColumn::make('email')
                     ->label('Email')
                     ->searchable()
                     ->sortable(),
 
                 // Kolom relasi roles — aman untuk many-to-many
-                Tables\Columns\TextColumn::make('roles.name')
+                TextColumn::make('roles.name')
                     ->label('Roles')
                     ->badge()
                     ->color('success')
                     ->listWithLineBreaks(),
 
-                Tables\Columns\TextColumn::make('email_verified_at')
+                TextColumn::make('email_verified_at')
                     ->label('Email Verified At')
                     ->dateTime()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label('Created At')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->label('Updated At')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->label('Deleted At')
                     ->dateTime()
                     ->sortable()
@@ -117,18 +129,18 @@ class UserResource extends Resource
                 // Tambahkan filter jika perlu. Hindari filter yang menyentuh relasi tak ada.
                 // \Filament\Tables\Filters\TrashedFilter::make(), // aktifkan jika perlu
             ])
-            ->actions([
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
-                    Tables\Actions\ForceDeleteAction::make(),
+            ->recordActions([
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
+                    ForceDeleteAction::make(),
                 ]),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
                 ]),
             ]);
     }

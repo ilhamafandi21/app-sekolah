@@ -2,11 +2,21 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\SemesterResource\Pages\ListSemesters;
+use App\Filament\Resources\SemesterResource\Pages\CreateSemester;
+use App\Filament\Resources\SemesterResource\Pages\EditSemester;
 use App\Filament\Resources\SemesterResource\Pages;
 use App\Filament\Resources\SemesterResource\RelationManagers;
 use App\Models\Semester;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -18,23 +28,23 @@ class SemesterResource extends Resource
 {
     protected static ?string $model = Semester::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-bolt';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-bolt';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->unique(ignoreRecord:true)
                     ->validationMessages([
                         "unique" => "Semester sudah ada!",
                     ])
                     ->dehydrateStateUsing(fn($state) => strtoupper($state))
                     ->required(),
-                Forms\Components\Toggle::make('status')
+                Toggle::make('status')
                     ->default(true)
                     ->required(),
-                Forms\Components\TextInput::make('keterangan')
+                TextInput::make('keterangan')
                     ->required()
                     ->default('-'),
             ]);
@@ -44,17 +54,17 @@ class SemesterResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\IconColumn::make('status')
+                IconColumn::make('status')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('keterangan')
+                TextColumn::make('keterangan')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -62,12 +72,12 @@ class SemesterResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -82,9 +92,9 @@ class SemesterResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSemesters::route('/'),
-            'create' => Pages\CreateSemester::route('/create'),
-            'edit' => Pages\EditSemester::route('/{record}/edit'),
+            'index' => ListSemesters::route('/'),
+            'create' => CreateSemester::route('/create'),
+            'edit' => EditSemester::route('/{record}/edit'),
         ];
     }
 }

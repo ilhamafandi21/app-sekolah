@@ -2,13 +2,32 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\RestoreAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
+use App\Filament\Resources\SiswaResource\Pages\ListSiswas;
+use App\Filament\Resources\SiswaResource\Pages\CreateSiswa;
+use App\Filament\Resources\SiswaResource\Pages\EditSiswa;
 use App\Enums\Agama;
 use App\Enums\JenisKelamin;
 use App\Enums\StatusSiswa;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Siswa;
-use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use function Laravel\Prompts\password;
@@ -24,16 +43,16 @@ class SiswaResource extends Resource
 {
     protected static ?string $model = Siswa::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
-    protected static ?string $navigationGroup = 'Akademik';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-academic-cap';
+    protected static string | \UnitEnum | null $navigationGroup = 'Akademik';
     protected static ?string $navigationLabel = 'Murid';
     protected static ?int $navigationSort = -9;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('nis')
+        return $schema
+            ->components([
+                TextInput::make('nis')
                     ->label('NIS')
                     ->default(fn () => Siswa::generateNis())
                     ->placeholder('Masukkan NIS siswa...')
@@ -47,20 +66,20 @@ class SiswaResource extends Resource
                     ->helperText('NIS harus unik dan tidak boleh kosong.')
                     ->columnSpanFull()
                     ->required(),
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->required(),
-                Forms\Components\TextInput::make('tempat_lahir'),
-                Forms\Components\DatePicker::make('tanggal_lahir'),
-                Forms\Components\Textarea::make('alamat')
+                TextInput::make('tempat_lahir'),
+                DatePicker::make('tanggal_lahir'),
+                Textarea::make('alamat')
                     ->columnSpanFull(),
-                Forms\Components\Select::make('agama')
+                Select::make('agama')
                     ->options(Agama::options())
                     ->default(Agama::ISLAM),
-                Forms\Components\Select::make('jenis_kelamin')
+                Select::make('jenis_kelamin')
                     ->options(JenisKelamin::options())
                     ->default(JenisKelamin::LAKI_LAKI),
-                Forms\Components\TextInput::make('asal_sekolah'),
-                Forms\Components\Select::make('tahun_lulus')
+                TextInput::make('asal_sekolah'),
+                Select::make('tahun_lulus')
                     ->label('Tahun Lulus')
                     ->options(
                         TahunLulus::tahun_lulus()
@@ -69,34 +88,34 @@ class SiswaResource extends Resource
                     ->preload()
                     ->required(),
 
-                Forms\Components\Repeater::make('documents')
+                Repeater::make('documents')
                     ->addActionLabel('Tambah Dokumen')
                     ->relationship('documents')
                     ->schema([
-                        Forms\Components\TextInput::make('name')
+                        TextInput::make('name')
                             ->nullable(),
-                        Forms\Components\FileUpload::make('files')
+                        FileUpload::make('files')
                             ->directory('dokumen-siswa')    
                             ->nullable(),
-                        Forms\Components\Textarea::make('ket')
+                        Textarea::make('ket')
                             ->label('keterangan')
                             ->default('-')    
                             ->nullable(),
                     ]),
 
-                Forms\Components\Select::make('status')
+                Select::make('status')
                     ->options(StatusSiswa::options())
                     ->default(StatusSiswa::AKTIF),
-                Forms\Components\TextInput::make('user_id')
+                TextInput::make('user_id')
                     ->dehydrated(false)
                     ->hidden()
                     ->numeric(),
 
-                Forms\Components\TextInput::make('user.email')
+                TextInput::make('user.email')
                     ->visible(fn (string $context) => $context === 'create')
                     ->email()
                     ->required(),
-                Forms\Components\TextInput::make('user.password')
+                TextInput::make('user.password')
                     ->visible(fn (string $context) => $context === 'create')
                     ->default('password')
                     ->revealable()
@@ -108,39 +127,39 @@ class SiswaResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nis')
+                TextColumn::make('nis')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('tempat_lahir')
+                TextColumn::make('tempat_lahir')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('tanggal_lahir')
+                TextColumn::make('tanggal_lahir')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('agama')
+                TextColumn::make('agama')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('jenis_kelamin')
+                TextColumn::make('jenis_kelamin')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('asal_sekolah')
+                TextColumn::make('asal_sekolah')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('tahun_lulus')
+                TextColumn::make('tahun_lulus')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('documents.files')
+                ImageColumn::make('documents.files')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('user_id')
+                TextColumn::make('user_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -148,17 +167,17 @@ class SiswaResource extends Resource
             ->filters([
                 TrashedFilter::make()
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ForceDeleteAction::make(),
-                Tables\Actions\RestoreAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
+                ForceDeleteAction::make(),
+                RestoreAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
 
                 ]),
             ]);
@@ -189,9 +208,9 @@ class SiswaResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSiswas::route('/'),
-            'create' => Pages\CreateSiswa::route('/create'),
-            'edit' => Pages\EditSiswa::route('/{record}/edit'),
+            'index' => ListSiswas::route('/'),
+            'create' => CreateSiswa::route('/create'),
+            'edit' => EditSiswa::route('/{record}/edit'),
         ];
     }
 }

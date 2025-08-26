@@ -7,6 +7,7 @@ use Filament\Tables;
 use App\Models\Siswa;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -48,7 +49,7 @@ class SiswasRelationManager extends RelationManager
                             ? $record->rombels
                                 ->map(fn ($r) => "{$r->tingkat->nama_tingkat}-{$r->jurusan->kode}-" . ($r->divisi ?? '-'))
                                 ->implode(', ')
-                            : 'Rombel belum diatur';
+                            : new HtmlString('<span style="color:red;">Rombel Belum Diatur</span>');
 
                         // --- Jika ingin versi "cantik", pakai ini sebagai ganti v1:
                         // $labelRombel = $record->rombels->isNotEmpty()

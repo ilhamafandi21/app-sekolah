@@ -114,7 +114,15 @@ class TransactionResource extends Resource
                 Forms\Components\Hidden::make('divisi')
                     ->required()
                     ->dehydrated(true),
+                Forms\Components\Select::make('semester')
+                    ->options(
+                        \App\Models\Semester::query()
+                            ->pluck('name', 'id') // [id => name]
+                    )
+                    ->searchable()
+                    ->required(),
                 Forms\Components\TextInput::make('nominal')
+                    ->label('Jumlah Bayar')
                     ->required()
                     ->numeric(),
                 Forms\Components\TextInput::make('keterangan')
@@ -128,7 +136,7 @@ class TransactionResource extends Resource
         return $table
             ->query(Static::getModel()::query()
                 ->with(['siswa:id,name',
-                        'biaya:id,name',
+                        'biaya:id,name,nominal',
                         'tingkat:id,nama_tingkat',
                         'jurusan:id,kode'
                         ]))
@@ -139,7 +147,9 @@ class TransactionResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('biaya.name')
-                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('biaya.nominal')
+                    ->money('IDR', true, locale: 'id_ID')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('ringkasan_rombel')
                     ->label('Rombel')

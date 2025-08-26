@@ -153,6 +153,7 @@ class TransactionResource extends Resource
                         ]))
             ->columns([
                 Tables\Columns\TextColumn::make('kode')
+                    ->limit(5)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('siswa.name')
                     ->numeric()
@@ -174,16 +175,20 @@ class TransactionResource extends Resource
                 }),
 
                 Tables\Columns\TextColumn::make('biaya.nominal')
+                    ->label('Nominal Biaya')
+                    ->color('info')
                     ->money('IDR', true, locale: 'id_ID')
                     ->sortable(),
                
                 Tables\Columns\TextColumn::make('nominal')
                     ->label('Jumlah Bayar')
+                    ->color('success')
                     ->money('IDR', true, locale: 'id_ID')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('tunggakan')
                     ->label('Tunggakan')
+                    ->color('warning')  
                     ->money('IDR', true, locale: 'id_ID')
                     ->sortable()
                     ->getStateUsing(function ($record) {

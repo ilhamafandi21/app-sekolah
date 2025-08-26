@@ -186,14 +186,14 @@ class TransactionResource extends Resource
                     ->money('IDR', true, locale: 'id_ID')
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('tunggakan')
-                    ->label('Tunggakan')
-                    ->color('warning')  
-                    ->money('IDR', true, locale: 'id_ID')
-                    ->sortable()
-                    ->getStateUsing(function ($record) {
-                        return max(0, $record->biaya->nominal - $record->nominal);
-                    }),
+                // Tables\Columns\TextColumn::make('tunggakan')
+                //     ->label('Tunggakan')
+                //     ->color('warning')  
+                //     ->money('IDR', true, locale: 'id_ID')
+                //     ->sortable()
+                //     ->getStateUsing(function ($record) {
+                //         return max(0, $record->biaya->nominal - $record->nominal);
+                //     }),
 
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status Bayar')

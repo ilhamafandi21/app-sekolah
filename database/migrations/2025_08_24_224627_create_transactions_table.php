@@ -21,6 +21,8 @@ return new class extends Migration
             $table->foreignId('jurusan_id')->constrained('jurusans', 'id')->nullOnDelete();
             $table->string('divisi')->nullOnDelete();
             $table->integer('nominal')->nullOnDelete();
+            $table->string('semester')->nullOnDelete();
+            $table->boolean('status')->default(false)->nullOnDelete();
             $table->string('keterangan')->nullOnDelete();
             $table->timestamps();
         });

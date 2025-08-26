@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('rombel_biayas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('rombel_id')->constrained('rombels', 'id')->cascadeOnDelete();
-            $table->string('semester_id')->nullable();
             $table->foreignId('biaya_id')->constrained('biayas', 'id')->cascadeOnDelete();
             $table->timestamps();
         });

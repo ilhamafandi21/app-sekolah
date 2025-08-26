@@ -15,6 +15,8 @@ class Transaction extends Model
         'jurusan_id',
         'divisi',
         'nominal',
+        'semester',
+        'status',
         'keterangan',
     ];
 

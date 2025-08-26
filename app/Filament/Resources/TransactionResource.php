@@ -182,6 +182,14 @@ class TransactionResource extends Resource
                     ->money('IDR', true, locale: 'id_ID')
                     ->sortable(),
 
+                Tables\Columns\TextColumn::make('tunggakan')
+                    ->label('Tunggakan')
+                    ->money('IDR', true, locale: 'id_ID')
+                    ->sortable()
+                    ->getStateUsing(function ($record) {
+                        return max(0, $record->biaya->nominal - $record->nominal);
+                    }),
+
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status Bayar')
                     ->formatStateUsing(fn ($state) => $state ? 'Lunas' : 'Belum Lunas')
@@ -192,6 +200,7 @@ class TransactionResource extends Resource
                 Tables\Columns\TextColumn::make('keterangan')
                     ->limit(10)
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

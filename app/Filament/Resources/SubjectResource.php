@@ -36,9 +36,6 @@ class SubjectResource extends Resource
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-book-open';
 
     protected static ?string $navigationLabel = 'Mata Pelajaran';
-    
-    protected static string | \UnitEnum | null $navigationGroup = 'Akademik';
-    protected static ?int $navigationSort = -8;
 
     use GenerateSubjectsKode;
 

@@ -50,8 +50,8 @@ class TeacherResource extends Resource
             return $schema->components([
                     Section::make([
                         Fieldset::make('Data Pribadi')->schema([
-                            Grid::make()->schema([
-                                 TextInput::make('nip')
+                          
+                                TextInput::make('nip')
                                     ->label('NIP')
                                     ->default(fn () => Teacher::generateNip())
                                     ->placeholder('Masukkan NIP guru...')
@@ -91,12 +91,13 @@ class TeacherResource extends Resource
                                 ->imageEditor()
                                 ->imagePreviewHeight('80')
                                 ->helperText('Upload foto terbaru, rasio 1:1 (square) untuk hasil terbaik.'),
-                        ])
-                    ]),
+                        
+                    ])
+                    ->columnSpanFull(),
 
                     Section::make([
                         Fieldset::make('Akun Pengguna')->schema([
-                            Grid::make()->schema([
+                           
                                 TextInput::make('user.email')
                                     ->label('Email')
                                     ->email()
@@ -108,9 +109,11 @@ class TeacherResource extends Resource
                                     ->revealable()
                                     ->helperText('Default "password". Ganti jika perlu.')
                                     ->nullable()
-                            ]),
+                          
                         ]),
-                    ])->visible(fn (string $operation) => $operation !== 'edit'),
+                    ])
+                    ->columnSpanFull()
+                    ->visible(fn (string $operation) => $operation !== 'edit'),
 
                     Section::make([
                         Fieldset::make('Pengajaran')->schema([
@@ -122,7 +125,7 @@ class TeacherResource extends Resource
                                 ->searchable()
                                 ->placeholder('Pilih mata pelajaran'),
                         ]),
-                    ]),
+                    ])->columnSpanFull(),
                
             ]);
         }

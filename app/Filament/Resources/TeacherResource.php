@@ -51,7 +51,7 @@ class TeacherResource extends Resource
                                     ->required(),
                                 Forms\Components\DatePicker::make('tgl_lahir')
                                     ->label('Tanggal Lahir')
-                                    ->native(false)
+                                    ->native()
                                     ->required(),
                                 Forms\Components\TextInput::make('kota_lahir')
                                     ->label('Tempat Lahir')

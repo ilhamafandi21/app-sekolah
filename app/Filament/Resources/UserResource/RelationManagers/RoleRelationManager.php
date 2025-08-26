@@ -2,8 +2,15 @@
 
 namespace App\Filament\Resources\UserResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Select;
+use Spatie\Permission\Models\Role;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\AttachAction;
+use Filament\Actions\DetachAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -14,14 +21,14 @@ class RoleRelationManager extends RelationManager
 {
     protected static string $relationship = 'roles';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-               Forms\Components\Select::make('name')
+        return $schema
+            ->components([
+               Select::make('name')
                 ->label('Role')
                 ->required()
-                ->options(\Spatie\Permission\Models\Role::pluck('name', 'name'))
+                ->options(Role::pluck('name', 'name'))
                 ->searchable(),
             ]);
     }
@@ -31,23 +38,23 @@ class RoleRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Name'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make()
+                AttachAction::make()
                     ->label('Tambah Role')
                     ->preloadRecordSelect()
             ])
-            ->actions([
-                Tables\Actions\DetachAction::make()->label('Hapus Role dari User'),
+            ->recordActions([
+                DetachAction::make()->label('Hapus Role dari User'),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

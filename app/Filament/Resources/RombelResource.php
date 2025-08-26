@@ -2,11 +2,25 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\Hidden;
+use Filament\Schemas\Components\Grid;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\RombelResource\Pages\ListRombels;
+use App\Filament\Resources\RombelResource\Pages\CreateRombel;
+use App\Filament\Resources\RombelResource\Pages\EditRombel;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Rombel;
 use Filament\Forms\Get;
-use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Validation\Rule;
 use Filament\Resources\Resource;
@@ -21,7 +35,7 @@ class RombelResource extends Resource
 {
     protected static ?string $model = Rombel::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-arrow-right-start-on-rectangle';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-arrow-right-start-on-rectangle';
     protected static ?string $navigationLabel = 'Rombel';
 
     public static function getEloquentQuery(): Builder
@@ -33,41 +47,41 @@ class RombelResource extends Resource
         ]);
     }
 
-   public static function form(Form $form): Form
+   public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make('📟 Informasi Rombel')
+        return $schema
+            ->components([
+                Section::make('📟 Informasi Rombel')
                     ->description('Silakan lengkapi data rombongan belajar')
                     ->schema([
-                        Forms\Components\Hidden::make('kode')
+                        Hidden::make('kode')
                             ->dehydrated()
                             ->nullable(),
 
-                        Forms\Components\Grid::make(2)
+                        Grid::make(2)
                             ->schema([
-                                Forms\Components\Select::make('tahun_ajaran_id')
+                                Select::make('tahun_ajaran_id')
                                     ->label('Tahun Ajaran')
                                     ->required()
                                     ->relationship('tahun_ajaran', 'thn_ajaran')
                                     ->disabled(fn (string $context) => $context === 'edit')
                                     ->dehydrated(),
 
-                                Forms\Components\Select::make('tingkat_id')
+                                Select::make('tingkat_id')
                                     ->label('Tingkat')
                                     ->required()
                                     ->relationship('tingkat', 'nama_tingkat')
                                     ->disabled(fn (string $context) => $context === 'edit')
                                     ->dehydrated(),
 
-                                Forms\Components\Select::make('jurusan_id')
+                                Select::make('jurusan_id')
                                     ->label('Jurusan')
                                     ->required()
                                     ->relationship('jurusan', 'nama_jurusan')
                                     ->disabled(fn (string $context) => $context === 'edit')
                                     ->dehydrated(),
 
-                                Forms\Components\TextInput::make('divisi')
+                                TextInput::make('divisi')
                                     ->label('Divisi')
                                     ->numeric()
                                     ->required()
@@ -79,14 +93,14 @@ class RombelResource extends Resource
                     ])
                     ->collapsible(),
 
-                Forms\Components\Section::make('📌 Status & Keterangan')
+                Section::make('📌 Status & Keterangan')
                     ->description('Informasi tambahan')
                     ->schema([
-                        Forms\Components\Toggle::make('status')
+                        Toggle::make('status')
                             ->label('Aktifkan Rombel')
                             ->default(true),
 
-                        Forms\Components\TextInput::make('keterangan')
+                        TextInput::make('keterangan')
                             ->label('Catatan / Keterangan')
                             ->default('-')
                             ->nullable()
@@ -102,9 +116,9 @@ class RombelResource extends Resource
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
-                Tables\Columns\TextColumn::make('kode')
+                TextColumn::make('kode')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('info_singkat')
+                TextColumn::make('info_singkat')
                     ->label('Info Kelas')
                     ->getStateUsing(function ($record) {
                         return ($record->tingkat?->nama_tingkat ?? '-') . ' ' .
@@ -113,37 +127,37 @@ class RombelResource extends Resource
                     })
                     ->wrap()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('tahun_ajaran.thn_ajaran')
+                TextColumn::make('tahun_ajaran.thn_ajaran')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('tingkat.nama_tingkat')
+                TextColumn::make('tingkat.nama_tingkat')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('jurusan.nama_jurusan')
+                TextColumn::make('jurusan.nama_jurusan')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('divisi')
+                TextColumn::make('divisi')
                     ->searchable(),
-                Tables\Columns\IconColumn::make('status')
+                IconColumn::make('status')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('keterangan')
+                TextColumn::make('keterangan')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -161,9 +175,9 @@ class RombelResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRombels::route('/'),
-            'create' => Pages\CreateRombel::route('/create'),
-            'edit' => Pages\EditRombel::route('/{record}/edit'),
+            'index' => ListRombels::route('/'),
+            'create' => CreateRombel::route('/create'),
+            'edit' => EditRombel::route('/{record}/edit'),
         ];
     }
 }

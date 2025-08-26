@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\TeacherResource\Pages;
 
+use Filament\Actions\DeleteAction;
+use Filament\Actions\Action;
 use Filament\Actions;
 use Spatie\Permission\Models\Role;
 use Filament\Notifications\Notification;
@@ -15,8 +17,8 @@ class EditTeacher extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
-             Actions\Action::make('assignGuruRole')
+            DeleteAction::make(),
+             Action::make('assignGuruRole')
                 ->label('Tetapkan Role Guru')
                 ->visible(fn ($record) => !$record->user?->hasRole('teacher'))
                 ->action(function ($record) {

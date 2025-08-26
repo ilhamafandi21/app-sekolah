@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\BiayaResource\Pages;
 
+use Filament\Actions\CreateAction;
 use App\Filament\Resources\BiayaResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -15,7 +16,7 @@ class ListBiayas extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()
+            CreateAction::make()
                 ->label('Tambah Biaya'),
         ];
     }

@@ -2,11 +2,22 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\BiayaResource\Pages\ListBiayas;
+use App\Filament\Resources\BiayaResource\Pages\CreateBiaya;
+use App\Filament\Resources\BiayaResource\Pages\EditBiaya;
 use App\Filament\Resources\BiayaResource\Pages;
 use App\Filament\Resources\BiayaResource\RelationManagers;
 use App\Models\Biaya;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -17,24 +28,24 @@ class BiayaResource extends Resource
 {
     protected static ?string $model = Biaya::class;
     
-    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-currency-dollar';
     protected static ?string $navigationLabel = 'Biaya';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->label('Jenis Biaya')
                     ->required(),
-                Forms\Components\TextInput::make('nominal')
+                TextInput::make('nominal')
                     ->label('Nominal')
                     ->prefix('Rp.')
                     ->numeric(),
-                Forms\Components\Toggle::make('status')
+                Toggle::make('status')
                     ->label('Status')
                     ->default(true),
-                Forms\Components\Textarea::make('keterangan')
+                Textarea::make('keterangan')
                     ->label('Keterangan')
                     ->default('-'),
             ]);
@@ -44,21 +55,21 @@ class BiayaResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('nominal')
+                TextColumn::make('nominal')
                     ->prefix('Rp.')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('status')
+                IconColumn::make('status')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('keterangan')
+                TextColumn::make('keterangan')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -66,12 +77,12 @@ class BiayaResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -86,9 +97,9 @@ class BiayaResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListBiayas::route('/'),
-            'create' => Pages\CreateBiaya::route('/create'),
-            'edit' => Pages\EditBiaya::route('/{record}/edit'),
+            'index' => ListBiayas::route('/'),
+            'create' => CreateBiaya::route('/create'),
+            'edit' => EditBiaya::route('/{record}/edit'),
         ];
     }
 }

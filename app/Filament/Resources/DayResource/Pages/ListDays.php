@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\DayResource\Pages;
 
+use Filament\Actions\CreateAction;
 use App\Filament\Resources\DayResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -13,7 +14,7 @@ class ListDays extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

@@ -2,12 +2,21 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\RombelsPenilaianResource\Pages\ListRombelsPenilaians;
+use App\Filament\Resources\RombelsPenilaianResource\Pages\CreateRombelsPenilaian;
+use App\Filament\Resources\RombelsPenilaianResource\Pages\EditRombelsPenilaian;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Rombel;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
-use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\RombelsSiswa;
 use App\Models\RombelsPenilaian;
@@ -23,13 +32,13 @@ class RombelsPenilaianResource extends Resource
 {
     protected static ?string $model = RombelsPenilaian::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-               Forms\Components\Select::make('rombel_id')
+        return $schema
+            ->components([
+               Select::make('rombel_id')
                     ->label('Pilih Rombel')
                     ->relationship(
                         name: 'rombel',
@@ -51,10 +60,10 @@ class RombelsPenilaianResource extends Resource
                     ->searchable()
                     ->preload()
                     ->reactive()
-                    ->afterStateUpdated(fn (\Filament\Forms\Set $set) => $set('siswa_id', null))
+                    ->afterStateUpdated(fn (Set $set) => $set('siswa_id', null))
                     ->required(),
 
-                Forms\Components\Select::make('siswa_id')
+                Select::make('siswa_id')
                     ->label('Siswa')
                     ->options(function (Get $get): array {
                         $rombelId = $get('rombel_id');
@@ -78,7 +87,7 @@ class RombelsPenilaianResource extends Resource
 
 
 
-                Forms\Components\Select::make('subject_id')
+                Select::make('subject_id')
                     ->label('Subject')
                     ->options(function (Get $get): array {
                         $rombelId = $get('rombel_id');
@@ -103,7 +112,7 @@ class RombelsPenilaianResource extends Resource
 
 
 
-                Forms\Components\Select::make('indikatornilai_id')
+                Select::make('indikatornilai_id')
                     ->relationship('indikatornilai', 'id')
                     ->options(function (Get $get): array {
                         $subjectId = $get('subject_id');
@@ -127,11 +136,11 @@ class RombelsPenilaianResource extends Resource
                     ->required(),
 
                     
-                Forms\Components\Select::make('teacher_id')
+                Select::make('teacher_id')
                     ->relationship('teacher', 'name'),
-                Forms\Components\Select::make('semester_id')
+                Select::make('semester_id')
                     ->relationship('semester', 'name'),
-                Forms\Components\TextInput::make('nilai')
+                TextInput::make('nilai')
                     ->numeric(),
             ]);
     }
@@ -140,32 +149,32 @@ class RombelsPenilaianResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('rombel.id')
+                TextColumn::make('rombel.id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('siswa.name')
+                TextColumn::make('siswa.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('subject.name')
+                TextColumn::make('subject.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('indikatornilai.id')
+                TextColumn::make('indikatornilai.id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('teacher.name')
+                TextColumn::make('teacher.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('semester.name')
+                TextColumn::make('semester.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('nilai')
+                TextColumn::make('nilai')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -173,12 +182,12 @@ class RombelsPenilaianResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -193,9 +202,9 @@ class RombelsPenilaianResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRombelsPenilaians::route('/'),
-            'create' => Pages\CreateRombelsPenilaian::route('/create'),
-            'edit' => Pages\EditRombelsPenilaian::route('/{record}/edit'),
+            'index' => ListRombelsPenilaians::route('/'),
+            'create' => CreateRombelsPenilaian::route('/create'),
+            'edit' => EditRombelsPenilaian::route('/{record}/edit'),
         ];
     }
 }

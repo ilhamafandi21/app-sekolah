@@ -2,9 +2,17 @@
 
 namespace App\Filament\Resources\TeacherResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Forms;
 use Filament\Tables;
-use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
 use Filament\Notifications\Notification;
@@ -17,11 +25,11 @@ class UserRelationManager extends RelationManager
     protected static string $relationship = 'User';
     protected static ?string $title = 'Akun Pengguna';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('email')
+        return $schema
+            ->components([
+                TextInput::make('email')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -32,8 +40,8 @@ class UserRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('email')
             ->columns([
-                Tables\Columns\TextColumn::make('email'),
-                Tables\Columns\TextColumn::make('password'),
+                TextColumn::make('email'),
+                TextColumn::make('password'),
             ])
             ->filters([
                 //
@@ -41,17 +49,17 @@ class UserRelationManager extends RelationManager
             ->headerActions([
                 // Tables\Actions\CreateAction::make(),
             ])
-            ->actions([
+            ->recordActions([
 
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\Action::make('resetPassword')
+                ActionGroup::make([
+                    EditAction::make(),
+                DeleteAction::make(),
+                Action::make('resetPassword')
                     ->label('Reset Password')
                     ->icon('heroicon-o-key')
                     ->color('danger')
-                    ->form([
-                        Forms\Components\TextInput::make('new_password')
+                    ->schema([
+                        TextInput::make('new_password')
                             ->label('Password Baru')
                             ->password()
                             ->required()
@@ -72,9 +80,9 @@ class UserRelationManager extends RelationManager
                 ])
                 
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

@@ -2,11 +2,24 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\TahunAjaranResource\Pages\ListTahunAjarans;
+use App\Filament\Resources\TahunAjaranResource\Pages\CreateTahunAjaran;
+use App\Filament\Resources\TahunAjaranResource\Pages\EditTahunAjaran;
 use App\Filament\Resources\TahunAjaranResource\Pages;
 use App\Filament\Resources\TahunAjaranResource\RelationManagers;
 use App\Models\TahunAjaran;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -17,15 +30,15 @@ class TahunAjaranResource extends Resource
 {
     protected static ?string $model = TahunAjaran::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-calendar';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-calendar';
     protected static ?string $navigationLabel = 'Tahun Ajaran';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
 
-                Forms\Components\TextInput::make('thn_ajaran')
+                TextInput::make('thn_ajaran')
                     ->afterStateUpdated(fn ($state, callable $set) => 
                         $set('thn_ajaran', preg_replace('/\s+/', '', $state))
                     )
@@ -37,11 +50,11 @@ class TahunAjaranResource extends Resource
                     ])
                     ->required(),
 
-                Forms\Components\Textarea::make('keterangan')
+                Textarea::make('keterangan')
                     ->default('-')
                     ->required(),
 
-                Forms\Components\Toggle::make('status')
+                Toggle::make('status')
                     ->label('active')
                     ->required()
                     ->default(true),
@@ -54,16 +67,16 @@ class TahunAjaranResource extends Resource
         return $table
             
             ->columns([
-                Tables\Columns\TextColumn::make('thn_ajaran')
+                TextColumn::make('thn_ajaran')
                     ->searchable(),
-                Tables\Columns\ToggleColumn::make('status')
+                ToggleColumn::make('status')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('keterangan')
+                TextColumn::make('keterangan')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable(),
             ])
@@ -71,18 +84,18 @@ class TahunAjaranResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make()
+            ->recordActions([
+                ActionGroup::make([
+                    EditAction::make(),
+                    DeleteAction::make()
                         ->label('Hapus')
                         ->modalAlignment()
                         ->modalSubmitActionLabel('hapus'),
                 ])
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make()
                         ->label('Hapus'),
                 ]),
             ]);
@@ -99,9 +112,9 @@ class TahunAjaranResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTahunAjarans::route('/'),
-            'create' => Pages\CreateTahunAjaran::route('/create'),
-            'edit' => Pages\EditTahunAjaran::route('/{record}/edit'),
+            'index' => ListTahunAjarans::route('/'),
+            'create' => CreateTahunAjaran::route('/create'),
+            'edit' => EditTahunAjaran::route('/{record}/edit'),
         ];
     }
 }

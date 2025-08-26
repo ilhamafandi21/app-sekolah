@@ -2,11 +2,19 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\TingkatResource\Pages\ListTingkats;
+use App\Filament\Resources\TingkatResource\Pages\CreateTingkat;
+use App\Filament\Resources\TingkatResource\Pages\EditTingkat;
 use App\Filament\Resources\TingkatResource\Pages;
 use App\Filament\Resources\TingkatResource\RelationManagers;
 use App\Models\Tingkat;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -17,17 +25,17 @@ class TingkatResource extends Resource
 {
     protected static ?string $model = Tingkat::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-cube-transparent';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-cube-transparent';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('nama_tingkat')
+        return $schema
+            ->components([
+                TextInput::make('nama_tingkat')
                     ->unique(ignoreRecord:true)
                     ->numeric()
                     ->required(),
-                Forms\Components\TextInput::make('keterangan')
+                TextInput::make('keterangan')
                     ->default('-'),
             ]);
     }
@@ -36,15 +44,15 @@ class TingkatResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama_tingkat')
+                TextColumn::make('nama_tingkat')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('keterangan')
+                TextColumn::make('keterangan')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -52,12 +60,12 @@ class TingkatResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -72,9 +80,9 @@ class TingkatResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTingkats::route('/'),
-            'create' => Pages\CreateTingkat::route('/create'),
-            'edit' => Pages\EditTingkat::route('/{record}/edit'),
+            'index' => ListTingkats::route('/'),
+            'create' => CreateTingkat::route('/create'),
+            'edit' => EditTingkat::route('/{record}/edit'),
         ];
     }
 }

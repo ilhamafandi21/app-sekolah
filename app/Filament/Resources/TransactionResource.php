@@ -2,10 +2,24 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Select;
+use App\Models\RombelBiaya;
+use App\Models\RombelsSiswa;
+use Filament\Forms\Components\Hidden;
+use App\Models\Semester;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\TransactionResource\Pages\ListTransactions;
+use App\Filament\Resources\TransactionResource\Pages\CreateTransaction;
+use App\Filament\Resources\TransactionResource\Pages\EditTransaction;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Rombel;
-use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\Transaction;
 use Filament\Resources\Resource;
@@ -19,15 +33,15 @@ class TransactionResource extends Resource
 {
     protected static ?string $model = Transaction::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
               
 
-                Forms\Components\Select::make('rombel_id')
+                Select::make('rombel_id')
                     ->relationship(
                         name: 'rombel',
                         titleAttribute: 'kode',
@@ -52,7 +66,7 @@ class TransactionResource extends Resource
 
                         if (!$state) return;
 
-                        $rombel = \App\Models\Rombel::query()
+                        $rombel = Rombel::query()
                             ->select(['id','tingkat_id', 'jurusan_id', 'divisi'])
                             ->with([
                                 'tingkat:id,nama_tingkat',
@@ -73,10 +87,10 @@ class TransactionResource extends Resource
                     ->reactive()
                     ->required(),
 
-                Forms\Components\Select::make('biaya_id')
+                Select::make('biaya_id')
                     ->options(function ($get) {
                         $rombelId = $get('rombel_id');
-                        return \App\Models\RombelBiaya::where('rombel_id', $rombelId)
+                        return RombelBiaya::where('rombel_id', $rombelId)
                             ->with(['biaya:id,name,nominal'])        // batasi kolom
                             ->get()
                             ->mapWithKeys(fn ($row) => [
@@ -94,10 +108,10 @@ class TransactionResource extends Resource
                     ->required(),
                 
 
-                Forms\Components\Select::make('siswa_id')
+                Select::make('siswa_id')
                     ->options(function ($get) {
                         $rombelId = $get('rombel_id');
-                        return \App\Models\RombelsSiswa::where('rombel_id', $rombelId)
+                        return RombelsSiswa::where('rombel_id', $rombelId)
                             ->with('siswa:id,name')
                             ->get()
                             ->pluck('siswa.name', 'siswa.id');
@@ -105,28 +119,28 @@ class TransactionResource extends Resource
                     ->preload()
                     ->required(),
                 
-                Forms\Components\Hidden::make('tingkat_id')
+                Hidden::make('tingkat_id')
                     ->required()
                     ->dehydrated(true),
-                Forms\Components\Hidden::make('jurusan_id')
+                Hidden::make('jurusan_id')
                     ->required()
                     ->dehydrated(true),
-                Forms\Components\Hidden::make('divisi')
+                Hidden::make('divisi')
                     ->required()
                     ->dehydrated(true),
-                Forms\Components\Select::make('semester')
+                Select::make('semester')
                     ->options(
-                        \App\Models\Semester::query()
+                        Semester::query()
                             ->pluck('name', 'id') // [id => name]
                     )
                     ->searchable()
                     ->required(),
-                Forms\Components\TextInput::make('nominal')
+                TextInput::make('nominal')
                     ->label('Jumlah Bayar')
                     ->required()
                     ->numeric(),
 
-               Forms\Components\Toggle::make('status')
+               Toggle::make('status')
                     ->label('Status Bayar')
                     ->onIcon('heroicon-o-check-circle')
                     ->offIcon('heroicon-o-x-circle')
@@ -136,7 +150,7 @@ class TransactionResource extends Resource
                     ->inline(false) // biar ada label di samping
                     ->helperText('Tandai Lunas jika pembayaran sudah lunas'),
 
-                Forms\Components\TextInput::make('keterangan')
+                TextInput::make('keterangan')
                     ->default('Pembayaran Biaya Pendidikan')
                     ->required(),
             ]);
@@ -152,15 +166,15 @@ class TransactionResource extends Resource
                         'jurusan:id,kode'
                         ]))
             ->columns([
-                Tables\Columns\TextColumn::make('kode')
+                TextColumn::make('kode')
                     ->limit(5)
                     ->searchable(),
-                Tables\Columns\TextColumn::make('siswa.name')
+                TextColumn::make('siswa.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('biaya.name')
+                TextColumn::make('biaya.name')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('ringkasan_rombel')
+                TextColumn::make('ringkasan_rombel')
                     ->label('Rombel')
                     ->state(function ($record) {
                         $tingkat = $record->tingkat?->nama_tingkat ?? '-';
@@ -174,13 +188,13 @@ class TransactionResource extends Resource
                         ->orWhere('divisi', 'like', "%{$term}%");
                 }),
 
-                Tables\Columns\TextColumn::make('biaya.nominal')
+                TextColumn::make('biaya.nominal')
                     ->label('Nominal Biaya')
                     ->color('info')
                     ->money('IDR', true, locale: 'id_ID')
                     ->sortable(),
                
-                Tables\Columns\TextColumn::make('nominal')
+                TextColumn::make('nominal')
                     ->label('Jumlah Bayar')
                     ->color('success')
                     ->money('IDR', true, locale: 'id_ID')
@@ -195,22 +209,22 @@ class TransactionResource extends Resource
                 //         return max(0, $record->biaya->nominal - $record->nominal);
                 //     }),
 
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->label('Status Bayar')
                     ->formatStateUsing(fn ($state) => $state ? 'Lunas' : 'Belum Lunas')
                     ->badge()
                     ->color(fn ($state) => $state ? 'success' : 'danger')
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('keterangan')
+                TextColumn::make('keterangan')
                     ->limit(10)
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -218,12 +232,12 @@ class TransactionResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -238,9 +252,9 @@ class TransactionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTransactions::route('/'),
-            'create' => Pages\CreateTransaction::route('/create'),
-            'edit' => Pages\EditTransaction::route('/{record}/edit'),
+            'index' => ListTransactions::route('/'),
+            'create' => CreateTransaction::route('/create'),
+            'edit' => EditTransaction::route('/{record}/edit'),
         ];
     }
 }

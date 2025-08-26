@@ -2,11 +2,23 @@
 
 namespace App\Filament\Resources\RombelResource\RelationManagers;
 
+use RuntimeException;
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use App\Models\RombelsSubjects;
+use Filament\Tables\Grouping\Group;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\CreateAction;
+use App\Models\RombelsSubjectsSchedullsTeacher;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Rombel;
 use App\Models\Schedull;
-use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\DB;
 use Filament\Notifications\Notification;
@@ -33,7 +45,7 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
         $owner = $this->getOwnerRecord(); // Rombel
         if (! $owner) {
             // kalau ini terpanggil, kamu membuka RM dari halaman yang bukan View/Edit Rombel
-            throw new \RuntimeException('Owner record null. Buka RelationManager dari halaman View/Edit Rombel.');
+            throw new RuntimeException('Owner record null. Buka RelationManager dari halaman View/Edit Rombel.');
         }
 
         // kunci di relasi owner, lalu eager-load yang dipakai kolom
@@ -47,24 +59,24 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
             ])
             ->orderBy('day_id')
             ->orderBy(
-                \App\Models\Schedull::select('start_at')
+                Schedull::select('start_at')
                     ->whereColumn('schedulls.id', 'rombels_subjects_schedulls_teachers.schedull_id')
             );
     }
 
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
 
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('rombel_id')
+        return $schema
+            ->components([
+                TextInput::make('rombel_id')
                     ->required()
                     ->default($this->getOwnerRecord()->id)
                     ->disabled()
                     ->dehydrated()
                     ->reactive(),
-                Forms\Components\Select::make('subject_id')
+                Select::make('subject_id')
                     ->required()
                     ->options(function (callable $get) {
                         $rombelId = $get('rombel_id');
@@ -80,7 +92,7 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
                         $subjectId = $get('subject_id');
 
                         if ($rombelId && $subjectId) {
-                            $pivot = \App\Models\RombelsSubjects::where('rombel_id', $rombelId)
+                            $pivot = RombelsSubjects::where('rombel_id', $rombelId)
                                 ->where('subject_id', $subjectId)
                                 ->first();
                             if ($pivot) {
@@ -90,7 +102,7 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
                         return [];
                     }),
                
-                Forms\Components\TextInput::make('rombels_subjects_id')
+                TextInput::make('rombels_subjects_id')
                     ->label('Rombel Subjects ID')
                     ->required()
                     ->disabled()
@@ -98,7 +110,7 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
                     ->reactive()
                     ->default(fn($get) => $get('subject_id')),
                
-                Forms\Components\Select::make('schedull_id')
+                Select::make('schedull_id')
                     ->required()
                     ->relationship(
                         name: 'schedull',
@@ -113,11 +125,11 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
                         return "{$s->kode} — {$start} s/d {$end}";
                     }),
                 
-                Forms\Components\Select::make('day_id')
+                Select::make('day_id')
                     ->required()
                     ->relationship('day', 'nama_hari'),    
 
-                Forms\Components\Select::make('teacher_id')
+                Select::make('teacher_id')
                     ->relationship('teacher', 'name'),
             ]);
     }
@@ -129,18 +141,18 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
             // 2) Eager load SEMUA relasi yang dipakai kolom
 
             ->groups([
-                Tables\Grouping\Group::make('day_id')
+                Group::make('day_id')
                     ->label('Hari')
                     ->getTitleFromRecordUsing(fn ($record) => $record->day->nama_hari ?? '—')
                     ->collapsible(),
             ])
             ->defaultGroup('day_id')
             ->columns([
-                Tables\Columns\TextColumn::make('')
+                TextColumn::make('')
                     ->description(fn($record)=> $record->day->nama_hari)
                     ->default('--->'),
-                Tables\Columns\TextColumn::make('subject.name'),
-                Tables\Columns\TextColumn::make('schedull.kode')
+                TextColumn::make('subject.name'),
+                TextColumn::make('schedull.kode')
                     ->label('Jadwal')
                     ->getStateUsing(function ($record) {
                         $kode  = $record->schedull->kode ?? '-';
@@ -149,7 +161,7 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
 
                         return "{$kode} — {$start} s/d {$end}";
                     }),
-                Tables\Columns\TextColumn::make('teacher.name')
+                TextColumn::make('teacher.name')
                     ->badge()
                     ->html()
                     ->getStateUsing(function ($record) {
@@ -161,17 +173,17 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
+                CreateAction::make()
                     ->label('Buat Jadwal')
                     ->color('info')
-                    ->mutateFormDataUsing(function(array $data){
+                    ->mutateDataUsing(function(array $data){
                         $kodeGabungan = $data['rombel_id'].
                                         $data['subject_id'].
                                         $data['rombels_subjects_id'].
                                         $data['schedull_id'].
                                         $data['day_id'];
 
-                        $cekduplikat = \App\Models\RombelsSubjectsSchedullsTeacher::where('rombel_id', $data['rombel_id'])
+                        $cekduplikat = RombelsSubjectsSchedullsTeacher::where('rombel_id', $data['rombel_id'])
                                     ->where('subject_id', $data['subject_id'])
                                     ->where('rombels_subjects_id', $data['rombels_subjects_id'])
                                     ->where('schedull_id', $data['schedull_id'])
@@ -195,13 +207,13 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
                         return $data;
                     }),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

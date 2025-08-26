@@ -2,10 +2,18 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\JurusanResource\Pages\ListJurusans;
+use App\Filament\Resources\JurusanResource\Pages\CreateJurusan;
+use App\Filament\Resources\JurusanResource\Pages\EditJurusan;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Jurusan;
-use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\TextInput;
@@ -18,18 +26,18 @@ class JurusanResource extends Resource
 {
     protected static ?string $model = Jurusan::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-bookmark-square';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-bookmark-square';
     protected static ?string $navigationLabel = 'Jurusan';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('nama_jurusan')
+        return $schema
+            ->components([
+                TextInput::make('nama_jurusan')
                     ->unique(ignoreRecord:true)
                     ->reactive()
                     ->required(),
-                Forms\Components\Textarea::make('keterangan')
+                Textarea::make('keterangan')
                     ->default('-')
                     ->columnSpanFull(),
             ]);
@@ -39,13 +47,13 @@ class JurusanResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama_jurusan')
+                TextColumn::make('nama_jurusan')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -53,12 +61,12 @@ class JurusanResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -73,9 +81,9 @@ class JurusanResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListJurusans::route('/'),
-            'create' => Pages\CreateJurusan::route('/create'),
-            'edit' => Pages\EditJurusan::route('/{record}/edit'),
+            'index' => ListJurusans::route('/'),
+            'create' => CreateJurusan::route('/create'),
+            'edit' => EditJurusan::route('/{record}/edit'),
         ];
     }
 }

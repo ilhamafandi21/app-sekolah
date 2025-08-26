@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\RombelResource\Pages;
 
+use Filament\Actions\CreateAction;
 use App\Filament\Resources\RombelResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -15,7 +16,7 @@ class ListRombels extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

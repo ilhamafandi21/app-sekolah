@@ -30,6 +30,7 @@ use App\Filament\Resources\RombelResource\RelationManagers\BiayasRelationManager
 use App\Filament\Resources\RombelResource\RelationManagers\SubjectsRelationManager;
 use App\Filament\Resources\RombelResource\RelationManagers\RombelsSubjectsSchedullsTeachersRelationManager;
 use App\Filament\Resources\RombelResource\RelationManagers\SiswasRelationManager;
+use App\Filament\Resources\RombelResource\RelationManagers\TransactionsRelationManager;
 
 class RombelResource extends Resource
 {
@@ -169,6 +170,7 @@ class RombelResource extends Resource
             RombelsSubjectsSchedullsTeachersRelationManager::class,
             SiswasRelationManager::class,
             BiayasRelationManager::class,
+            TransactionsRelationManager::class
         ];
     }
 

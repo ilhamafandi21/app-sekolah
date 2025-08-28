@@ -10,6 +10,7 @@ use Filament\Actions\DetachBulkAction;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Siswa;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -74,10 +75,11 @@ class SiswasRelationManager extends RelationManager
             ->recordActions([
                 DetachAction::make(),
             ])
-            ->toolbarActions([
-                    BulkActionGroup::make([
-                        DetachBulkAction::make(),
-                    ]),
-                ]);
+            ->bulkActions([
+                BulkActionGroup::make([
+                    Tables\Actions\DetachBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
     }
 }

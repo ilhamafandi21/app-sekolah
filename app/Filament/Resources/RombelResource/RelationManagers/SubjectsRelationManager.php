@@ -139,7 +139,9 @@ class SubjectsRelationManager extends RelationManager
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DissociateBulkAction::make(),
+                    DissociateBulkAction::make()
+                        ->label('Hapus terpilih')
+                        ->action(fn($records) => $this->getOwnerRecord()->subjects()->detach($records->pluck('id')) ),
                 ]),
             ]);
     }

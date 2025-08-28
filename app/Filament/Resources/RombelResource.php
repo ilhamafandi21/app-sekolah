@@ -170,7 +170,7 @@ class RombelResource extends Resource
             RombelsSubjectsSchedullsTeachersRelationManager::class,
             SiswasRelationManager::class,
             BiayasRelationManager::class,
-            TransactionsRelationManager::class
+            TransactionsRelationManager::class,
         ];
     }
 

@@ -2,19 +2,14 @@
 
 namespace App\Filament\Resources\RombelResource\RelationManagers;
 
-use Filament\Tables\Columns\TextColumn;
+use App\Models\Siswa;
+use Filament\Tables\Table;
 use Filament\Actions\AttachAction;
 use Filament\Actions\DetachAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DetachBulkAction;
-use Filament\Forms;
-use Filament\Tables;
-use App\Models\Siswa;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Resources\RelationManagers\RelationManager;
 
 class SiswasRelationManager extends RelationManager
@@ -75,10 +70,12 @@ class SiswasRelationManager extends RelationManager
             ->recordActions([
                 DetachAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 BulkActionGroup::make([
                     DetachBulkAction::make(),
                 ]),
             ]);
+
+
     }
 }

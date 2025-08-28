@@ -75,9 +75,9 @@ class SiswasRelationManager extends RelationManager
                 DetachAction::make(),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
-                    DetachBulkAction::make()
-                ])
-            ]);
+                    BulkActionGroup::make([
+                        DetachBulkAction::make(),
+                    ]),
+                ]);
     }
 }

@@ -141,6 +141,10 @@ class SubjectsRelationManager extends RelationManager
                 BulkActionGroup::make([
                     DissociateBulkAction::make()
                         ->label('Hapus terpilih')
+                        ->modalHeading('Yakin ingin menghapus data terpilih?')
+                        ->modalSubmitActionLabel('Ya, Hapus Data')
+                        ->modalCancelActionLabel('Batal')
+                        ->successNotificationTitle('Data terpilih berhasil dihapus')
                         ->action(fn($records) => $this->getOwnerRecord()->subjects()->detach($records->pluck('id')) ),
                 ]),
             ]);

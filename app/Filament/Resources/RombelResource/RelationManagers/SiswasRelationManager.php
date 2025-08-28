@@ -69,15 +69,15 @@ class SiswasRelationManager extends RelationManager
 
                         return "{$record->name} — {$labelRombel}";
                     }),
-                   
+
             ])
             ->recordActions([
                 DetachAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DetachBulkAction::make(),
-                ]),
+                    DetachBulkAction::make()
+                ])
             ]);
     }
 }

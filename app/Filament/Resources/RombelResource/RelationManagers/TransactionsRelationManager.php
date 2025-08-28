@@ -2,19 +2,26 @@
 
 namespace App\Filament\Resources\RombelResource\RelationManagers;
 
-use Filament\Actions\AssociateAction;
-use Filament\Actions\BulkActionGroup;
+use App\Models\Rombel;
+use App\Models\Semester;
+use Filament\Tables\Table;
+use App\Models\RombelBiaya;
+use App\Models\RombelsSiswa;
+use Filament\Schemas\Schema;
+use Filament\Actions\EditAction;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\AssociateAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DissociateAction;
-use Filament\Actions\DissociateBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Forms\Components\TextInput;
-use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
+use Filament\Forms\Components\TextInput;
+use Filament\Actions\DissociateBulkAction;
+use Filament\Resources\RelationManagers\RelationManager;
 
 class TransactionsRelationManager extends RelationManager
 {
@@ -24,10 +31,81 @@ class TransactionsRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                TextInput::make('name')
+
+                TextInput::make('rombel_id')
+                    ->default(fn (RelationManager $livewire) => $livewire->ownerRecord->id)
+                    ->disabled()
+                    ->dehydrated()
+                    ->required(),
+
+                Select::make('biaya_id')
+                    ->options(function ($get) {
+                        $rombelId = $get('rombel_id');
+                        return RombelBiaya::where('rombel_id', $rombelId)
+                            ->with(['biaya:id,name,nominal'])        // batasi kolom
+                            ->get()
+                            ->mapWithKeys(fn($row) => [
+                                $row->biaya->id => sprintf(
+                                    '%s — Rp %s',
+                                    $row->biaya->name,
+                                    number_format((int) $row->biaya->nominal, 0, ',', '.')
+                                ),
+                            ])
+                            ->toArray();
+                    })
+
+
+                    ->preload()
+                    ->required(),
+
+
+                Select::make('siswa_id')
+                    ->options(function ($get) {
+                        $rombelId = $get('rombel_id');
+                        return RombelsSiswa::where('rombel_id', $rombelId)
+                            ->with('siswa:id,name')
+                            ->get()
+                            ->pluck('siswa.name', 'siswa.id');
+                    })
+                    ->preload()
+                    ->required(),
+
+                Hidden::make('tingkat_id')
                     ->required()
-                    ->maxLength(255),
+                    ->dehydrated(true),
+                Hidden::make('jurusan_id')
+                    ->required()
+                    ->dehydrated(true),
+                Hidden::make('divisi')
+                    ->required()
+                    ->dehydrated(true),
+                Select::make('semester')
+                    ->options(
+                        Semester::query()
+                            ->pluck('name', 'id') // [id => name]
+                    )
+                    ->searchable()
+                    ->required(),
+                TextInput::make('nominal')
+                    ->label('Jumlah Bayar')
+                    ->required()
+                    ->numeric(),
+
+                Toggle::make('status')
+                    ->label('Status Bayar')
+                    ->onIcon('heroicon-o-check-circle')
+                    ->offIcon('heroicon-o-x-circle')
+                    ->onColor('success')     // hijau kalau ON
+                    ->offColor('danger')     // merah kalau OFF
+                    ->required()
+                    ->inline(false) // biar ada label di samping
+                    ->helperText('Tandai Lunas jika pembayaran sudah lunas'),
+
+                TextInput::make('keterangan')
+                    ->default('Pembayaran Biaya Pendidikan')
+                    ->required(),
             ]);
+
     }
 
     public function table(Table $table): Table
@@ -53,7 +131,7 @@ class TransactionsRelationManager extends RelationManager
             ->toolbarActions([
                 BulkActionGroup::make([
                     DissociateBulkAction::make(),
-                    DeleteBulkAction::make(),
+                    // DeleteBulkAction::make(),
                 ]),
             ]);
     }

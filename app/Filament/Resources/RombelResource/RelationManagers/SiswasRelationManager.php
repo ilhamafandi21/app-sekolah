@@ -77,8 +77,7 @@ class SiswasRelationManager extends RelationManager
             ])
             ->bulkActions([
                 BulkActionGroup::make([
-                    Tables\Actions\DetachBulkAction::make(),
-                    Tables\Actions\DeleteBulkAction::make(),
+                    DetachBulkAction::make(),
                 ]),
             ]);
     }

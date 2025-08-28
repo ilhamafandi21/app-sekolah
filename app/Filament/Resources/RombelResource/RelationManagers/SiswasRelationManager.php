@@ -42,7 +42,7 @@ class SiswasRelationManager extends RelationManager
             ])
 
             /* ---------- BULK DETACH ---------- */
-            ->bulkActions([
+            ->toolbarActions([
                 BulkActionGroup::make([
                     DissociateBulkAction::make()
                         ->action(function ($records, RelationManager $livewire) {

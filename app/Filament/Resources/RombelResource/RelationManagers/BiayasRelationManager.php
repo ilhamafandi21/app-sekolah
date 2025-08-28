@@ -55,7 +55,12 @@ class BiayasRelationManager extends RelationManager
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DissociateBulkAction::make(),
+                    DissociateBulkAction::make()
+                        ->action(function ($records, RelationManager $livewire) {
+                            $rombel = $this->getOwnerRecord();
+                            $rombel->biayas()->detach($records->pluck('id'));
+                        })
+                        ->successNotificationTitle('Semua biaya terlepas'),
                 ]),
             ]);
     }

@@ -39,14 +39,14 @@ class TransactionResource extends Resource
     {
         return $schema
             ->components([
-              
+
 
                 Select::make('rombel_id')
                     ->relationship(
                         name: 'rombel',
                         titleAttribute: 'kode',
-                        modifyQueryUsing: fn (Builder $query) => $query
-                            ->select(['id','kode','tingkat_id','jurusan_id','divisi'])
+                        modifyQueryUsing: fn(Builder $query) => $query
+                            ->select(['id', 'kode', 'tingkat_id', 'jurusan_id', 'divisi'])
                             ->with([
                                 'tingkat:id,nama_tingkat',   // ← ambil nama_tingkat
                                 'jurusan:id,kode',   // (opsional) kalau mau tampilkan kode jurusan
@@ -54,20 +54,20 @@ class TransactionResource extends Resource
                             ->orderBy('kode')
                     )
                     ->getOptionLabelFromRecordUsing(function ($record) {
-                        return "{$record->kode} | 
+                        return "{$record->kode} |
                                 {$record->tingkat->nama_tingkat} {$record->jurusan->kode}-{$record->divisi}";
                     })
                     ->afterStateUpdated(function ($set, $state) {
                         // setiap ganti rombel, kosongkan siswa_id
 
-                            $set('tingkat_id', null);
-                            $set('jurusan_id', null);
-                            $set('divisi', null);
+                        $set('tingkat_id', null);
+                        $set('jurusan_id', null);
+                        $set('divisi', null);
 
                         if (!$state) return;
 
                         $rombel = Rombel::query()
-                            ->select(['id','tingkat_id', 'jurusan_id', 'divisi'])
+                            ->select(['id', 'tingkat_id', 'jurusan_id', 'divisi'])
                             ->with([
                                 'tingkat:id,nama_tingkat',
                                 'jurusan:id,kode',
@@ -75,7 +75,7 @@ class TransactionResource extends Resource
                             ->find($state);
 
                         return [
-                            $set('siswa_id', null), 
+                            $set('siswa_id', null),
                             $set('biaya_id', null),
                             $set('tingkat_id', $rombel?->tingkat?->id),
                             $set('jurusan_id', $rombel?->jurusan?->id),
@@ -93,7 +93,7 @@ class TransactionResource extends Resource
                         return RombelBiaya::where('rombel_id', $rombelId)
                             ->with(['biaya:id,name,nominal'])        // batasi kolom
                             ->get()
-                            ->mapWithKeys(fn ($row) => [
+                            ->mapWithKeys(fn($row) => [
                                 $row->biaya->id => sprintf(
                                     '%s — Rp %s',
                                     $row->biaya->name,
@@ -103,10 +103,10 @@ class TransactionResource extends Resource
                             ->toArray();
                     })
 
-                    
+
                     ->preload()
                     ->required(),
-                
+
 
                 Select::make('siswa_id')
                     ->options(function ($get) {
@@ -118,7 +118,7 @@ class TransactionResource extends Resource
                     })
                     ->preload()
                     ->required(),
-                
+
                 Hidden::make('tingkat_id')
                     ->required()
                     ->dehydrated(true),
@@ -140,7 +140,7 @@ class TransactionResource extends Resource
                     ->required()
                     ->numeric(),
 
-               Toggle::make('status')
+                Toggle::make('status')
                     ->label('Status Bayar')
                     ->onIcon('heroicon-o-check-circle')
                     ->offIcon('heroicon-o-x-circle')
@@ -159,12 +159,13 @@ class TransactionResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(Static::getModel()::query()
-                ->with(['siswa:id,name',
-                        'biaya:id,name,nominal',
-                        'tingkat:id,nama_tingkat',
-                        'jurusan:id,kode'
-                        ]))
+            ->query(static::getModel()::query()
+                ->with([
+                    'siswa:id,name',
+                    'biaya:id,name,nominal',
+                    'tingkat:id,nama_tingkat',
+                    'jurusan:id,kode'
+                ]))
             ->columns([
                 TextColumn::make('kode')
                     ->limit(5)
@@ -183,17 +184,17 @@ class TransactionResource extends Resource
                         return "{$tingkat} {$jurusan}-{$divisi}";
                     })
                     ->searchable(query: function (Builder $q, string $term) {
-                        $q->whereHas('tingkat', fn ($x) => $x->where('nama_tingkat', 'like', "%{$term}%"))
-                        ->orWhereHas('jurusan', fn ($x) => $x->where('kode', 'like', "%{$term}%"))
-                        ->orWhere('divisi', 'like', "%{$term}%");
-                }),
+                        $q->whereHas('tingkat', fn($x) => $x->where('nama_tingkat', 'like', "%{$term}%"))
+                            ->orWhereHas('jurusan', fn($x) => $x->where('kode', 'like', "%{$term}%"))
+                            ->orWhere('divisi', 'like', "%{$term}%");
+                    }),
 
                 TextColumn::make('biaya.nominal')
                     ->label('Nominal Biaya')
                     ->color('info')
                     ->money('IDR', true, locale: 'id_ID')
                     ->sortable(),
-               
+
                 TextColumn::make('nominal')
                     ->label('Jumlah Bayar')
                     ->color('success')
@@ -202,7 +203,7 @@ class TransactionResource extends Resource
 
                 // Tables\Columns\TextColumn::make('tunggakan')
                 //     ->label('Tunggakan')
-                //     ->color('warning')  
+                //     ->color('warning')
                 //     ->money('IDR', true, locale: 'id_ID')
                 //     ->sortable()
                 //     ->getStateUsing(function ($record) {
@@ -211,9 +212,9 @@ class TransactionResource extends Resource
 
                 TextColumn::make('status')
                     ->label('Status Bayar')
-                    ->formatStateUsing(fn ($state) => $state ? 'Lunas' : 'Belum Lunas')
+                    ->formatStateUsing(fn($state) => $state ? 'Lunas' : 'Belum Lunas')
                     ->badge()
-                    ->color(fn ($state) => $state ? 'success' : 'danger')
+                    ->color(fn($state) => $state ? 'success' : 'danger')
                     ->sortable(),
 
                 TextColumn::make('keterangan')

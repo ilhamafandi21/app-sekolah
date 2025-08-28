@@ -101,7 +101,7 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
                         }
                         return [];
                     }),
-               
+
                 TextInput::make('rombels_subjects_id')
                     ->label('Rombel Subjects ID')
                     ->required()
@@ -109,7 +109,7 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
                     ->dehydrated()
                     ->reactive()
                     ->default(fn($get) => $get('subject_id')),
-               
+
                 Select::make('schedull_id')
                     ->required()
                     ->relationship(
@@ -124,10 +124,10 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
                         $end   = $s->end_at   ? substr($s->end_at, 0, 5)   : '-';
                         return "{$s->kode} — {$start} s/d {$end}";
                     }),
-                
+
                 Select::make('day_id')
                     ->required()
-                    ->relationship('day', 'nama_hari'),    
+                    ->relationship('day', 'nama_hari'),
 
                 Select::make('teacher_id')
                     ->relationship('teacher', 'name'),
@@ -148,7 +148,7 @@ class RombelsSubjectsSchedullsTeachersRelationManager extends RelationManager
             ])
             ->defaultGroup('day_id')
             ->columns([
-                TextColumn::make('')
+                TextColumn::make('--->')
                     ->description(fn($record)=> $record->day->nama_hari)
                     ->default('--->'),
                 TextColumn::make('subject.name'),

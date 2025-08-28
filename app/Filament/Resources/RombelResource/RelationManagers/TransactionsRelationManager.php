@@ -22,7 +22,8 @@ class TransactionsRelationManager extends RelationManager
                 TextColumn::make('kode'),
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ->label('Buat Transaction'),
             ]);
     }
 }

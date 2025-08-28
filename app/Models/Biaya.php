@@ -26,7 +26,8 @@ class Biaya extends Model
 
     public function rombels(): BelongsToMany
     {
-        return $this->belongsToMany(Rombel::class, 'rombel_biayas');
+        return $this->belongsToMany(Rombel::class, 'rombel_biayas')
+            ->withTimestamps();
     }
     public function rombelBiayas(): HasMany
     {

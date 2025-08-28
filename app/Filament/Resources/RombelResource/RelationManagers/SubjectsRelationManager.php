@@ -9,6 +9,7 @@ use Filament\Actions\AttachAction;
 use Filament\Actions\DetachAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DetachBulkAction;
+use Filament\Actions\DissociateBulkAction;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -78,7 +79,7 @@ class SubjectsRelationManager extends RelationManager
                 AttachAction::make()
                     ->multiple()
                     ->preloadRecordSelect(),
-                    
+
             ])
             ->recordActions([
                 DetachAction::make()
@@ -89,12 +90,12 @@ class SubjectsRelationManager extends RelationManager
                 //         Forms\Components\Select::make('schedull_id')
                 //             ->options(\App\Models\Schedull::pluck('kode', 'id'))
                 //             ->multiple()
-                //             ->searchable() 
+                //             ->searchable()
                 //     ])
                 //     ->action(function(array $data, $record){
                 //         $record->rombelsSubject->update([
                 //             'schedull_id' => $data['schedull_id'],
-                    
+
                 //         \Filament\Notifications\Notification::make()
                 //             ->title('Berhasil')
                 //             ->body(
@@ -112,7 +113,7 @@ class SubjectsRelationManager extends RelationManager
                 //     ->form([
                 //          Forms\Components\Select::make('teacher_id')
                 //             ->options(\App\Models\Teacher::pluck('name', 'id'))
-                //             ->searchable()      
+                //             ->searchable()
                 //     ])
                 //     ->action(function(array $data, $record){
 
@@ -138,7 +139,7 @@ class SubjectsRelationManager extends RelationManager
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DetachBulkAction::make(),
+                    DissociateBulkAction::make(),
                 ]),
             ]);
     }

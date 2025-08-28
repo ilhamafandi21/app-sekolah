@@ -49,7 +49,8 @@ class Rombel extends Model
 
     public function biayas(): BelongsToMany
     {
-        return $this->belongsToMany(Biaya::class, 'rombel_biayas');
+        return $this->belongsToMany(Biaya::class, 'rombel_biayas')
+            ->withTimestamps();
     }
 
     public function rombelBiayas(): HasMany
@@ -78,7 +79,7 @@ class Rombel extends Model
 
     public function siswas(): BelongsToMany
     {
-        return $this->belongsToMany(Siswa::class, 
+        return $this->belongsToMany(Siswa::class,
             'rombels_siswas',
             'rombel_id',
             'siswa_id',

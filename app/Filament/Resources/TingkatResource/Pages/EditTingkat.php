@@ -14,7 +14,10 @@ class EditTingkat extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make(),
+            DeleteAction::make()
+                ->label('')
+                ->icon('heroicon-o-trash')
+                ->iconPosition('after'),
         ];
     }
 }

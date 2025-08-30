@@ -15,6 +15,7 @@ use App\Filament\Resources\IndikatornilaiResource\Pages;
 use App\Filament\Resources\IndikatornilaiResource\RelationManagers;
 use App\Models\Indikatornilai;
 use App\Traits\GenerateIndikator;
+use Filament\Actions\DeleteAction;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -72,7 +73,10 @@ class IndikatornilaiResource extends Resource
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                DeleteAction::make()
+                    ->label('')
+                    ->icon('heroicon-o-trash')
+                    ->iconPosition('after'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

@@ -9,4 +9,6 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateIndikatornilai extends CreateRecord
 {
     protected static string $resource = IndikatornilaiResource::class;
+    protected static ?string $title = 'Buat Indikator Penilaian';
+
 }

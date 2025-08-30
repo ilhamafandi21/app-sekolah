@@ -30,6 +30,7 @@ class IndikatornilaiResource extends Resource
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-magnifying-glass-plus';
     protected static string | \UnitEnum | null $navigationGroup = 'Master Data Akademik';
     protected static ?string $navigationLabel = 'Indikator Penilaian';
+    protected static ?string $title = 'Indikator Penilaian';
 
     use GenerateIndikator;
 

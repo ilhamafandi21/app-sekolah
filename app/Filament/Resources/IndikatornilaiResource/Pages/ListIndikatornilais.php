@@ -10,6 +10,8 @@ use Filament\Resources\Pages\ListRecords;
 class ListIndikatornilais extends ListRecords
 {
     protected static string $resource = IndikatornilaiResource::class;
+    protected static ?string $title = 'Daftar Indikator Penilaian';
+
 
     protected function getHeaderActions(): array
     {

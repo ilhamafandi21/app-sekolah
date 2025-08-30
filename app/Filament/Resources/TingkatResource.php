@@ -14,6 +14,7 @@ use App\Filament\Resources\TingkatResource\Pages\EditTingkat;
 use App\Filament\Resources\TingkatResource\Pages;
 use App\Filament\Resources\TingkatResource\RelationManagers;
 use App\Models\Tingkat;
+use Filament\Actions\DeleteAction;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -65,7 +66,10 @@ class TingkatResource extends Resource
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                DeleteAction::make()
+                    ->label('')
+                    ->icon('heroicon-o-trash')
+                    ->iconPosition('after'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

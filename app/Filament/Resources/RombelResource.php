@@ -37,6 +37,8 @@ class RombelResource extends Resource
     protected static ?string $model = Rombel::class;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-arrow-right-start-on-rectangle';
+    protected static string | \UnitEnum | null $navigationGroup = 'Master Data Akademik';
+    protected static ?string $title = 'Rombel';
     protected static ?string $navigationLabel = 'Rombel';
 
     public static function getEloquentQuery(): Builder

@@ -31,6 +31,7 @@ class TahunAjaranResource extends Resource
     protected static ?string $model = TahunAjaran::class;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-calendar';
+    protected static string | \UnitEnum | null $navigationGroup = 'Master Data Akademik';
     protected static ?string $navigationLabel = 'Tahun Ajaran';
 
     public static function form(Schema $schema): Schema
@@ -39,7 +40,7 @@ class TahunAjaranResource extends Resource
             ->components([
 
                 TextInput::make('thn_ajaran')
-                    ->afterStateUpdated(fn ($state, callable $set) => 
+                    ->afterStateUpdated(fn ($state, callable $set) =>
                         $set('thn_ajaran', preg_replace('/\s+/', '', $state))
                     )
                     ->rule('regex:/^\d{4}-\d{4}$/')
@@ -65,7 +66,7 @@ class TahunAjaranResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            
+
             ->columns([
                 TextColumn::make('thn_ajaran')
                     ->searchable(),
@@ -99,7 +100,7 @@ class TahunAjaranResource extends Resource
                         ->label('Hapus'),
                 ]),
             ]);
-            
+
     }
 
     public static function getRelations(): array

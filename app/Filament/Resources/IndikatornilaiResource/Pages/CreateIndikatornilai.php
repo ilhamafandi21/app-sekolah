@@ -11,4 +11,8 @@ class CreateIndikatornilai extends CreateRecord
     protected static string $resource = IndikatornilaiResource::class;
     protected static ?string $title = 'Buat Indikator Penilaian';
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

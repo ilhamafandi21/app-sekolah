@@ -27,6 +27,7 @@ class JurusanResource extends Resource
     protected static ?string $model = Jurusan::class;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-bookmark-square';
+    protected static string | \UnitEnum | null $navigationGroup = 'Master Data Akademik';
     protected static ?string $navigationLabel = 'Jurusan';
 
     public static function form(Schema $schema): Schema

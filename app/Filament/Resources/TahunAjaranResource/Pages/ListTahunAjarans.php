@@ -21,7 +21,9 @@ class ListTahunAjarans extends ListRecords
                 CreateAction::make()
                     ->label('Buat')
                     ->icon('heroicon-o-plus-circle')
-                    ->iconPosition(IconPosition::After)
+                    ->iconPosition('after'),
         ];
     }
 }
+
+

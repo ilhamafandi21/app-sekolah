@@ -10,16 +10,16 @@ use Filament\Resources\Pages\ListRecords;
 class ListJurusans extends ListRecords
 {
     protected static string $resource = JurusanResource::class;
-    protected static ?string $title = 'Jurusan';
+    protected static ?string $title = 'Daftar Jurusan';
 
 
     protected function getHeaderActions(): array
     {
         return [
             CreateAction::make()
-                ->label('Tambah Jurusan')
-                ->button()
-                ->color('success'),
+                ->label('Buat')
+                ->icon('heroicon-o-plus-circle')
+                ->iconPosition('after'),
         ];
     }
 }

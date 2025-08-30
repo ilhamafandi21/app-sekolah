@@ -10,11 +10,16 @@ use Filament\Resources\Pages\EditRecord;
 class EditIndikatornilai extends EditRecord
 {
     protected static string $resource = IndikatornilaiResource::class;
+    protected static ?string $title = 'Edit Indikator Penilaian';
+
 
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make(),
+            DeleteAction::make()
+                ->label('Hapus')
+                ->icon('heroicon-o-trash')
+                ->iconPosition('after'),
         ];
     }
 }

@@ -26,6 +26,10 @@ class TingkatResource extends Resource
     protected static ?string $model = Tingkat::class;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-cube-transparent';
+    protected static string | \UnitEnum | null $navigationGroup = 'Master Data Akademik';
+    protected static ?string  $navigationLabel = 'Tingkat';
+
+    protected static ?string $breadcrumb = 'tingkat';
 
     public static function form(Schema $schema): Schema
     {

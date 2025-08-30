@@ -10,11 +10,16 @@ use Filament\Resources\Pages\ListRecords;
 class ListTingkats extends ListRecords
 {
     protected static string $resource = TingkatResource::class;
+    protected static ?string $title = 'Daftar Tingkat';
+
 
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label('Buat')
+                ->icon('heroicon-o-plus-circle')
+                ->iconPosition('after'),
         ];
     }
 }

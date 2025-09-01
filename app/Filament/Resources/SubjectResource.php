@@ -34,15 +34,16 @@ class SubjectResource extends Resource
     protected static ?string $model = Subject::class;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-book-open';
+    protected static string | \UnitEnum | null $navigationGroup = 'Master Data Akademik';
 
-    protected static ?string $navigationLabel = 'Subjects';
+    protected static ?string $navigationLabel = 'Mata Pelajaran';
 
     use GenerateSubjectsKode;
 
     public static function form(Schema $schema): Schema
     {
         return $schema
-       
+
             ->components([
                 TextInput::make('name')
                     ->label('Nama Mata Pelajaran')

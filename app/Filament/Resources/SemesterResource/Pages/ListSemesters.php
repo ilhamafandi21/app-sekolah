@@ -10,6 +10,7 @@ use Filament\Resources\Pages\ListRecords;
 class ListSemesters extends ListRecords
 {
     protected static string $resource = SemesterResource::class;
+    protected static ?string $title = 'Daftar Semester';
 
     protected function getHeaderActions(): array
     {

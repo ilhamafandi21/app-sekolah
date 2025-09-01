@@ -44,7 +44,7 @@ class SiswaResource extends Resource
     protected static ?string $model = Siswa::class;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-academic-cap';
-    protected static ?string $navigationLabel = 'Siswa';
+    protected static ?string $navigationLabel = 'Daftar Siswa';
 
     public static function form(Schema $schema): Schema
     {
@@ -93,11 +93,11 @@ class SiswaResource extends Resource
                         TextInput::make('name')
                             ->nullable(),
                         FileUpload::make('files')
-                            ->directory('dokumen-siswa')    
+                            ->directory('dokumen-siswa')
                             ->nullable(),
                         Textarea::make('ket')
                             ->label('keterangan')
-                            ->default('-')    
+                            ->default('-')
                             ->nullable(),
                     ]),
 

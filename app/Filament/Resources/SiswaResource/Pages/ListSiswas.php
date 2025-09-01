@@ -10,11 +10,15 @@ use Filament\Resources\Pages\ListRecords;
 class ListSiswas extends ListRecords
 {
     protected static string $resource = SiswaResource::class;
+    protected static ?string $title = 'Daftar Siswa';
 
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label('Buat')
+                ->icon('heroicon-o-plus-circle')
+                ->iconPosition('after'),
         ];
     }
 }

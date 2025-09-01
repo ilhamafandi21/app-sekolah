@@ -15,6 +15,7 @@ use App\Traits\GenerateNis;
 class CreateSiswa extends CreateRecord
 {
     protected static string $resource = SiswaResource::class;
+    protected static ?string $title = 'Buat Siswa Baru';
 
 
     protected function beforeCreate(): void
@@ -41,7 +42,7 @@ class CreateSiswa extends CreateRecord
         //         $this->halt(); // batalkan simpan, notifikasi sudah muncul
         //     }
         //     $data['nis'] = $nis;
-       
+
 
 
 

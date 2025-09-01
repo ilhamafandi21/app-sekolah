@@ -14,11 +14,11 @@ use Illuminate\Contracts\Support\Htmlable;
 class EditRombel extends EditRecord
 {
     protected static string $resource = RombelResource::class;
-    
+
 
     public function getTitle(): string
     {
-        return 'Rombel '.$this->record->kode;
+        return 'Edit Rombel '.$this->record->kode;
     }
 
     protected function getHeaderActions(): array
@@ -37,7 +37,7 @@ class EditRombel extends EditRecord
         //             $record->tingkat_id == $data['tingkat_id'] &&
         //             $record->jurusan_id == $data['jurusan_id'] &&
         //             $record->divisi == $data['divisi'];
-        
+
         // if($original){
         //     return $data;
         // }
@@ -55,7 +55,7 @@ class EditRombel extends EditRecord
                 ->body('Data seperti ini sudah ada! ')
                 ->danger()
                 ->send();
-                
+
             $this->halt();
         }
 

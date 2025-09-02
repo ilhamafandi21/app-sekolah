@@ -15,11 +15,11 @@ class EditTransaction extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make(
+            DeleteAction::make()
                 ->label('Hapus')
                 ->icon('heroicon-o-trash')
                 ->iconposition('after')
-            ),
+            ,
         ];
     }
 }

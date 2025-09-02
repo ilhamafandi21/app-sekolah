@@ -10,6 +10,7 @@ use Filament\Resources\Pages\EditRecord;
 class EditTransaction extends EditRecord
 {
     protected static string $resource = TransactionResource::class;
+    protected static ?string $title = 'Edit Pembayaran';
 
     protected function getHeaderActions(): array
     {

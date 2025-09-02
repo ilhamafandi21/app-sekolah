@@ -10,6 +10,8 @@ use Filament\Resources\Pages\ListRecords;
 class ListTransactions extends ListRecords
 {
     protected static string $resource = TransactionResource::class;
+    protected static ?string $title = 'Daftar Pembayaran';
+
 
     protected function getHeaderActions(): array
     {

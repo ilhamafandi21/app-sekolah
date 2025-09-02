@@ -9,6 +9,7 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateTransaction extends CreateRecord
 {
     protected static string $resource = TransactionResource::class;
+    protected static ?string $title = 'Buat Pembayaran Baru';
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
@@ -17,9 +18,9 @@ class CreateTransaction extends CreateRecord
             $data['siswa_id'] .
             $data['tingkat_id'] .
             $data['jurusan_id'] .
-            $data['divisi'] . 
+            $data['divisi'] .
             date('YmdHis');
-            
+
         return $data;
     }
 }

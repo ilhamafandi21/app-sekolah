@@ -40,7 +40,7 @@ class TeacherResource extends Resource
     protected static ?string $model = Teacher::class;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-group';
-    protected static ?string $navigationLabel = 'Teacher';
+    protected static ?string $navigationLabel = 'Daftar Guru';
 
 
         public static function form(Schema $schema): Schema
@@ -48,7 +48,7 @@ class TeacherResource extends Resource
             return $schema->components([
                     Section::make([
                         Fieldset::make('Data Pribadi')->schema([
-                          
+
                                 TextInput::make('nip')
                                     ->label('NIP')
                                     ->default(fn () => Teacher::generateNip())
@@ -89,13 +89,13 @@ class TeacherResource extends Resource
                                 ->imageEditor()
                                 ->imagePreviewHeight('80')
                                 ->helperText('Upload foto terbaru, rasio 1:1 (square) untuk hasil terbaik.'),
-                        
+
                     ])
                     ->columnSpanFull(),
 
                     Section::make([
                         Fieldset::make('Akun Pengguna')->schema([
-                           
+
                                 TextInput::make('user.email')
                                     ->label('Email')
                                     ->email()
@@ -107,7 +107,7 @@ class TeacherResource extends Resource
                                     ->revealable()
                                     ->helperText('Default "password". Ganti jika perlu.')
                                     ->nullable()
-                          
+
                         ]),
                     ])
                     ->columnSpanFull()
@@ -124,7 +124,7 @@ class TeacherResource extends Resource
                                 ->placeholder('Pilih mata pelajaran'),
                         ]),
                     ])->columnSpanFull(),
-               
+
             ]);
         }
 

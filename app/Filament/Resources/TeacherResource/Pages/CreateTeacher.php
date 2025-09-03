@@ -14,6 +14,7 @@ use App\Filament\Resources\TeacherResource;
 class CreateTeacher extends CreateRecord
 {
     protected static string $resource = TeacherResource::class;
+    protected static ?string $title = 'Buat Guru Baru';
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
@@ -22,7 +23,7 @@ class CreateTeacher extends CreateRecord
                     ->title('Role teacher tidak ditemukan')
                     ->body('Role "teacher" belum tersedia. Silakan buat role terlebih dahulu.')
                     ->danger()
-                    ->send();   
+                    ->send();
                 }
 
          return $data; // atau kembalikan error lainnya

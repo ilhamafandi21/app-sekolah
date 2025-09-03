@@ -21,7 +21,8 @@ class EditTeacher extends EditRecord
         return [
             DeleteAction::make()
                 ->label('')
-                ->icon('heroicon-o-trash'),
+                ->icon('heroicon-o-trash')
+                ->modalHeading('Hapus Guru'),
              Action::make('assignGuruRole')
                 ->label('Tetapkan Role Guru')
                 ->visible(fn ($record) => !$record->user?->hasRole('teacher'))

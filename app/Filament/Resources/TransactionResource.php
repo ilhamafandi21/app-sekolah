@@ -193,27 +193,37 @@ class TransactionResource extends Resource
                             ->orWhere('divisi', 'like', "%{$term}%");
                     }),
 
-                TextColumn::make('biaya.nominal')
-                    ->label('Nominal Biaya')
-                    ->color('info')
-                    ->money('IDR', true, locale: 'id_ID')
-                    ->sortable(),
 
-                TextColumn::make('nominal')
-                    ->label('Jumlah Bayar')
-                    ->numeric()
-                    ->color('success')
-                    ->money('IDR', true, locale: 'id_ID')
-                    ->sortable(),
+            TextColumn::make('biaya.nominal')
+                ->label('Biaya')
+                ->money('IDR', true, locale: 'id_ID')
+                ->getStateUsing(fn($record) =>
+                    Transaction::where('siswa_id', $record->siswa_id)
+                        ->where('biaya_id', $record->biaya_id)
+                        ->sum('nominal')
+                ),
 
-                Tables\Columns\TextColumn::make('tunggakan')
-                    ->label('Tunggakan')
-                    ->color('warning')
-                    ->money('IDR', true, locale: 'id_ID')
-                    ->sortable()
-                    ->getStateUsing(function ($record) {
-                        return max(0, $record->biaya->nominal - $record->nominal);
-                    }),
+
+            TextColumn::make('nominal')
+                ->label('Bayar')
+                ->money('IDR', true, locale: 'id_ID')
+                ->color('success'),
+
+
+
+            TextColumn::make('tunggakan')
+                ->label('Sisa')
+                ->money('IDR', true, locale: 'id_ID')
+                ->color('warning')
+                ->getStateUsing(fn($record) =>
+                    max(0, $record->biaya->nominal -
+                        Transaction::where('siswa_id', $record->siswa_id)
+                            ->where('biaya_id', $record->biaya_id)
+                            ->sum('nominal'))
+                ),
+
+
+
 
                 TextColumn::make('status')
                     ->label('Status Bayar')

@@ -13,6 +13,8 @@ use App\Filament\Resources\TeacherResource;
 class EditTeacher extends EditRecord
 {
     protected static string $resource = TeacherResource::class;
+    protected static ?string $title = 'Edit Data Guru';
+
 
     protected function getHeaderActions(): array
     {
@@ -43,7 +45,7 @@ class EditTeacher extends EditRecord
                             ->send();
                     }
                 })
-                ->color('success'),  
+                ->color('success'),
         ];
     }
 }

@@ -177,6 +177,7 @@ class TransactionResource extends Resource
                     ->sortable(),
                 TextColumn::make('biaya.name')
                     ->sortable(),
+
                 TextColumn::make('ringkasan_rombel')
                     ->label('Rombel')
                     ->state(function ($record) {
@@ -203,14 +204,14 @@ class TransactionResource extends Resource
                     ->money('IDR', true, locale: 'id_ID')
                     ->sortable(),
 
-                // Tables\Columns\TextColumn::make('tunggakan')
-                //     ->label('Tunggakan')
-                //     ->color('warning')
-                //     ->money('IDR', true, locale: 'id_ID')
-                //     ->sortable()
-                //     ->getStateUsing(function ($record) {
-                //         return max(0, $record->biaya->nominal - $record->nominal);
-                //     }),
+                Tables\Columns\TextColumn::make('tunggakan')
+                    ->label('Tunggakan')
+                    ->color('warning')
+                    ->money('IDR', true, locale: 'id_ID')
+                    ->sortable()
+                    ->getStateUsing(function ($record) {
+                        return max(0, $record->biaya->nominal - $record->nominal);
+                    }),
 
                 TextColumn::make('status')
                     ->label('Status Bayar')

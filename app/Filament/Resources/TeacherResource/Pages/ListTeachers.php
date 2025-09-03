@@ -21,7 +21,8 @@ class ListTeachers extends ListRecords
         return [
             CreateAction::make()
                 ->label('Buat')
-                ->,
+                ->icon('heroicon-o-plus-circle')
+                ->iconPosition('after'),
         ];
     }
 

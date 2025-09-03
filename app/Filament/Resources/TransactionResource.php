@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TransactionResource\Pages;
 use App\Filament\Resources\TransactionResource\RelationManagers;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class TransactionResource extends Resource
@@ -162,6 +163,8 @@ class TransactionResource extends Resource
     {
         return $table
             ->query(static::getModel()::query()
+                ->selectRaw('siswa_id, biaya_id, SUM(nominal) as total_bayar')
+                ->groupBy('siswa_id', 'biaya_id')
                 ->with([
                     'siswa:id,name',
                     'biaya:id,name,nominal',
@@ -201,8 +204,8 @@ class TransactionResource extends Resource
                 TextColumn::make('nominal')
                     ->label('Jumlah Bayar')
                     ->numeric()
-                    ->formatStateUsing(fn($state) => number_format($state, 0, ',', '.'))
                     ->color('success')
+                    ->money('IDR', true, locale: 'id_ID')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('tunggakan')

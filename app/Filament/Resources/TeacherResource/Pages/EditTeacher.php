@@ -19,7 +19,9 @@ class EditTeacher extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make(),
+            DeleteAction::make()
+                ->label('')
+                ->icon('heroicon-o-trash'),
              Action::make('assignGuruRole')
                 ->label('Tetapkan Role Guru')
                 ->visible(fn ($record) => !$record->user?->hasRole('teacher'))

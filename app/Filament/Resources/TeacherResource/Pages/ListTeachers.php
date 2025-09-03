@@ -13,11 +13,15 @@ use App\Filament\Resources\TeacherResource;
 class ListTeachers extends ListRecords
 {
     protected static string $resource = TeacherResource::class;
+    protected static ?string $title = 'Daftar Guru';
+
 
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label('Buat')
+                ->,
         ];
     }
 

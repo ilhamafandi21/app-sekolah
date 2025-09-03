@@ -44,6 +44,7 @@ class SiswaResource extends Resource
     protected static ?string $model = Siswa::class;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-academic-cap';
+    protected static string | \UnitEnum | null $navigationGroup = 'Siswa dan Guru';
     protected static ?string $navigationLabel = 'Daftar Siswa';
 
     public static function form(Schema $schema): Schema

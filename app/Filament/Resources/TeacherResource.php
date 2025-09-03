@@ -40,6 +40,7 @@ class TeacherResource extends Resource
     protected static ?string $model = Teacher::class;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-group';
+    protected static string | \UnitEnum | null $navigationGroup = 'Siswa dan Guru';
     protected static ?string $navigationLabel = 'Daftar Guru';
 
 

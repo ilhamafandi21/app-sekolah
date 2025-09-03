@@ -200,6 +200,8 @@ class TransactionResource extends Resource
 
                 TextColumn::make('nominal')
                     ->label('Jumlah Bayar')
+                    ->numeric()
+                    ->summarize(Tables\Columns\Summarizers\Sum::make())
                     ->color('success')
                     ->money('IDR', true, locale: 'id_ID')
                     ->sortable(),

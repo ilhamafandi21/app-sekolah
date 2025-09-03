@@ -163,8 +163,6 @@ class TransactionResource extends Resource
     {
         return $table
             ->query(static::getModel()::query()
-                ->selectRaw('siswa_id, biaya_id, SUM(nominal) as total_bayar')
-                ->groupBy('siswa_id', 'biaya_id')
                 ->with([
                     'siswa:id,name',
                     'biaya:id,name,nominal',

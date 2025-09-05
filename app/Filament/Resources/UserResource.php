@@ -33,7 +33,7 @@ class UserResource extends Resource
     protected static ?string $model = User::class;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static string | \UnitEnum | null $navigationGroup = 'Manajemen';
+    protected static string | \UnitEnum | null $navigationGroup = 'Manaen';
 
     public static function form(Schema $schema): Schema
     {

@@ -39,7 +39,7 @@ class UserResource extends Resource
     {
         return $schema->components([
             TextInput::make('name')
-                ->label('Nama Lengk')
+                ->label('Nama Lengkap')
                 ->required(),
 
             TextInput::make('email')

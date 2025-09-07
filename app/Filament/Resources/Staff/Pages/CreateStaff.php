@@ -32,9 +32,6 @@ class CreateStaff extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-
-        dd($data);
-
         $existingUser = User::where('email', $data['email'])->exists();
 
         if ($existingUser) {

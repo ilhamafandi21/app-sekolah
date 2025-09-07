@@ -24,6 +24,8 @@ class StaffResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    
+
     public static function form(Schema $schema): Schema
     {
         return StaffForm::configure($schema);

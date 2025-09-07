@@ -14,6 +14,11 @@ class CreateStaff extends CreateRecord
 {
     protected static string $resource = StaffResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
     protected function beforeCreate(): void
     {
         // Cek apakah role 'staff' tersedia

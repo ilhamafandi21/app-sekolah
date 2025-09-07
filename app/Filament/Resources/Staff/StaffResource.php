@@ -20,7 +20,7 @@ class StaffResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
     protected static string|\UnitEnum|null $navigationGroup = 'Staff & User Management';
-    protected static string $navigationGroup = '';
+    protected static ?string $navigationLabel = 'Daftar Staff';
 
     protected static ?string $recordTitleAttribute = 'name';
 

@@ -35,15 +35,28 @@ class CreateStaff extends CreateRecord
 
         dd($data);
 
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['user']['email'],
-            'password' => Hash::make($data['user']['password']),
-        ])->assignRole('staff');// assogneRole ke Spatie
+        $existingUser = User::where('email', $data['email'])->exists();
 
-        $data['user_id'] = $user->id;
+        if ($existingUser) {
+            Notification::make()
+                ->title('Email sudah digunakan.')
+                ->body('Silakan gunakan email lain yang belum terdaftar.')
+                ->danger()
+                ->send();
 
-        unset($data['user']['email'], $data['user']['password']);
+            $this->halt(); // Hentikan proses simpan
+        }else{
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+            ])->assignRole('staff');// assogneRole ke Spatie
+
+
+        }
+
+            $data['user_id'] = $user->id;
+            unset($data['email'], $data['password']);
 
         return static::getModel()::create($data);
     }

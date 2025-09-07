@@ -19,7 +19,8 @@ class StaffResource extends Resource
     protected static ?string $model = Staff::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-    protected static ?string $navigationGroup = 'Staff & User Management';
+    protected static string|\UnitEnum|null $navigationGroup = 'Staff & User Management';
+    protected static string $navigationGroup = '';
 
     protected static ?string $recordTitleAttribute = 'name';
 

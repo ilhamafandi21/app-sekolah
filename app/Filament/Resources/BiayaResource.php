@@ -37,7 +37,7 @@ class BiayaResource extends Resource
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->label('Jenis Biaya')
+                    ->label('Jenis')
                     ->required(),
                 TextInput::make('nominal')
                     ->label('Nominal')

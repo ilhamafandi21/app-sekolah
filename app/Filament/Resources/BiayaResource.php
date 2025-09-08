@@ -28,7 +28,7 @@ class BiayaResource extends Resource
 {
     protected static ?string $model = Biaya::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-currency-';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-currency-dollar';
     protected static string | \UnitEnum | null $navigationGroup = 'Master Data Akademik';
     protected static ?string $navigationLabel = 'Data Biaya';
 

@@ -32,7 +32,7 @@ class TransactionsRelationManager extends RelationManager
         return $schema
             ->components([
 
-                TextInput::make('rombel_id')
+                Hidden::make('rombel_id')
                     ->default(fn (RelationManager $livewire) => $livewire->ownerRecord->id)
                     ->disabled()
                     ->dehydrated()
@@ -83,19 +83,19 @@ class TransactionsRelationManager extends RelationManager
                                                             . date('YmdHis')
                     )),
 
-                TextInput::make('kode')
+                Hidden::make('kode')
                     ->disabled()
                     ->required()
                     ->dehydrated(),
-                TextInput::make('tingkat_id')
+                Hidden::make('tingkat_id')
                     ->default(fn (RelationManager $livewire) => $livewire->ownerRecord->tingkat_id)
                     ->required()
                     ->dehydrated(),
-                TextInput::make('jurusan_id')
+                Hidden::make('jurusan_id')
                     ->default(fn (RelationManager $livewire) => $livewire->ownerRecord->jurusan_id)
                     ->required()
                     ->dehydrated(),
-                TextInput::make('divisi')
+                Hidden::make('divisi')
                     ->default(fn (RelationManager $livewire) => $livewire->ownerRecord->divisi)
                     ->required()
                     ->dehydrated(),

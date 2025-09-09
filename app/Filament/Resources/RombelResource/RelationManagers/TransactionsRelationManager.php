@@ -53,7 +53,6 @@ class TransactionsRelationManager extends RelationManager
                             ])
                             ->toArray();
                     })
-                    ->live()
                     ->preload()
                     ->reactive()
                     ->required(),
@@ -66,11 +65,17 @@ class TransactionsRelationManager extends RelationManager
                             ->get()
                             ->pluck('siswa.name', 'siswa.id');
                     })
-                    ->live()
+                    ->disabled(fn ($get) => ! $get('biaya_id'))
                     ->preload()
                     ->reactive()
                     ->required()
-                    ->afterStateUpdated(fn (callable $set) => $set('kode', 'halo'
+                    ->afterStateUpdated(fn (callable $set) => $set('kode', $this->getOwnerRecord()->id
+                                                            . $set('biaya_id')
+                                                            . $set('siswa_id')
+                                                            . $set('tingkat_id')
+                                                            . $set('jurusan_id')
+                                                            . $set('divisi')
+                                                            . date('YmdHis')
                     )),
 
                 TextInput::make('kode')

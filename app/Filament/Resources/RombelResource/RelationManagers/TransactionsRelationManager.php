@@ -27,10 +27,10 @@ class TransactionsRelationManager extends RelationManager
 {
     protected static string $relationship = 'transactions';
 
-    public function form(Schema $schema): Schema
+    public static function form(Forms\Form $form): Forms\Form
     {
-        return $schema
-            ->components([
+        return $form
+            ->schema([
 
                 TextInput::make('rombel_id')
                     ->default(fn (RelationManager $livewire) => $livewire->ownerRecord->id)
@@ -53,7 +53,9 @@ class TransactionsRelationManager extends RelationManager
                             ])
                             ->toArray();
                     })
+                    ->live()
                     ->preload()
+                    ->reactive()
                     ->required(),
 
                 Select::make('siswa_id')
@@ -64,12 +66,19 @@ class TransactionsRelationManager extends RelationManager
                             ->get()
                             ->pluck('siswa.name', 'siswa.id');
                     })
+                    ->live()
                     ->preload()
+                    ->reactive()
                     ->required(),
 
                 TextInput::make('kode')
-                    ->default(fn (RelationManager $livewire) =>
-                                $livewire->ownerRecord->tingkat_id)
+                    ->default(fn ($get, $livewire) =>
+                        $livewire->ownerRecord->id .
+                        ($get('biaya_id') ?? '') .
+                        ($get('siswa_id') ?? '')
+                    )
+                    ->live()
+                    ->reactive()
                     ->required()
                     ->dehydrated(),
                 TextInput::make('tingkat_id')
@@ -96,12 +105,10 @@ class TransactionsRelationManager extends RelationManager
                     ->required()
                     ->numeric(),
 
-
-
                 TextInput::make('keterangan')
                     ->default('Pembayaran Biaya Pendidikan')
                     ->required(),
-            ]);
+                ]);
 
     }
 

@@ -70,7 +70,7 @@ class TransactionsRelationManager extends RelationManager
                     ->preload()
                     ->reactive()
                     ->required()
-                    ->afterStateUpdated(fn (callable $set) => $set('kode', $this->getOwnerRecord()->rombel_id
+                    ->afterStateUpdated(fn (callable $set) => $set('kode', 'halo'
                     )),
 
                 TextInput::make('kode')

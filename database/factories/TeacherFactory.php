@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use App\Models\Teacher;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -10,22 +12,41 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class TeacherFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = Teacher::class;
+
+    // Counter incremental untuk NIP
+    protected static int $counter = 1;
+
     public function definition(): array
     {
-        $user = User::factory()->create();
+        // Buat user terlebih dahulu
+        $user = User::create([
+            'name' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'password' => Hash::make('password'),
+        ]);
+
+        // Berikan role 'teacher'
+        $user->assignRole('teacher');
+
         return [
-            'name' => $user->name, // bisa pakai nama yang sama
+            'user_id' => $user->id,
+            'nip' => $this->generateNip(),
+            'name' => $user->name,
             'tgl_lahir' => $this->faker->date(),
             'kota_lahir' => $this->faker->city(),
             'alamat' => $this->faker->address(),
-            'pendidikan' => $this->faker->randomElement(['S1', 'S2', 'SMA']),
+            'pendidikan' => $this->faker->randomElement(['S1', 'S2', 'S3']),
             'foto' => null,
-            'user_id' => $user->id, // hubungkan ke user
         ];
+    }
+
+    protected function generateNip(): string
+    {
+        $year = now()->year; // 4 digit tahun
+        $monthLastDigit = substr(now()->format('m'), -1); // 1 digit bulan terakhir
+        $sequence = str_pad(static::$counter++, 3, '0', STR_PAD_LEFT); // 3 digit urutan
+
+        return $year . $monthLastDigit . $sequence; // Contoh: 20259 + 001 = 20259001
     }
 }

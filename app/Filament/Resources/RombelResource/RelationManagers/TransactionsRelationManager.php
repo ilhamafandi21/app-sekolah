@@ -69,12 +69,12 @@ class TransactionsRelationManager extends RelationManager
                     ->preload()
                     ->reactive()
                     ->required()
-                    ->afterStateUpdated(fn (callable $set) => $set('kode', $this->getOwnerRecord()->id
-                                                            . $set('biaya_id')
-                                                            . $set('siswa_id')
-                                                            . $set('tingkat_id')
-                                                            . $set('jurusan_id')
-                                                            . $set('divisi')
+                    ->afterStateUpdated(fn (callable $set, $get) => $set('kode', $this->getOwnerRecord()->id
+                                                            . $get('biaya_id')
+                                                            . $get('siswa_id')
+                                                            . $ $this->getOwnerRecord()->tingkat_id
+                                                            . $ $this->getOwnerRecord()->jurusan_id
+                                                            . $ $this->getOwnerRecord()->divisi
                                                             . date('YmdHis')
                     )),
 

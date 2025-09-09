@@ -18,9 +18,9 @@ class SemesterFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->randomElement(['Ganjil', 'Genap']),
-            'status' => $this->faker->boolean(false),
-            'keterangan' => $this->faker->sentence(),
+            'name' => $this->faker->unique()->randomElement(['Ganjil', 'Genap']),
+            'status' => $this->faker->boolean(true),
+            'keterangan' => '-',
         ];
     }
 }

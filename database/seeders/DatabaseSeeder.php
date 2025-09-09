@@ -19,9 +19,7 @@ use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
+   #Data Roles
     public function run(): void
     {
 
@@ -34,34 +32,26 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // User::factory(2)->create();
 
+        #Data Master Akademik
         TahunAjaran::factory()->count(1)->create();
-        Siswa::factory(10)->create();
         Tingkat::factory()->count(3)->create();
         Jurusan::factory()->count(3)->create();
-        Subject::factory(11)->create();
-        // Teacher::factory()->count(10)->create();
         Semester::factory()->count(2)->create();
+        Subject::factory(11)->create();
         Biaya::factory()->count(5)->create();
         Schedull::factory()->count(12)->create();
         Day::factory()->count(7)->create();
 
+        #Data Master User
+        Siswa::factory(10)->create();
+        Teacher::factory()->count(10)->create();
 
-
-
+        #Data User Admin
         User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@admin.com',
         ])->assignRole('admin');
 
-
-        // for ($i = 1; $i <= 40; $i++) {
-        //     Subject::create([
-        //         'kode' => 'MP' . $i,
-        //         'name' => 'Subject ' . $i,
-        //         'deskripsi' => 'Deskripsi untuk subject ' . $i,
-        //     ]);
-        // }
     }
 }

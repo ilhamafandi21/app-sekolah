@@ -44,8 +44,8 @@ class DatabaseSeeder extends Seeder
         Day::factory()->count(7)->create();
 
         #Data Master User
-        Siswa::factory(10)->create();
-        Teacher::factory()->count(10)->create();
+        Siswa::factory(2)->create();
+        Teacher::factory()->count(5)->create();
 
         #Data User Admin
         User::factory()->create([

@@ -19,6 +19,11 @@ class TeacherFactory extends Factory
 
     public function definition(): array
     {
+
+        if (static::$counter > 10) {
+            throw new \Exception('NIP Teacher incremental sudah mencapai batas maksimal'.' '.static::$counter - 1);
+        }
+
         // Buat user terlebih dahulu
         $user = User::create([
             'name' => $this->faker->name(),

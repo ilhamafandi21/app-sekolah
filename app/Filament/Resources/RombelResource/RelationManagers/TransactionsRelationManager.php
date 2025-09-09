@@ -53,11 +53,8 @@ class TransactionsRelationManager extends RelationManager
                             ])
                             ->toArray();
                     })
-
-
                     ->preload()
                     ->required(),
-
 
                 Select::make('siswa_id')
                     ->options(function ($get) {
@@ -70,15 +67,23 @@ class TransactionsRelationManager extends RelationManager
                     ->preload()
                     ->required(),
 
-                Hidden::make('tingkat_id')
+                TextInput::make('kode')
+                    ->default(fn (RelationManager $livewire) =>
+                                $livewire->ownerRecord->tingkat_id)
                     ->required()
-                    ->dehydrated(true),
-                Hidden::make('jurusan_id')
+                    ->dehydrated(),
+                TextInput::make('tingkat_id')
+                    ->default(fn (RelationManager $livewire) => $livewire->ownerRecord->tingkat_id)
                     ->required()
-                    ->dehydrated(true),
-                Hidden::make('divisi')
+                    ->dehydrated(),
+                TextInput::make('jurusan_id')
+                    ->default(fn (RelationManager $livewire) => $livewire->ownerRecord->jurusan_id)
                     ->required()
-                    ->dehydrated(true),
+                    ->dehydrated(),
+                TextInput::make('divisi')
+                    ->default(fn (RelationManager $livewire) => $livewire->ownerRecord->divisi)
+                    ->required()
+                    ->dehydrated(),
                 Select::make('semester')
                     ->options(
                         Semester::query()
@@ -91,15 +96,7 @@ class TransactionsRelationManager extends RelationManager
                     ->required()
                     ->numeric(),
 
-                Toggle::make('status')
-                    ->label('Status Bayar')
-                    ->onIcon('heroicon-o-check-circle')
-                    ->offIcon('heroicon-o-x-circle')
-                    ->onColor('success')     // hijau kalau ON
-                    ->offColor('danger')     // merah kalau OFF
-                    ->required()
-                    ->inline(false) // biar ada label di samping
-                    ->helperText('Tandai Lunas jika pembayaran sudah lunas'),
+
 
                 TextInput::make('keterangan')
                     ->default('Pembayaran Biaya Pendidikan')
@@ -120,7 +117,8 @@ class TransactionsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ,
                 // AssociateAction::make(),
             ])
             ->recordActions([

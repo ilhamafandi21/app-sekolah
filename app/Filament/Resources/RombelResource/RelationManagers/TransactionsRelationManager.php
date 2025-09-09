@@ -71,12 +71,7 @@ class TransactionsRelationManager extends RelationManager
                     ->reactive()
                     ->required()
                     ->afterStateUpdated(fn (callable $set) => $set('kode', $this->getOwnerRecord()->rombel_id
-                                                            . $set('biaya_id')
-                                                            . $set('siswa_id')
-                                                            . $set('tingkat_id')
-                                                            . $set('jurusan_id')
-                                                            . $set('divisi')
-                                                            . date('YmdHis'))),
+                    )),
 
                 TextInput::make('kode')
                     ->disabled()

@@ -14,6 +14,7 @@ use App\Models\Schedull;
 use App\Models\Semester;
 use App\Models\TahunAjaran;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,6 +23,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
+        $roles = ['teacher', 'staff', 'siswa'];
+
+        foreach ($roles as $role) {
+            Role::firstOrCreate([
+                'name' => $role,
+                'guard_name' => 'web', // sesuai guard default Anda
+            ]);
+        }
+
         // User::factory(2)->create();
         // Siswa::factory(200)->create();
         TahunAjaran::factory()->count(1)->create();
@@ -33,7 +44,7 @@ class DatabaseSeeder extends Seeder
         Schedull::factory()->count(12)->create();
         Day::factory()->count(7)->create();
 
-        
+
 
 
         User::factory()->create([
@@ -41,7 +52,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@admin.com',
         ])->assignRole('admin');
 
-        
+
         // for ($i = 1; $i <= 40; $i++) {
         //     Subject::create([
         //         'kode' => 'MP' . $i,

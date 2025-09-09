@@ -53,6 +53,11 @@ class TransactionsRelationManager extends RelationManager
                             ])
                             ->toArray();
                     })
+                     ->afterStateUpdated(function ($state, callable $set) {
+                        // reset siswa dan kode saat biaya diganti
+                        $set('siswa_id', null);
+                        $set('kode', null);
+                    })
                     ->preload()
                     ->reactive()
                     ->required(),
@@ -72,9 +77,9 @@ class TransactionsRelationManager extends RelationManager
                     ->afterStateUpdated(fn (callable $set, $get) => $set('kode', $this->getOwnerRecord()->id
                                                             . $get('biaya_id')
                                                             . $get('siswa_id')
-                                                            . $ $this->getOwnerRecord()->tingkat_id
-                                                            . $ $this->getOwnerRecord()->jurusan_id
-                                                            . $ $this->getOwnerRecord()->divisi
+                                                            . $this->getOwnerRecord()->tingkat_id
+                                                            . $this->getOwnerRecord()->jurusan_id
+                                                            . $this->getOwnerRecord()->divisi
                                                             . date('YmdHis')
                     )),
 

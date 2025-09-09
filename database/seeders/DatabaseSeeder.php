@@ -35,12 +35,13 @@ class DatabaseSeeder extends Seeder
         }
 
         // User::factory(2)->create();
-        // Siswa::factory(200)->create();
+
         TahunAjaran::factory()->count(1)->create();
+        Siswa::factory(10)->create();
         Tingkat::factory()->count(3)->create();
         Jurusan::factory()->count(3)->create();
         Subject::factory(11)->create();
-        // Teacher::factory()->count(40)->create();
+        // Teacher::factory()->count(10)->create();
         Semester::factory()->count(2)->create();
         Biaya::factory()->count(5)->create();
         Schedull::factory()->count(12)->create();

@@ -16,7 +16,6 @@ class Transaction extends Model
         'divisi',
         'nominal',
         'semester',
-        'status',
         'keterangan',
     ];
 

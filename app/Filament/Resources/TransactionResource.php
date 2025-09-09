@@ -143,15 +143,15 @@ class TransactionResource extends Resource
                     ->required()
                     ->numeric(),
 
-                Toggle::make('status')
-                    ->label('Status Bayar')
-                    ->onIcon('heroicon-o-check-circle')
-                    ->offIcon('heroicon-o-x-circle')
-                    ->onColor('success')     // hijau kalau ON
-                    ->offColor('danger')     // merah kalau OFF
-                    ->required()
-                    ->inline(false) // biar ada label di samping
-                    ->helperText('Tandai Lunas jika pembayaran sudah lunas'),
+                // Toggle::make('status')
+                //     ->label('Status Bayar')
+                //     ->onIcon('heroicon-o-check-circle')
+                //     ->offIcon('heroicon-o-x-circle')
+                //     ->onColor('success')     // hijau kalau ON
+                //     ->offColor('danger')     // merah kalau OFF
+                //     ->required()
+                //     ->inline(false) // biar ada label di samping
+                //     ->helperText('Tandai Lunas jika pembayaran sudah lunas'),
 
                 TextInput::make('keterangan')
                     ->default('Pembayaran Biaya Pendidikan')

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Biaya;
 use App\Models\Day;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -41,6 +42,7 @@ class DatabaseSeeder extends Seeder
         Subject::factory(11)->create();
         // Teacher::factory()->count(40)->create();
         Semester::factory()->count(2)->create();
+        Biaya::factory()->count(5)->create();
         Schedull::factory()->count(12)->create();
         Day::factory()->count(7)->create();
 

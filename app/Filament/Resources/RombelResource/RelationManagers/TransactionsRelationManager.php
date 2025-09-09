@@ -27,10 +27,10 @@ class TransactionsRelationManager extends RelationManager
 {
     protected static string $relationship = 'transactions';
 
-    public static function form(Forms\Form $form): Forms\Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
 
                 TextInput::make('rombel_id')
                     ->default(fn (RelationManager $livewire) => $livewire->ownerRecord->id)
@@ -69,16 +69,17 @@ class TransactionsRelationManager extends RelationManager
                     ->live()
                     ->preload()
                     ->reactive()
-                    ->required(),
+                    ->required()
+                    ->afterStateUpdated(fn (callable $set) => $set('kode', $this->getOwnerRecord()->rombel_id
+                                                            . $set('biaya_id')
+                                                            . $set('siswa_id')
+                                                            . $set('tingkat_id')
+                                                            . $set('jurusan_id')
+                                                            . $set('divisi')
+                                                            . date('YmdHis'))),
 
                 TextInput::make('kode')
-                    ->default(fn ($get, $livewire) =>
-                        $livewire->ownerRecord->id .
-                        ($get('biaya_id') ?? '') .
-                        ($get('siswa_id') ?? '')
-                    )
-                    ->live()
-                    ->reactive()
+                    ->disabled()
                     ->required()
                     ->dehydrated(),
                 TextInput::make('tingkat_id')

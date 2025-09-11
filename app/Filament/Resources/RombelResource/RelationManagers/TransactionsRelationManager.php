@@ -146,7 +146,19 @@ class TransactionsRelationManager extends RelationManager
             TextColumn::make('nominal')
                 ->label('Uang Masuk')
                 ->getStateUsing(fn($record) =>
-                    max(0, $record->biaya->nominal -
+
+                        Transaction::where('siswa_id', $record->siswa_id)
+                            ->where('biaya_id', $record->biaya_id)
+                            ->sum('nominal')
+                )
+                ->money('IDR', locale: 'id_ID')
+                ->sortable(),
+
+             TextColumn::make('selisih')
+                ->label('Sisa Bayar')
+                ->getStateUsing(fn($record) =>
+
+                        max(0, $record->biaya->nominal -
                         Transaction::where('siswa_id', $record->siswa_id)
                             ->where('biaya_id', $record->biaya_id)
                             ->sum('nominal'))

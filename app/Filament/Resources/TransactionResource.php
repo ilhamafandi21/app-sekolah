@@ -230,6 +230,7 @@ class TransactionResource extends Resource
                                 ->where('biaya_id', $record->biaya_id)
                                 ->value('status') == 1 ? 'Lunas' : 'Belum Lunas')
                     ->badge()
+                    ->color(fn($state) => $state === 'Lunas' ? 'success' : 'danger')
                     ->sortable(),
 
                 TextColumn::make('keterangan')

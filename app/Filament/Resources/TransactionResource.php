@@ -222,11 +222,9 @@ class TransactionResource extends Resource
 
 
 
-                TextColumn::make('status')
+                TextColumn::make('siswaBiaya.status')
                     ->label('Status Bayar')
-                    ->formatStateUsing(fn($state) => $state ? 'Lunas' : 'Belum Lunas')
-                    ->badge()
-                    ->color(fn($state) => $state ? 'success' : 'danger')
+                
                     ->sortable(),
 
                 TextColumn::make('keterangan')

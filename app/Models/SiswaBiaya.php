@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SiswaBiaya extends Model
 {
@@ -22,5 +23,10 @@ class SiswaBiaya extends Model
     public function biaya()
     {
         return $this->belongsTo(Biaya::class, 'biaya_id');
+    }
+
+    public function transaction(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
     }
 }

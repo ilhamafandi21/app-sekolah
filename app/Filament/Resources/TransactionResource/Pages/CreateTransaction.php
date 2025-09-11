@@ -41,7 +41,7 @@ class CreateTransaction extends CreateRecord
                     'status' => 0,
                 ]);
             }else{
-                if(Biaya::find($data('biaya_id'))->nominal == $total + $data['nominal']){
+                if(Biaya::find($data['biaya_id'])->nominal >= $total + $data['nominal']){
                     SiswaBiaya::where('siswa_id', $data['siswa_id'])
                                 ->where('biaya_id', $data['biaya_id'])
                                 ->update(['status' => 1]);

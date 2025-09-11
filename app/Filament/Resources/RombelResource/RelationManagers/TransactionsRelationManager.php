@@ -133,10 +133,12 @@ class TransactionsRelationManager extends RelationManager
         )
         ->columns([
             TextColumn::make('siswa.name')
-                ->label('Siswa'),
+                ->label('Siswa')
+                ->searchable(),
 
             TextColumn::make('biaya.name')
-                ->label('Jenis Biaya'),
+                ->label('Jenis Biaya')
+                ->searchable(),
 
             TextColumn::make('biaya.nominal')
                 ->label('Nominal Biaya')
@@ -177,25 +179,25 @@ class TransactionsRelationManager extends RelationManager
                 ->badge()
                 ->color(fn ($state) => $state === 'Lunas' ? 'success' : 'danger')
                 ->label('Status Bayar'),
-        ])
+            ])
             ->filters([
                 //
             ])
             ->headerActions([
                 CreateAction::make()
-                    ,
+                    // ,
                 // AssociateAction::make(),
             ])
             ->recordActions([
-                EditAction::make(),
+                // EditAction::make(),
                 // DissociateAction::make(),
-                DeleteAction::make(),
+                // DeleteAction::make(),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
-                    DissociateBulkAction::make(),
-                    // DeleteBulkAction::make(),
-                ]),
+                // BulkActionGroup::make([
+                //     DissociateBulkAction::make(),
+                //     DeleteBulkAction::make(),
+                // ]),
             ]);
     }
 }

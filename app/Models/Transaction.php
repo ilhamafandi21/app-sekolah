@@ -18,12 +18,6 @@ class Transaction extends Model
         'semester',
         'keterangan',
     ];
-
-    public function siswaBiaya()
-    {
-        return $this->belongsTo(SiswaBiaya::class);
-    }
-
     public function siswa()
     {
         return $this->belongsTo(Siswa::class);

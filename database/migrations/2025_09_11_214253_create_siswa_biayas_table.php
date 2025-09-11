@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('siswa_id')->constrained('siswas', 'id')->onDelete('cascade');
             $table->foreignId('biaya_id')->constrained('biayas', 'id')->onDelete('cascade');
-            $table->foreignId('transaction_id')->constrained('transactions', 'id')->onDelete('cascade');
             $table->boolean('status')->default(false);
             $table->timestamps();
         });

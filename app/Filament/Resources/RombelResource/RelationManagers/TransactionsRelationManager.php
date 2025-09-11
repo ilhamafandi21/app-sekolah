@@ -7,6 +7,8 @@ use App\Models\Semester;
 use Filament\Tables\Table;
 use App\Models\RombelBiaya;
 use App\Models\RombelsSiswa;
+use App\Models\SiswaBiaya;
+use Dom\Text;
 use Filament\Schemas\Schema;
 use Filament\Actions\EditAction;
 use Filament\Actions\CreateAction;
@@ -121,11 +123,31 @@ class TransactionsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('kode')
-            ->columns([
-                TextColumn::make('kode')
-                    ->searchable(),
-            ])
+        ->recordTitleAttribute('biaya.name')
+        ->modifyQueryUsing(fn ($query) =>
+           $query->join('biayas', 'transactions.biaya_id', '=', 'biayas.id')
+                ->select('transactions.*')
+                ->groupBy('transactions.biaya_id', 'transactions.siswa_id')
+        )
+        ->columns([
+            TextColumn::make('siswa.name')
+                ->label('Siswa'),
+
+            TextColumn::make('biaya.name')
+                ->label('Biaya'),
+
+            TextColumn::make('status')
+                ->default(fn ($record) =>
+                    SiswaBiaya::where('siswa_id', $record->siswa_id)
+                        ->where('biaya_id', $record->biaya_id)
+                        ->value('status') == 1
+                        ? 'Lunas'
+                        : 'Belum Lunas'
+                )
+                ->badge()
+                ->color(fn ($state) => $state === 'Lunas' ? 'success' : 'danger')
+                ->label('Status Bayar'),
+        ])
             ->filters([
                 //
             ])

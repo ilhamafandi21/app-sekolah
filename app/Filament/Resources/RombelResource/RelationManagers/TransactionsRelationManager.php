@@ -136,6 +136,11 @@ class TransactionsRelationManager extends RelationManager
             TextColumn::make('biaya.name')
                 ->label('Biaya'),
 
+            TextColumn::make('biaya.nominal')
+                ->label('Nominal Biaya')
+                ->money('idr', true)
+                ->sortable(),
+
             TextColumn::make('status')
                 ->default(fn ($record) =>
                     SiswaBiaya::where('siswa_id', $record->siswa_id)

@@ -2,13 +2,14 @@
 
 namespace App\Filament\Resources\RombelResource\RelationManagers;
 
+use Dom\Text;
 use App\Models\Rombel;
 use App\Models\Semester;
+use App\Models\SiswaBiaya;
 use Filament\Tables\Table;
 use App\Models\RombelBiaya;
+use App\Models\Transaction;
 use App\Models\RombelsSiswa;
-use App\Models\SiswaBiaya;
-use Dom\Text;
 use Filament\Schemas\Schema;
 use Filament\Actions\EditAction;
 use Filament\Actions\CreateAction;
@@ -23,6 +24,7 @@ use Filament\Actions\DissociateAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Actions\DissociateBulkAction;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Resources\RelationManagers\RelationManager;
 
 class TransactionsRelationManager extends RelationManager
@@ -141,8 +143,14 @@ class TransactionsRelationManager extends RelationManager
                 ->money('IDR', locale: 'id_ID')
                 ->sortable(),
 
-            TextColumn::make('b')
-                ->label('Nominal Biaya')
+            TextColumn::make('nominal')
+                ->label('Uang Masuk')
+                ->getStateUsing(fn($record) =>
+                    max(0, $record->biaya->nominal -
+                        Transaction::where('siswa_id', $record->siswa_id)
+                            ->where('biaya_id', $record->biaya_id)
+                            ->sum('nominal'))
+                )
                 ->money('IDR', locale: 'id_ID')
                 ->sortable(),
 

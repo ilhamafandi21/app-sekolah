@@ -228,7 +228,8 @@ class TransactionResource extends Resource
                     ->default(fn($record)
                         => SiswaBiaya::where('siswa_id', $record->siswa_id)
                                 ->where('biaya_id', $record->biaya_id)
-                                ->value('status'))
+                                ->value('status') == 1 ? 'Lunas' : 'Belum Lunas')
+                    ->badge()
                     ->sortable(),
 
                 TextColumn::make('keterangan')

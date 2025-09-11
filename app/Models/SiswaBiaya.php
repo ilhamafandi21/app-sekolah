@@ -24,9 +24,4 @@ class SiswaBiaya extends Model
     {
         return $this->belongsTo(Biaya::class, 'biaya_id');
     }
-
-    public function transaction(): HasMany
-    {
-        return $this->hasMany(Transaction::class);
-    }
 }

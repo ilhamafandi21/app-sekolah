@@ -20,7 +20,11 @@ class CreateTransaction extends CreateRecord
         // dd($data);
         $total = Transaction::where('siswa_id', $data['siswa_id'])
                     ->where('biaya_id', $data['biaya_id'])
-                    ->sum('nominal');
+                    ->sum('nominal') + $data['nominal'];
+
+        $biayaAsli = Biaya::find($data['biaya_id'])->nominal;
+
+        // dd('total : '.$total, 'Biaya Asli : '.$biayaAsli);
 
         $data['kode'] = $data['rombel_id'] .
             $data['biaya_id'] .
@@ -40,12 +44,16 @@ class CreateTransaction extends CreateRecord
                     'biaya_id' => $data['biaya_id'],
                     'status' => 0,
                 ]);
+            }
+
+            if($total >= $biayaAsli){
+                SiswaBiaya::where('siswa_id', $data['siswa_id'])
+                            ->where('biaya_id', $data['biaya_id'])
+                            ->update(['status' => 1]);
             }else{
-                if(Biaya::find($data['biaya_id'])->nominal >= $total + $data['nominal']){
-                    SiswaBiaya::where('siswa_id', $data['siswa_id'])
-                                ->where('biaya_id', $data['biaya_id'])
-                                ->update(['status' => 1]);
-                }
+                SiswaBiaya::where('siswa_id', $data['siswa_id'])
+                            ->where('biaya_id', $data['biaya_id'])
+                            ->update(['status' => 0]);
             }
 
         return $data;

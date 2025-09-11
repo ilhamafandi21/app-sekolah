@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TransactionResource\Pages;
 use App\Filament\Resources\TransactionResource\RelationManagers;
+use App\Models\SiswaBiaya;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
@@ -222,9 +223,12 @@ class TransactionResource extends Resource
 
 
 
-                TextColumn::make('siswaBiaya.status')
+                TextColumn::make('status')
                     ->label('Status Bayar')
-                
+                    ->default(fn($record)
+                        => SiswaBiaya::where('siswa_id', $record->siswa_id)
+                                ->where('biaya_id', $record->biaya_id)
+                                ->value('status'))
                     ->sortable(),
 
                 TextColumn::make('keterangan')

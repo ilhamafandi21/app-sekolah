@@ -34,6 +34,11 @@ class Siswa extends Model
         'user_id',
     ];
 
+    public function siswaBiayas(): HasMany
+    {
+        return $this->hasMany(SiswaBiaya::class);
+    }
+
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
@@ -57,7 +62,7 @@ class Siswa extends Model
 
     public function rombels(): BelongsToMany
     {
-        return $this->belongsToMany(Rombel::class, 
+        return $this->belongsToMany(Rombel::class,
             'rombels_siswas',
             'siswa_id',
             'rombel_id',

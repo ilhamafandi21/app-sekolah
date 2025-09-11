@@ -12,6 +12,12 @@ class Biaya extends Model
 {
     use HasFactory;
 
+
+    public function siswaBiayas(): HasMany
+    {
+        return $this->hasMany(SiswaBiaya::class);
+    }
+
     protected $fillable = [
         'name',
         'nominal',

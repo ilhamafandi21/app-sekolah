@@ -24,6 +24,7 @@ class SiswaBiaya extends Model
     {
         return $this->belongsTo(Biaya::class, 'biaya_id');
     }
+    
     public function transaction()
     {
         return $this->belongsTo(Transaction::class, 'biaya_id');

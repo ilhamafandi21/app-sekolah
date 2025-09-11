@@ -11,6 +11,7 @@ class SiswaBiaya extends Model
     protected $fillable = [
         'siswa_id',
         'biaya_id',
+        'transaction_id',
         'status',
     ];
 
@@ -22,5 +23,9 @@ class SiswaBiaya extends Model
     public function biaya()
     {
         return $this->belongsTo(Biaya::class, 'biaya_id');
+    }
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class, 'biaya_id');
     }
 }

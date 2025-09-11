@@ -134,11 +134,16 @@ class TransactionsRelationManager extends RelationManager
                 ->label('Siswa'),
 
             TextColumn::make('biaya.name')
-                ->label('Biaya'),
+                ->label('Jenis Biaya'),
 
             TextColumn::make('biaya.nominal')
                 ->label('Nominal Biaya')
-                ->money('idr', true)
+                ->money('IDR', locale: 'id_ID')
+                ->sortable(),
+
+            TextColumn::make('b')
+                ->label('Nominal Biaya')
+                ->money('IDR', locale: 'id_ID')
                 ->sortable(),
 
             TextColumn::make('status')

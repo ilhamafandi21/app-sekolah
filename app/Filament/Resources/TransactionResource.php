@@ -177,6 +177,7 @@ class TransactionResource extends Resource
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('biaya.name')
+                    ->label('Jenis Biaya')
                     ->sortable(),
 
                 TextColumn::make('ringkasan_rombel')
@@ -197,11 +198,7 @@ class TransactionResource extends Resource
             TextColumn::make('biaya.nominal')
                 ->label('Biaya')
                 ->money('IDR', true, locale: 'id_ID')
-                ->getStateUsing(fn($record) =>
-                    Transaction::where('siswa_id', $record->siswa_id)
-                        ->where('biaya_id', $record->biaya_id)
-                        ->sum('nominal')
-                ),
+                ,
 
 
             TextColumn::make('nominal')

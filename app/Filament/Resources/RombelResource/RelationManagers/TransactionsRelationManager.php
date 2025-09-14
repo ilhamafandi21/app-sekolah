@@ -173,7 +173,7 @@ class TransactionsRelationManager extends RelationManager
                     SiswaBiaya::where('siswa_id', $record->siswa_id)
                         ->where('biaya_id', $record->biaya_id)
                         ->value('status') == 1
-                        ? ''
+                        ? 'Lunas'
                         : 'Belum Lunas'
                 )
                 ->badge()

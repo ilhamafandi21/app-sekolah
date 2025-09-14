@@ -172,7 +172,7 @@ class TransactionsRelationManager extends RelationManager
                 ->default(fn ($record) =>
                     SiswaBiaya::where('siswa_id', $record->siswa_id)
                         ->where('biaya_id', $record->biaya_id)
-                        ->value('status') == 1
+                        ->value('') == 1
                         ? 'Lunas'
                         : 'Belum Lunas'
                 )

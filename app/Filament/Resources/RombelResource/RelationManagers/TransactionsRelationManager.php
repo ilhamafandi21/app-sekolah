@@ -177,7 +177,7 @@ class TransactionsRelationManager extends RelationManager
                         : 'Belum Lunas'
                 )
                 ->badge()
-                ->color(fn ($state) => $state === 'Lunas' ? '' : 'danger')
+                ->color(fn ($state) => $state === 'Lunas' ? 'success' : 'danger')
                 ->label('Status Bayar')
             ])
             ->filters([

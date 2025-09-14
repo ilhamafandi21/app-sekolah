@@ -174,7 +174,7 @@ class TransactionsRelationManager extends RelationManager
                         ->where('biaya_id', $record->biaya_id)
                         ->value('status') == 1
                         ? 'Lunas'
-                        : 'Belum Lunas'
+                        : 'Belum '
                 )
                 ->badge()
                 ->color(fn ($state) => $state === 'Lunas' ? 'success' : 'danger')

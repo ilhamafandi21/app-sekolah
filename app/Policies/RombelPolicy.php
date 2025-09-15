@@ -30,6 +30,15 @@ class RombelPolicy
      */
     public function view(User $user, Rombel $rombel): bool
     {
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Staff hanya boleh kalau position = operational
+        if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
+            return true;
+        }
+
         return false;
     }
 
@@ -55,6 +64,15 @@ class RombelPolicy
      */
     public function update(User $user, Rombel $rombel): bool
     {
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Staff hanya boleh kalau position = operational
+        if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
+            return true;
+        }
+
         return false;
     }
 
@@ -63,6 +81,15 @@ class RombelPolicy
      */
     public function delete(User $user, Rombel $rombel): bool
     {
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Staff hanya boleh kalau position = operational
+        if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
+            return true;
+        }
+
         return false;
     }
 
@@ -71,6 +98,15 @@ class RombelPolicy
      */
     public function restore(User $user, Rombel $rombel): bool
     {
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Staff hanya boleh kalau position = operational
+        if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
+            return true;
+        }
+
         return false;
     }
 
@@ -79,6 +115,20 @@ class RombelPolicy
      */
     public function forceDelete(User $user, Rombel $rombel): bool
     {
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Staff hanya boleh kalau position = operational
+        if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
+            return true;
+        }
+
         return false;
+    }
+
+    public static function canDeleteAny(): bool
+    {
+        return auth()->user()->can('delete', Rombel::class);
     }
 }

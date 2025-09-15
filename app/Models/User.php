@@ -60,7 +60,12 @@ class User extends Authenticatable
         return $this->hasOne(Teacher::class);
     }
 
-     public function siswa(): HasOne
+     public function staff(): HasOne
+    {
+        return $this->hasOne(Staff::class);
+    }
+
+    public function siswa(): HasOne
     {
         return $this->hasOne(Siswa::class);
     }

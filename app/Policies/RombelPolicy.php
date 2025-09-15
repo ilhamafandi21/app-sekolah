@@ -18,7 +18,7 @@ class RombelPolicy
         }
 
         // Staff hanya boleh kalau position = operational
-        if ($user->hasRole('staff') && $user->position === 'operational') {
+        if ($user->hasRole('staff') && $user->staff->position === 'operational') {
             return true;
         }
 

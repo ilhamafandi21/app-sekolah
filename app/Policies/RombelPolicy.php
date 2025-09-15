@@ -18,7 +18,7 @@ class RombelPolicy
         }
 
         // Staff hanya boleh kalau position = operational
-        if ($user->hasRole('staff') && $user->staff->position === 'operational') {
+        if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
             return true;
         }
 
@@ -43,7 +43,7 @@ class RombelPolicy
         }
 
         // Staff hanya boleh kalau position = operational
-        if ($user->hasRole('staff') && $user->position === 'operational') {
+        if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
             return true;
         }
 
@@ -55,15 +55,6 @@ class RombelPolicy
      */
     public function update(User $user, Rombel $rombel): bool
     {
-        if ($user->hasRole('admin')) {
-            return true;
-        }
-
-        // Staff hanya boleh kalau position = operational
-        if ($user->hasRole('staff') && $user->position === 'operational') {
-            return true;
-        }
-
         return false;
     }
 
@@ -72,15 +63,6 @@ class RombelPolicy
      */
     public function delete(User $user, Rombel $rombel): bool
     {
-        if ($user->hasRole('admin')) {
-            return true;
-        }
-
-        // Staff hanya boleh kalau position = operational
-        if ($user->hasRole('staff') && $user->position === 'operational') {
-            return true;
-        }
-
         return false;
     }
 
@@ -89,15 +71,6 @@ class RombelPolicy
      */
     public function restore(User $user, Rombel $rombel): bool
     {
-        if ($user->hasRole('admin')) {
-            return true;
-        }
-
-        // Staff hanya boleh kalau position = operational
-        if ($user->hasRole('staff') && $user->position === 'operational') {
-            return true;
-        }
-
         return false;
     }
 
@@ -106,15 +79,6 @@ class RombelPolicy
      */
     public function forceDelete(User $user, Rombel $rombel): bool
     {
-        if ($user->hasRole('admin')) {
-            return true;
-        }
-
-        // Staff hanya boleh kalau position = operational
-        if ($user->hasRole('staff') && $user->position === 'operational') {
-            return true;
-        }
-
         return false;
     }
 }

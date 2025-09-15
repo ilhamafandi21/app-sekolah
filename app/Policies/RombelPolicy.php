@@ -87,7 +87,7 @@ class RombelPolicy
 
         // Staff hanya boleh kalau position = operational
         if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
-            return false;
+            return true;
         }
 
         return false;
@@ -120,7 +120,7 @@ class RombelPolicy
         }
 
         // Staff hanya boleh kalau position = operational
-        if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
+        if ($user->hasRole('staff') && $user->staff?->position === '') {
             return true;
         }
 

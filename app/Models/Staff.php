@@ -18,6 +18,7 @@ class Staff extends Model
         'tanggal_lahir',
         'join_at',
         'is_active',
+        'user_id',
     ];
 
     public function user(): BelongsTo

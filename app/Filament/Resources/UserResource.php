@@ -100,7 +100,8 @@ class UserResource extends Resource
                     ->label('Roles')
                     ->badge()
                     ->color('success')
-                    ->listWithLineBreaks(),
+                    ->listWithLineBreaks()
+                    ->searchable(),
 
                 TextColumn::make('email_verified_at')
                     ->label('Email Verified At')

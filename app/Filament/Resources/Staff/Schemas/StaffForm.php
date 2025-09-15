@@ -27,12 +27,14 @@ class StaffForm
                 TextInput::make('email')
                     ->email()
                     ->dehydrated()
-                    ->required(),
+                    ->required()
+                    ->visibleOn('create'),
                 TextInput::make('password')
                     ->password()
                     ->revealable()
                     ->dehydrated()
-                    ->required(),
+                    ->required()
+                    ->visibleOn('create'),
                 TextInput::make('alamat'),
                 TextInput::make('tempat_lahir'),
                 DatePicker::make('tanggal_lahir'),

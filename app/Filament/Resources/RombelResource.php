@@ -161,7 +161,8 @@ class RombelResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->visible(fn () => \Illuminate\Support\Facades\Auth::user()?->hasRole('admin')),
                 ]),
             ]);
     }

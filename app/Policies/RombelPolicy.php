@@ -126,9 +126,4 @@ class RombelPolicy
 
         return false;
     }
-
-    public static function canDeleteAny(): bool
-    {
-        return auth()->user()->can('delete', Rombel::class);
-    }
 }

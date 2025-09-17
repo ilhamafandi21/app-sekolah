@@ -14,7 +14,7 @@ class Tingkat extends Model
 
     protected $fillable = [
         'nama_tingkat',
-        '',
+        'keterangan',
     ];
 
     public function transactions(): HasMany

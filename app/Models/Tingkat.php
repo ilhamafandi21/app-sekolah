@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Tingkat extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
-        'nama_tingkat',
+        '',
         'keterangan',
     ];
 

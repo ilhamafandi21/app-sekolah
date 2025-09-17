@@ -48,7 +48,7 @@ class TeacherPolicy
      */
     public function delete(User $user, Teacher $teacher): bool
     {
-         return $user->hasRole('admin');
+         return $user->hasRole(['admin', 'staff']);
     }
 
     /**
@@ -56,7 +56,7 @@ class TeacherPolicy
      */
     public function restore(User $user, Teacher $teacher): bool
     {
-         return $user->hasRole('admin');
+        return $user->hasRole(['admin', 'staff']);
     }
 
     /**

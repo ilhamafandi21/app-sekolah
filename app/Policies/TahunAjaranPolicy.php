@@ -64,6 +64,15 @@ class TahunAjaranPolicy
      */
     public function update(User $user, TahunAJaran $tahunAJaran): bool
     {
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Staff hanya boleh kalau position = operational
+        if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
+            return true;
+        }
+
         return false;
     }
 
@@ -72,6 +81,15 @@ class TahunAjaranPolicy
      */
     public function delete(User $user, TahunAJaran $tahunAJaran): bool
     {
+         if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Staff hanya boleh kalau position = operational
+        if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
+            return true;
+        }
+
         return false;
     }
 
@@ -80,6 +98,15 @@ class TahunAjaranPolicy
      */
     public function restore(User $user, TahunAJaran $tahunAJaran): bool
     {
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Staff hanya boleh kalau position = operational
+        if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
+            return true;
+        }
+
         return false;
     }
 

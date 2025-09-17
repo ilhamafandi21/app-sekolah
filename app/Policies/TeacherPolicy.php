@@ -64,6 +64,6 @@ class TeacherPolicy
      */
     public function forceDelete(User $user, Teacher $teacher): bool
     {
-         return $user->hasRole('admin');
+        return $user->hasRole(['admin', 'staff']);
     }
 }

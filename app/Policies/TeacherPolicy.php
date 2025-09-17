@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Staff;
 use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -21,9 +22,8 @@ class TeacherPolicy
      */
     public function view(User $user, Teacher $teacher): bool
     {
-         return $user->hasRole('admin') ||
-         ($user->hasRole('teacher') && $user->id === $teacher->user_id) ||
-         ($user->hasRole('staff') && $user->id === $teacher->user_id);
+         return $user->hasRole(['admin'. 'staff']) ||
+         ($user->hasRole('teacher') && $user->id === $teacher->user_id);
     }
 
     /**
@@ -31,7 +31,7 @@ class TeacherPolicy
      */
     public function create(User $user): bool
     {
-         return $user->hasRole('admin');
+         return $user->hasRole(['admin', 'staff']);
     }
 
     /**
@@ -39,7 +39,7 @@ class TeacherPolicy
      */
     public function update(User $user, Teacher $teacher): bool
     {
-         return $user->hasRole('admin');
+          return $user->hasRole(['admin', 'staff']);
      //     || ($user->hasRole('teacher') && $user->id === $teacher->user_id)
     }
 

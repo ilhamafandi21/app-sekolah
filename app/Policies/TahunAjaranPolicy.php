@@ -30,6 +30,15 @@ class TahunAjaranPolicy
      */
     public function view(User $user, TahunAJaran $tahunAJaran): bool
     {
+         if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Staff hanya boleh kalau position = operational
+        if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
+            return true;
+        }
+
         return false;
     }
 
@@ -38,6 +47,15 @@ class TahunAjaranPolicy
      */
     public function create(User $user): bool
     {
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Staff hanya boleh kalau position = operational
+        if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
+            return true;
+        }
+
         return false;
     }
 

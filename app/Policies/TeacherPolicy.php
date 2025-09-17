@@ -14,7 +14,16 @@ class TeacherPolicy
      */
     public function viewAny(User $user): bool
     {
-          return $user->hasAnyRole(['admin', 'teacher', 'staff']);
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Staff hanya boleh kalau position = operational
+        if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -22,8 +31,16 @@ class TeacherPolicy
      */
     public function view(User $user, Teacher $teacher): bool
     {
-         return $user->hasRole(['admin'. 'staff']) ||
-         ($user->hasRole('teacher') && $user->id === $teacher->user_id);
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Staff hanya boleh kalau position = operational
+        if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -31,7 +48,16 @@ class TeacherPolicy
      */
     public function create(User $user): bool
     {
-         return $user->hasRole(['admin', 'staff']);
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Staff hanya boleh kalau position = operational
+        if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -39,8 +65,16 @@ class TeacherPolicy
      */
     public function update(User $user, Teacher $teacher): bool
     {
-          return $user->hasRole(['admin', 'staff']);
-     //     || ($user->hasRole('teacher') && $user->id === $teacher->user_id)
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Staff hanya boleh kalau position = operational
+        if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -48,7 +82,16 @@ class TeacherPolicy
      */
     public function delete(User $user, Teacher $teacher): bool
     {
-         return $user->hasRole(['admin', 'staff']);
+         if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Staff hanya boleh kalau position = operational
+        if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -56,7 +99,16 @@ class TeacherPolicy
      */
     public function restore(User $user, Teacher $teacher): bool
     {
-        return $user->hasRole(['admin', 'staff']);
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Staff hanya boleh kalau position = operational
+        if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -64,6 +116,15 @@ class TeacherPolicy
      */
     public function forceDelete(User $user, Teacher $teacher): bool
     {
-        return $user->hasRole(['admin', 'staff']);
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+
+        // Staff hanya boleh kalau position = operational
+        if ($user->hasRole('staff') && $user->staff?->position === 'operasional') {
+            return true;
+        }
+
+        return false;
     }
 }

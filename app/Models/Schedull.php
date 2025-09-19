@@ -15,7 +15,7 @@ class Schedull extends Model
     use HasFactory;
 
     protected $fillable = [
-        'kode',
+        '',
         'start_at',
         'end_at',
      ];

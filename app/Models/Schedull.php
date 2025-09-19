@@ -22,7 +22,7 @@ class Schedull extends Model
 
      public function day(): BelongsTo
      {
-        return $this->(Day::class);
+        return $this->belongsTo(Day::class);
      }
 
      public function rombelsSubjects(): HasMany

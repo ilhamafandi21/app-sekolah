@@ -17,7 +17,7 @@ class Schedull extends Model
     protected $fillable = [
         'kode',
         'start_at',
-        '',
+        'end_at',
      ];
 
      public function day(): BelongsTo

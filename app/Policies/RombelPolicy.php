@@ -81,7 +81,7 @@ class RombelPolicy
      */
     public function delete(User $user, Rombel $rombel): bool
     {
-        if ($user->hasRole('')) {
+        if ($user->hasRole('admin')) {
             return true;
         }
 

@@ -120,7 +120,7 @@ class UserResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
-                TextColumn::make('')
+                TextColumn::make('deleted_at')
                     ->label('Deleted At')
                     ->dateTime()
                     ->sortable()

@@ -93,7 +93,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                         }
                         return [];
                     }),
-               
+
                 TextInput::make('rombels_subjects_id')
                     ->label('RSID')
                     ->required()
@@ -101,7 +101,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                     ->dehydrated()
                     ->reactive()
                     ->default(fn($get) => $get('subject_id')),
-               
+
                 Select::make('schedull_id')
                     ->label('Pilih Jam Pelajaran')
                     ->required()
@@ -117,7 +117,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                         $end   = $s->end_at   ? substr($s->end_at, 0, 5)   : '-';
                         return "{$s->kode} — {$start} s/d {$end}";
                     }),
-                
+
                 Select::make('day_id')
                     ->label('Pilih Jadwal Hari')
                     ->relationship(
@@ -127,7 +127,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                             ->select(['id','nama_hari']) // batasi kolom (wajib sertakan 'id')
                             ->orderBy('nama_hari')
                     )
-                    ->required(),  
+                    ->required(),
 
                 Select::make('teacher_id')
                     ->label('Pengampu')
@@ -136,7 +136,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                         titleAttribute: 'name',
                         modifyQueryUsing: fn (Builder $query) => $query
                             ->select(['id','name']) // batasi kolom (wajib sertakan 'id')
-                            ->orderBy('')
+                            ->orderBy('name')
                     ),
             ]);
     }
@@ -147,13 +147,13 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
             ->query(
                 static::getModel()::query()
                     ->with(['rombel:id,kode,divisi,tingkat_id,jurusan_id',
-                            'rombel.tingkat:id,nama_tingkat', 
+                            'rombel.tingkat:id,nama_tingkat',
                             'rombel.jurusan:id,kode',
                             'subject:id,name',
                             'teacher:id,name',
                             'schedull:id,kode,start_at,end_at',
                             'day:id,nama_hari',
-                            
+
                             ]) // eager load relasi
             )
             ->columns([

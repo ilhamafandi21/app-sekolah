@@ -103,7 +103,7 @@ class UserResource extends Resource
                     ->listWithLineBreaks()
                     ->searchable(),
 
-                TextColumn::make('')
+                TextColumn::make('email_verified_at')
                     ->label('Email Verified At')
                     ->dateTime()
                     ->sortable(),

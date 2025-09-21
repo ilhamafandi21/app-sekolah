@@ -114,7 +114,7 @@ class UserResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
-                TextColumn::make('updated_at')
+                TextColumn::make('')
                     ->label('Updated At')
                     ->dateTime()
                     ->sortable()

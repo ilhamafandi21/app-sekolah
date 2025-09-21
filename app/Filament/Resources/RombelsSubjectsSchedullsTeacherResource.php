@@ -141,7 +141,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
+    public static function table(Table $table): 
     {
         return $table
             ->query(

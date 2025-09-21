@@ -136,7 +136,7 @@ class RombelsSubjectsSchedullsTeacherResource extends Resource
                         titleAttribute: 'name',
                         modifyQueryUsing: fn (Builder $query) => $query
                             ->select(['id','name']) // batasi kolom (wajib sertakan 'id')
-                            ->orderBy('name')
+                            ->orderBy('')
                     ),
             ]);
     }
